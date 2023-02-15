@@ -4,6 +4,6 @@
 
 This is the code repo of COMP208 Team 16. 
 
-## Requirements
+## Advice
 
 Think twice before git PUSH.
