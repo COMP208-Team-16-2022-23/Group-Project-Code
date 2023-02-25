@@ -18,5 +18,5 @@ dependencies:
 
   ## PyPI packages
   - pip:
-    - tensorflow-macos
-    - tensorflow-metal  ## optional, but recommended
+      - tensorflow-macos
+      - tensorflow-metal  ## optional, but recommended
