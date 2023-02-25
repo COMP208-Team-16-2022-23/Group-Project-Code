@@ -13,9 +13,18 @@ You can find the YAML file `environment.yml` [here](./misc/conda_env_config). Pl
 the [instructions](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file)
 to create the environment.
 
+Alternatively, you can update your environment using:
+
+```shell
+conda env update --name COMP208 --file environment.yml --prune
+```
+
 Please remember
 to [update the YAML file](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-file-manually)
 after installing new python packages.
+
+Maintaining YAML files manually instead of generating them automatically can ensure that the file is compatible with
+both x86 and arm64 architectures.
 
 ### Advice
 
