@@ -10,4 +10,4 @@ my_data = Blueprint('my_data', __name__, template_folder='templates')
 
 @my_data.route("/my_data", methods=['GET', 'POST'])
 def mydata():
-    return render_template('auth/my_data.html')
+    return render_template('dataset/my_data.html')
