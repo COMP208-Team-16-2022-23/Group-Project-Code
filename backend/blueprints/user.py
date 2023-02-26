@@ -14,7 +14,7 @@ def home():
         username = session['username']
         # return index template
         return 'Logged in as ' + username + '<br>' + \
-         "<b><a href = '/logout'>click here to log out</a></b>"
+         "<b><a href = '/signout'>click here to log out</a></b>"
     return "You are not logged in <br><a href = '/signin'></b>" + \
       "click here to log in</b></a>"
 
@@ -24,11 +24,15 @@ def signin():
     if request.method == 'POST':
         _form = request.form
         username = str(_form["username"])
-        # password = str(_form["password"])
+        password = str(_form["password"])
 
         # if len(email) < 1 or len(password) < 1:
         #     return render_template('signin.html', error="Email and password are required")
 
+        # todo verify via database
+
+        # verification passed
+        session['username'] = username
         return redirect("/")
 
         # return render_template('signin.html', error="Email or password incorrect")
@@ -46,22 +50,24 @@ def signup():
         if len(username) < 1 or len(email) < 1 or len(password) < 1:
             return render_template('signup.html', error="All fields are required")
 
-    #     # query if user already exist
+        # todo query if user already exist
     #     new_user = ''
     #
     #     if new_user:
     #         return render_template('signup.html', error="User already exists with this email")
     #
-        # register completed.
-        # todo redirect to a new page.
-        return render_template('signup.html', msg="You've been registered!")
+        # todo transmit data to database
+
+        # register completed. redirect to a login page.
+        return render_template('signin.html', username=username, msg="You've been registered!")
 
     return render_template('signup.html')
 
 
 @user_view.route('/signout', methods=['GET'])
 def signout():
-    ...
+    session.pop('username', None)
+    return redirect('/')
 
 
 @user_view.route('/user', methods=['GET'])

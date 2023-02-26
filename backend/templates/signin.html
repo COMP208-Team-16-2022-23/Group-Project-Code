@@ -6,12 +6,14 @@
 </head>
 <body>
     <form action = "" method = "post">
-        <p><label>Username
-            <input type = text name = username>
-        </label></p>
-        <p><label>Password
-                <input type = text name = password>
-        </label></p>
+        <p>
+            <label>Username</label>
+            <input type = text name = username value={{username}}>
+        </p>
+        <p>
+            <label>Password</label>
+            <input type = password name = password>
+        </p>
         <p><input type = submit value = Login></p>
     </form>
     <p>Don't have an account? <br><a href='/signup'><b>Sign up here</b></a></p>
