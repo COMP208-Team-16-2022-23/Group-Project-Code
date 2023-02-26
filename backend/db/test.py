@@ -32,9 +32,9 @@ def pymysql():
     import pymysql
 
     # 打开数据库连接
-    db = pymysql.connect(host='localhost',
+    db = pymysql.connect(host='comp208-team16.ctw17gkeyu80.eu-west-2.rds.amazonaws.com',
                          user='root',
-                         password='11111111',
+                         password='5hqYXX55sFnIirPD868G',
                          database='test')
 
     # 使用 cursor() 方法创建一个游标对象 cursor
