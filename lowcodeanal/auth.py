@@ -101,6 +101,7 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+        password_confirm = request.form['password_confirm']
         password_reminder = request.form['password_reminder']
         error = None
         if not username:
@@ -109,6 +110,9 @@ def register():
             error = 'Password is required.'
         elif not email:
             error = 'Email is required.'
+        ## the two passwords are not the same
+        elif password != password_confirm:
+            error = 'The two passwords you entered are not the same.'
 
         if error is None:
             try:
