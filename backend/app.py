@@ -1,15 +1,17 @@
+from datetime import timedelta
+
 from flask import Flask, request, session, url_for, redirect
 from blueprints.user import user_view
 import os
 
 app = Flask(__name__)
 app.secret_key = 'abctest'
-# todo session initialization
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_mapping(
     SECRET_KEY='dev',
     DATABASE=os.path.join(app.instance_path, 'dataflow.mysql'),  # the database file
+    PERMANENT_SESSION_LIFETIME=timedelta(minutes=45)
 )
 
 # load the instance config, if it exists, when not testing
