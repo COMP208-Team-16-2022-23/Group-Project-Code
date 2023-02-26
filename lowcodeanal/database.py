@@ -10,10 +10,10 @@ port = lines[1].strip().split('=')[1].replace("'", "")
 user = lines[2].strip().split('=')[1].replace("'", "")
 password = lines[3].strip().split('=')[1].replace("'", "")
 database = lines[4].strip().split('=')[1].replace("'", "")
-type = lines[5].strip().split('=')[1].replace("'", "")
+prefix = lines[5].strip().split('=')[1].replace("'", "")
 
 # build the connection string
-connection_string = f'mysql+pymysql://{user}:{password}@{host}:{port}/{database}'
+connection_string = f'{prefix}://{user}:{password}@{host}:{port}/{database}'
 
 # dialect://username:password@host:port/database e.g. mysql://scott:tiger@localhost/project
 engine = create_engine(connection_string)
