@@ -3,7 +3,11 @@
 # @File: user.PY
 """User System. Handle operations including signin, signup and sign out. Get and update user state"""
 
-from flask import Blueprint, request, render_template, session, redirect
+from flask import Blueprint, request, render_template, session, redirect, url_for, flash
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from ..database import db_session  # Not runable
+from ..models import User
 
 user_view = Blueprint('user_routes', __name__, template_folder='Backend/templates')
 
@@ -41,25 +45,44 @@ def signin():
 @user_view.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        username = request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        error = None
+        if not username:
+            error = 'Username is required.'
+        elif not password:
+            error = 'Password is required.'
+        elif not email:
+            error = 'Email is required.'
 
-        if len(username) < 1 or len(email) < 1 or len(password) < 1:
-            return render_template('signup.html', error="All fields are required")
+        if error is None:
+            try:
+                user = User(username=username, email=email, password=generate_password_hash(password))
+                db_session.add(user)
+                db_session.commit()
+            except db_session.IntegrityError:
+                error = f'User {username} is already registered.'
+            else:
+                return redirect(url_for('user_routes.signin'))
 
-        # todo query if user already exist
-    #     new_user = ''
-    #
-    #     if new_user:
-    #         return render_template('signup.html', error="User already exists with this email")
-    #
-        # todo transmit data to database
-
-        # register completed. redirect to a login page.
-        return render_template('signin.html', username=username, msg="You've been registered!")
-
+        flash(error)
     return render_template('signup.html')
+    # if len(username) < 1 or len(email) < 1 or len(password) < 1:
+    #     return render_template('signup.html', error="All fields are required")
+    #
+    # # todo query if user already exist
+    # #     new_user = ''
+    # #
+    # #     if new_user:
+    # #         return render_template('signup.html', error="User already exists with this email")
+    # #
+    # # todo transmit data to database
+
+    # register completed. redirect to a login page.
+    #     return render_template('signin.html', username=username, msg="You've been registered!")
+    #
+    # return render_template('signup.html')
 
 
 @user_view.route('/signout', methods=['GET'])
@@ -71,4 +94,3 @@ def signout():
 @user_view.route('/user', methods=['GET'])
 def show_user(id=None):
     ...
-

@@ -9,10 +9,10 @@ from blueprints.data_manager import my_data
 from blueprints.data_analyse import data_analyse
 # from blueprints.node_editor import node_editer
 
-app = Flask(__name__, instance_relative_config=False)
+app = Flask(__name__)
 
 # load the instance config
-app.config.from_pyfile('config.py', silent=True)
+app.config.from_pyfile('config.py')
 
 # todo session initialization
 
