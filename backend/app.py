@@ -1,25 +1,18 @@
 from datetime import timedelta
 
 from flask import Flask, request, session, url_for, redirect
-from blueprints.user import user_view
 import os
 
 import database as db
 from blueprints.user import user_view
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
 
 # load the instance config
 app.config.from_pyfile('config.py', silent=True)
 
 # todo session initialization
 
-app = Flask(__name__, instance_relative_config=True)
-app.config.from_mapping(
-    SECRET_KEY='dev',
-    DATABASE=os.path.join(app.instance_path, 'dataflow.mysql'),  # the database file
-    PERMANENT_SESSION_LIFETIME=timedelta(minutes=45)
-)
 
 db.init_db()
 
