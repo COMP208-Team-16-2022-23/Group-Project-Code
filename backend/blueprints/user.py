@@ -38,24 +38,25 @@ def signin():
 
 @user_view.route('/signup', methods=['GET', 'POST'])
 def signup():
-    ...
-    # if request.method == 'POST':
-    #     username = request.form.get('username')
-    #     email = request.form.get('email')
-    #     password = request.form.get('password')
-    #
-    #     if len(username) < 1 or len(email) < 1 or len(password) < 1:
-    #         return render_template('signup.html', error="All fields are required")
-    #
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+        if len(username) < 1 or len(email) < 1 or len(password) < 1:
+            return render_template('signup.html', error="All fields are required")
+
     #     # query if user already exist
     #     new_user = ''
     #
     #     if new_user:
     #         return render_template('signup.html', error="User already exists with this email")
     #
-    #     return render_template('signup.html', msg="You've been registered!")
-    #
-    # return render_template('signup.html')
+        # register completed.
+        # todo redirect to a new page.
+        return render_template('signup.html', msg="You've been registered!")
+
+    return render_template('signup.html')
 
 
 @user_view.route('/signout', methods=['GET'])
