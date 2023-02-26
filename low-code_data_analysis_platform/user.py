@@ -4,10 +4,10 @@
 """User System. Handle operations including signin, signup and sign out. Get and update user state"""
 
 from flask import Blueprint, request, render_template, session, redirect, url_for, flash
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import generate_password_hash
 
-from ..database import db_session  # Not runable
-from ..models import User
+from LCDA.database import db_session  # Not runable
+from LCDA.models import User
 
 user_view = Blueprint('user_routes', __name__, template_folder='Backend/templates')
 
