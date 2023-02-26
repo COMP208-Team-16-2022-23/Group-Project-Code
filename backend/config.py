@@ -1,3 +1,5 @@
+SECRET_KEY = 'COMP208_Team16'
+
 # Configuration variables for the database
 HOSTNAME = '127.0.0.1'
 PORT = '3306'
