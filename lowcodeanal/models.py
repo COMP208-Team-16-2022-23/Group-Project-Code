@@ -9,8 +9,10 @@ class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     email = Column(String(120), unique=True, nullable=False)
     username = Column(String(80), unique=True, nullable=False)
-    password = Column(String, nullable=False)
+    password = Column(String(500), nullable=False)
     join_date = Column(DateTime, default=datetime.utcnow)
+    last_password_change_time = Column(DateTime, unique=False, nullable=True)
+    last_login = Column(DateTime, unique=False, nullable=True)
 
     def __init__(self, email=None, username=None, password=None):
         self.email = email
