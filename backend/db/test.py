@@ -1,8 +1,8 @@
 import mysql.connector
 import pymysql
 
-def mysql_connector():
 
+def mysql_connector():
     # the same dictionary as the python file called passport
     file_loc = "./passport"
 
@@ -22,9 +22,10 @@ def mysql_connector():
         password=data[2]
     )
 
-    print(db) # it will print a connection object if everything is fine
+    print(db)  # it will print a connection object if everything is fine
 
     db.close()
+
 
 def pymysql():
     # !/usr/bin/python3
