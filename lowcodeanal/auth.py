@@ -98,6 +98,7 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+        password_reminder = request.form['password_reminder']
         error = None
         if not username:
             error = 'Username is required.'
@@ -108,7 +109,7 @@ def register():
 
         if error is None:
             try:
-                user = User(email=email, username=username, password=generate_password_hash(password))
+                user = User(email=email, username=username, password=generate_password_hash(password), password_reminder=password_reminder)
                 db_session.add(user)
                 db_session.commit()
             except exc.IntegrityError:
