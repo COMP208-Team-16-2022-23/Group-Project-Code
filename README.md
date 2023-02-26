@@ -27,22 +27,33 @@ Maintaining YAML files manually instead of generating them automatically can ens
 both x86 and arm64 architectures.
 
 ### Install python packages use requirements.txt
+
+**Please use conda first to install python packages.** Mixed use of conda and pip may cause some problems.
+
 Jetbrains IDEs will automatically detect the requirements.txt file and install the packages with one click.
 
 Or you can use the following command to install the packages:
+
 ```shell
-pip install -r requirements.txt
+conda install --yes --file requirements.txt
 ```    
+
 Please remember to update the requirements.txt file when using new python packages.
+
 ```shell
-# install pipreqs
-pip install pipreqs
- ```
- ```shell
+# install pipreqs if you don't have it
+conda install -c conda-forge pipreqs
 # generate requirements.txt in the current directory
-pipreqs . --encoding=utf8 --force
+pipreqs . --encoding=utf8
 ```
 
 ### Advice
 
 Think twice before git PUSH.
+
+You can learn more about git from git-scm.com: [English](https://git-scm.com/book/en/v2)
+| [Simplified Chinese](https://git-scm.com/book/zh/v2)
+
+Or you can read “Flight rules for Git” for a more accessible
+tutorial: [English](https://github.com/k88hudson/git-flight-rules/blob/master/README.md)
+| [Simplified Chinese](https://github.com/k88hudson/git-flight-rules/blob/master/README_zh-CN.md)
