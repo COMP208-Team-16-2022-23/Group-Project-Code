@@ -6,4 +6,4 @@ dependencies:
   - scikit-learn
   - pandas
   - matplotlib
-  - pymysql
+  - flask-sqlalchemy
