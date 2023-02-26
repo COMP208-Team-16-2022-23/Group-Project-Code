@@ -5,9 +5,9 @@
 
 from flask import Blueprint, request, render_template, session, redirect
 
-my_data = Blueprint('my_data', __name__, template_folder='Backend/templates')
+my_data = Blueprint('my_data', __name__, template_folder='templates')
 
 
 @my_data.route("/my_data", methods=['GET', 'POST'])
 def mydata():
-    return render_template('/data_process/my_data.html')
+    return render_template('auth/my_data.html')

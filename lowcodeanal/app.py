@@ -6,7 +6,7 @@ import os
 import database as db
 import auth
 
-# from . import my_data
+from data_manager import my_data
 # from . import data_analyse
 # from blueprints.node_editor import node_editer
 
@@ -42,7 +42,7 @@ def index():
 app.register_blueprint(auth.bp)
 
 
-# app.register_blueprint(my_data)
+app.register_blueprint(my_data)
 # app.register_blueprint(data_analyse)
 
 
