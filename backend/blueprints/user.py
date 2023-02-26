@@ -39,7 +39,7 @@ def signin():
 
         # return render_template('signin.html', error="Email or password incorrect")
 
-    return render_template("signin.html")
+    return render_template("/auth/signin.html")
 
 
 @user_view.route('/signup', methods=['GET', 'POST'])
@@ -67,7 +67,7 @@ def signup():
                 return redirect(url_for('user_routes.signin'))
 
         flash(error)
-    return render_template('signup.html')
+    return render_template('/auth/signup.html')
     # if len(username) < 1 or len(email) < 1 or len(password) < 1:
     #     return render_template('signup.html', error="All fields are required")
     #
