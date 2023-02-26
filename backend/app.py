@@ -2,6 +2,9 @@ from datetime import timedelta
 
 from flask import Flask, request, session, url_for, redirect
 from blueprints.user import user_view
+from blueprints.data_manager import my_data
+from blueprints.data_analyse import data_analyse
+from blueprints.node_editor import node_editer
 import os
 
 app = Flask(__name__)
@@ -31,6 +34,8 @@ def hello_world():
 
 
 app.register_blueprint(user_view)
+app.register_blueprint(my_data)
+app.register_blueprint(data_analyse)
 
 if __name__ == "__main__":
     app.run()

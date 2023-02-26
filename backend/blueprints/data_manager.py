@@ -5,9 +5,9 @@
 
 from flask import Blueprint, request, render_template, session, redirect
 
-data_manager = Blueprint('data_manager', __name__, template_folder='Backend/templates')
+my_data = Blueprint('my_data', __name__, template_folder='Backend/templates')
 
 
-@data_manager.route("/mydata", methods=['GET', 'POST'])
+@my_data.route("/my_data", methods=['GET', 'POST'])
 def mydata():
-    ...
+    return render_template('my_data.html')

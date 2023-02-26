@@ -10,13 +10,11 @@ user_view = Blueprint('user_routes', __name__, template_folder='Backend/template
 
 @user_view.route('/')
 def home():
-    if 'username' in session:
-        username = session['username']
-        # return index template
-        return 'Logged in as ' + username + '<br>' + \
-         "<b><a href = '/signout'>click here to log out</a></b>"
-    return "You are not logged in <br><a href = '/signin'></b>" + \
-      "click here to log in</b></a>"
+    # if 'username' in session:
+    #     username = session['username']
+    #     # return index template
+    #     return redirect('/my_data')
+    return redirect('/my_data')
 
 
 @user_view.route('/signin', methods=['GET', 'POST'])

@@ -8,11 +8,11 @@ from flask import Blueprint, request, render_template, session, redirect
 data_analyse = Blueprint('data_analyse', __name__, template_folder='Backend/templates')
 
 
-@data_analyse.route("/dataprocess", methods=['GET', 'POST'])
+@data_analyse.route("/data_process", methods=['GET', 'POST'])
 def data_process():
     ...
 
 
-@data_analyse.route("/dataanalysis", methods=['GET', 'POST'])
+@data_analyse.route("/data_analysis", methods=['GET', 'POST'])
 def data_analysis():
     ...
