@@ -7,13 +7,13 @@
 {% block content %}
 <form method="post">
     <label for="email">Email</label>
-    <input name="email" id="email" required>
+    <input type='email' name="email" id="email" required>
     <label for="username">Username</label>
     <input name="username" id="username" required>
     <label for="password">Password</label>
     <input type="password" name="password" id="password" required>
     <label for="password_reminder">Password Reminder</label>
-    <input name="password_reminder" id="password_reminder" required>
+    <input name="password_reminder" id="password_reminder">
     <input type="submit" value="Register">
 </form>
 {% endblock %}

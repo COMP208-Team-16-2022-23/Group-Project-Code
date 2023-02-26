@@ -15,6 +15,7 @@ from flask import url_for
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
 from sqlalchemy import exc
+from datetime import datetime
 
 from database import db_session
 from models import User
@@ -72,6 +73,8 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user.id
+            user.last_login = datetime.utcnow()
+            db_session.commit()
             return redirect(url_for('index'))
 
         flash(error)
@@ -109,7 +112,8 @@ def register():
 
         if error is None:
             try:
-                user = User(email=email, username=username, password=generate_password_hash(password), password_reminder=password_reminder)
+                user = User(email=email, username=username, password=generate_password_hash(password, salt_length=128),
+                            password_reminder=password_reminder)
                 db_session.add(user)
                 db_session.commit()
             except exc.IntegrityError:

@@ -3,8 +3,8 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
 # dialect://username:password@host:port/database e.g. mysql://scott:tiger@localhost/project
-engine = create_engine('mysql+pymysql://root:5hqYXX55sFnIirPD868G@comp208-team16.ctw17gkeyu80.eu-west-2.rds.amazonaws.com:3306/project')
-# engine = create_engine('sqlite:///project.db')
+# engine = create_engine('mysql+pymysql://root:5hqYXX55sFnIirPD868G@comp208-team16.ctw17gkeyu80.eu-west-2.rds.amazonaws.com:3306/project')
+engine = create_engine('sqlite:///project.db')
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
