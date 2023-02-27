@@ -53,17 +53,18 @@
           </ul>
         </div>
         <div class="d-flex align-items-center fs-5">
-          {% if login %}
-          <button type="button" class="btn btn-danger me-3">
-            <a href="/auth/logout"></a>Log out
-          </button>
-          {% else %}
-          <button type="button" class="btn btn-link px-3 me-2">
-            <a href="/auth/login">Login</a>
-          </button>
-          <button type="button" class="btn btn-primary me-3">
-            <a href="/auth/register"></a>Register
-          </button>
+          {% if g.user %}
+          <li><span>{{ g.user['username'] }}</span>
+            <button type="button" class="btn btn-danger me-3">
+              <a href="/auth/logout"></a>Log out
+            </button>
+            {% else %}
+            <button type="button" class="btn btn-link px-3 me-2">
+              <a href="/auth/login">Login</a>
+            </button>
+            <button type="button" class="btn btn-primary me-3">
+              <a href="/auth/register"></a>Register
+            </button>
           {% endif %}
         </div>
       </nav>
