@@ -177,6 +177,11 @@ def reset_password():
         email = session.get('reset_email')
         otp_session = session.get('otp')
         otp_expiry= session.get('otp_expiry')
+        # check if all fields are valid
+        # check otp is an 6-digit integer
+        if not otp.isdigit() or len(otp) != 6:
+            flash('Invalid OTP.')
+            return redirect(url_for('auth.reset_password'))
         if not email:
             flash('Invalid request.')
             return redirect(url_for('auth.forgot_password'))
