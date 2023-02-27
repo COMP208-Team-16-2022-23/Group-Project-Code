@@ -3,20 +3,20 @@
     max-width: 200px;
 }
 
-.row.collapse {
-    margin-left: -200px;
-    left: 0;
-	transition: margin-left .15s linear;
-}
-
-.row.collapse.show {
+.sidebar.collapse.show {
     margin-left: 0 !important;
 }
 
-.row.collapsing {
+.sidebar.collapsing {
     margin-left: -200px;
     left: -0.05%;
 	transition: all .15s linear;
+}
+
+.sidebar.collapse {
+    margin-left: -100%;
+    left: 0;
+	transition: margin-left .15s linear;
 }
 
 @media (max-width:768px) {
