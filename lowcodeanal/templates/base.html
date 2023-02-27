@@ -25,17 +25,16 @@
     <!-- Start your project here-->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand me-5" href="/">LCDA</a>
     <button
       class="navbar-toggler"
       type="button"
-      data-mdb-toggle="collapse"
+      data-mdb-toggle=""
       data-mdb-target="#navbarNav"
       aria-controls="navbarNav"
       aria-expanded="false"
       aria-label="Toggle navigation"
     >
-      <i class="fas fa-bars"></i>
+      <i class="fas fa-bars"></i>LCDA
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav mx-auto fs-4">
@@ -54,12 +53,18 @@
       </ul>
     </div>
       <div class="d-flex align-items-center fs-5">
+        {% if login %}
+        <button type="button" class="btn btn-danger me-3">
+          <a href="/logout"></a>Log out
+        </button>
+        {% else %}
         <button type="button" class="btn btn-link px-3 me-2">
           <a href="/login">Login</a>
         </button>
         <button type="button" class="btn btn-primary me-3">
           <a href="/register"></a>Register
         </button>
+        {% end if %}
       </div>
   </div>
   </nav>
