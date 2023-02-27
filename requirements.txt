@@ -1,4 +1,5 @@
 Flask
+Flask_Mail
 PyMySQL
-sqlalchemy
-werkzeug
+SQLAlchemy
+Werkzeug
