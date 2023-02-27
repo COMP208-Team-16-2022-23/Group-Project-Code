@@ -28,36 +28,74 @@
   <header>
 
     <!-- Start your project here-->
-<div class="container-fluid fixed-top bg-dark">
-    <div class="row collapse show g-0 d-flex h-100">
-        <div class="col-3 px-0 w-sidebar navbar-collapse collapse d-none d-md-flex">
-            <!-- spacer col -->
-            <a href="#" class="navbar-brand">Brand</a>
+<div class="container-fluid fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button
+                class="btn"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target=".collapse"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+        >
+            <i class="fas fa-bars"></i>LCDA
+        </button>
+        <div class="row navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto fs-4">
+            <li class="nav-item">
+                <a class="nav-link active ms-5 me-5 text-center" href="/my_data">My Data</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active ms-5 me-5 text-center" href="/data_process">Data Process</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active ms-5 me-5 text-center" aria-current="page" href="/data_analysis">Data Analysis</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active ms-5 me-5 text-center" aria-current="page" href="/node_editor">Node Editor</a>
+            </li>
+            </ul>
         </div>
-        <div class="col px-2 px-md-0 py-3">
-            <div class="d-flex">
-                <!-- toggler -->
-                <a data-bs-toggle="collapse" href="#" data-bs-target=".collapse" role="button" class="">
-                    <i class="fa fa-bars fa-lg"></i>
-                </a>
-                <a href="#modal" data-bs-target="modal" data-bs-toggle="modal" class="ms-auto text-white"><i class="fa fa-cog"></i></a>
-            </div>
+        <div class="d-flex align-items-center fs-5">
+            {% if login %}
+            <button type="button" class="btn btn-danger me-3">
+            <a href="/auth/logout"></a>Log out
+            </button>
+            {% else %}
+            <button type="button" class="btn btn-link px-3 me-2">
+            <a href="/auth/login">Login</a>
+            </button>
+            <button type="button" class="btn btn-primary me-3">
+            <a href="/auth/register"></a>Register
+            </button>
+            {% endif %}
         </div>
-    </div>
+    </nav>
 </div>
 <div class="container-fluid px-0">
-    <div class="row vh-100 collapse show g-0 d-flex">
-        <div class="col-3 p-0 h-100 text-white w-sidebar navbar-collapse collapse d-none d-md-flex sidebar">
+    <div class="row vh-100 collapse g-0 d-flex">
+        <div class="col-3 p-0 h-100 text-black w-sidebar navbar-collapse collapse d-none d-md-flex sidebar">
             <!-- fixed sidebar -->
-            <div class="navbar-dark bg-dark position-fixed h-100 w-sidebar">
-                <h6 class="px-3 pt-3">Fixed Menu</h6>
+            <div class="navbar position-fixed h-100 w-sidebar">
                 <ul class="nav flex-column flex-nowrap text-truncate">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Active</a>
+                        <a class="nav-link" data-bs-toggle="collapse"
+                        data-bs-target=".collapse"
+                        aria-controls="navbarNav"
+                        aria-expanded="false" type="button" href="#">Active</a>    
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Link</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-3 p-0 h-200 text-black w-sidebar navbar-collapse collapse d-none d-md-flex sidebar">
+            <div class="navbar position-fixed h-200 w-sidebar">
+                <ul class="nav flex-column flex-nowrap text-truncate">
                     <li class="nav-item">
                         <a class="nav-link" href="#">Link</a>
                     </li>
