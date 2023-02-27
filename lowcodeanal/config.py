@@ -17,5 +17,5 @@ MAIL_PORT = 465
 MAIL_USE_SSL = True
 MAIL_USERNAME = 'lcda.team.2023@gmail.com'
 MAIL_PASSWORD = 'uwiyqlxbdizognpr'
-MAIL_DEFAULT_SENDER = 'lcda.team.2023@gmail.com'
+MAIL_DEFAULT_SENDER = 'LCDA Team'
 MAIL_MAX_EMAILS= None

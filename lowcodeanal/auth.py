@@ -5,6 +5,7 @@
 import functools
 from random import randint
 from datetime import datetime, timedelta
+from time import timezone
 
 from flask import Blueprint
 from flask import flash
@@ -20,7 +21,6 @@ from sqlalchemy import exc
 from datetime import datetime
 
 from database import db_session
-# from lowcodeanal.app import mail
 from models import User
 
 from flask_mail import Message
@@ -184,9 +184,8 @@ def reset_password():
         if not user:
             flash('Invalid request.')
             return redirect(url_for('auth.forgot_password'))
-            if not otp_session or otp_session != int(otp) or otp_expiry.replace(
-                    tzinfo=timezone.utc) < datetime.utcnow().replace(tzinfo=timezone.utc):
-                flash('Invalid OTP.')
+        if not otp_session or otp_session != int(otp) or otp_expiry.timestamp() < datetime.utcnow().timestamp():
+            flash('Invalid OTP.')
             return redirect(url_for('auth.reset_password'))
         elif password != password_confirm:
             flash('The two passwords you entered are not the same.')
@@ -194,6 +193,8 @@ def reset_password():
         else:
             # reset the password and clear the OTP
             user.password = generate_password_hash(password, salt_length=128)
+            # update the last password reset time
+            user.last_password_change_time = datetime.utcnow()
             db_session.commit()
 
             session.pop('reset_email', None)
