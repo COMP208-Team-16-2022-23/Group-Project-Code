@@ -157,7 +157,7 @@ def forgot_password():
 
             # send the OTP to user's email
             msg = Message('Reset Password - OTP Verification', recipients=[email])
-            msg.body = f"Hello {user.username},\n\nYour OTP for resetting your password is {otp}. This OTP will expire in 5 minutes. Please use this OTP to reset your password.\n\nThank you,\nExample Company"
+            msg.body = f"Hello {user.username},\n\nYour OTP for resetting your password is {otp}. This OTP will expire in 5 minutes. Please use this OTP to reset your password.\n\nThank you,\nLCDA Team"
             from lowcodeanal.app import mail
             mail.send(msg) # assuming you have a Flask-Mail instance named mail
 
