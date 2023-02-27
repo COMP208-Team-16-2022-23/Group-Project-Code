@@ -151,8 +151,6 @@ def forgot_password():
         else:
             # generate an OTP and save it to user's data
             otp = randint(100000, 999999)
-            user.otp = otp
-            user.otp_expiry = datetime.utcnow() + timedelta(minutes=5) # OTP will expire in 5 minutes
             db_session.commit()
 
             # send the OTP to user's email
@@ -163,7 +161,7 @@ def forgot_password():
 
             session['reset_email'] = email # store the email in session for verification in reset_password() view
             session['otp'] = otp # store the OTP in session for verification in reset_password() view
-            session['otp_expiry'] = user.otp_expiry # store the OTP expiry in session for verification in reset_password() view
+            session['otp_expiry'] = datetime.utcnow() + timedelta(minutes=5) # OTP will expire in 5 minutes # store the OTP expiry in session for verification in reset_password() view
             flash('An OTP has been sent to your email address.')
             return redirect(url_for('auth.reset_password'))
 
