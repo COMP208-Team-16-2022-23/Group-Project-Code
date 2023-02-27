@@ -8,7 +8,7 @@
     <!-- MDB icon -->
     <link rel="icon" href="../static/img/mdb-favicon.ico" type="image/x-icon" />
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!--    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">-->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -23,51 +23,52 @@
   </head>
   <body>
     <!-- Start your project here-->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-mdb-toggle=""
-      data-mdb-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <i class="fas fa-bars"></i>LCDA
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav mx-auto fs-4">
-        <li class="nav-item">
-          <a class="nav-link active ms-5 me-5 text-center" href="/my_data">My Data</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active ms-5 me-5 text-center" href="/data_process">Data Process</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active ms-5 me-5 text-center" aria-current="page" href="/data_analysis">Data Analysis</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active ms-5 me-5 text-center" aria-current="page" href="/node_editor">Node Editor</a>
-        </li>
-      </ul>
+    <div class="container-fluid">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-mdb-toggle=""
+                data-mdb-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+          <i class="fas fa-bars"></i>LCDA
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav mx-auto fs-4">
+            <li class="nav-item">
+              <a class="nav-link active ms-5 me-5 text-center" href="/my_data">My Data</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active ms-5 me-5 text-center" href="/data_process">Data Process</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active ms-5 me-5 text-center" aria-current="page" href="/data_analysis">Data Analysis</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active ms-5 me-5 text-center" aria-current="page" href="/node_editor">Node Editor</a>
+            </li>
+          </ul>
+        </div>
+        <div class="d-flex align-items-center fs-5">
+          {% if login %}
+          <button type="button" class="btn btn-danger me-3">
+            <a href="/auth/logout"></a>Log out
+          </button>
+          {% else %}
+          <button type="button" class="btn btn-link px-3 me-2">
+            <a href="/auth/login">Login</a>
+          </button>
+          <button type="button" class="btn btn-primary me-3">
+            <a href="/auth/register"></a>Register
+          </button>
+          {% endif %}
+        </div>
+      </nav>
     </div>
-      <div class="d-flex align-items-center fs-5">
-        {% if login %}
-        <button type="button" class="btn btn-danger me-3">
-          <a href="/logout"></a>Log out
-        </button>
-        {% else %}
-        <button type="button" class="btn btn-link px-3 me-2">
-          <a href="/login">Login</a>
-        </button>
-        <button type="button" class="btn btn-primary me-3">
-          <a href="/register"></a>Register
-        </button>
-        {% endif %}
-      </div>
-  </div>
-  </nav>
+    {% block content %}{% endblock %}
     <!-- End your project here-->
 
     <!-- MDB -->
@@ -97,5 +98,4 @@
 <!--    {% for message in get_flashed_messages() %}-->
 <!--    <div class="flash">{{ message }}</div>-->
 <!--    {% endfor %}-->
-<!--    {% block content %}{% endblock %}-->
 <!--</section>-->

@@ -110,9 +110,8 @@ def register():
             error = 'Password is required.'
         elif not email:
             error = 'Email is required.'
-        ## the two passwords are not the same
-        elif password != password_confirm:
-            error = 'The two passwords you entered are not the same.'
+        elif password != password_confirm:  # the two passwords are not the same
+            error = 'The passwords you have entered do not match.'
 
         if error is None:
             try:
