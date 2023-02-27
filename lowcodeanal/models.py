@@ -12,7 +12,7 @@ class User(Base):
     password = Column(String(500), nullable=False)
     password_reminder = Column(String(500), nullable=True)
     join_date = Column(DateTime, default=datetime.utcnow)
-    last_password_change_time = Column(DateTime, unique=False, nullable=True, default=datetime.utcnow)
+    last_password_change_time = Column(DateTime, default=datetime.utcnow)
     last_login = Column(DateTime, unique=False, nullable=True)
 
     def __init__(self, email=None, username=None, password=None, password_reminder=None):
