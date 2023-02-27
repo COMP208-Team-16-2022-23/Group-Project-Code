@@ -7,4 +7,5 @@ dependencies:
   - pandas
   - matplotlib
   - flask-sqlalchemy
+  - conda-forge::flask-mail
   - pymysql
