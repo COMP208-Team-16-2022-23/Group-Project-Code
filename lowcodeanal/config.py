@@ -18,4 +18,10 @@ MAIL_USE_SSL = True
 MAIL_USERNAME = 'lcda.team.2023@gmail.com'
 MAIL_PASSWORD = 'uwiyqlxbdizognpr'
 MAIL_DEFAULT_SENDER = 'LCDA Team'
-MAIL_MAX_EMAILS= None
+MAIL_MAX_EMAILS = None
+
+# Configuration variables for the file upload
+UPLOAD_FOLDER = 'lowcodeanal/static/uploads'
+
+# product name
+PRODUCT_NAME = 'LCDA'

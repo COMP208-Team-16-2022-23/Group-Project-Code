@@ -27,6 +27,11 @@ from flask_mail import Message
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
+import config
+
+##  product name
+product_name = config.PRODUCT_NAME
+
 
 def login_required(view):
     """View decorator that redirects anonymous users to the login page."""
@@ -124,7 +129,7 @@ def register():
                             password_reminder=password_reminder)
                 db_session.add(user)
                 db_session.commit()
-                flash('Your account has been created successfully.')
+                flash('Your LCDA account has been created successfully.')
                 # send confirmation email
                 msg = Message('Welcome to LCDA', recipients=[email])
                 msg.body = f'Hi {username},\n\nWelcome to LCDA. Your account has been created successfully.\n\nThank you,\nLCDA Team'
@@ -168,17 +173,18 @@ def forgot_password():
             db_session.commit()
 
             # send the OTP to user's email
-            msg = Message('Reset Password - OTP Verification', recipients=[email])
-            msg.body = f"Hello {user.username},\n\nYour OTP for resetting your password is {otp}. This OTP will expire in 5 minutes. Please use this OTP to reset your password.\n\nThank you,\nLCDA Team"
+            msg = Message('Reset your LCDA password - OTP Verification', recipients=[email])
+            msg.body = f"Hello {user.username},\n\nYour OTP for resetting your password is {otp}. This OTP will expire in 5 minutes. Please use this OTP to reset your password.\n\nThank you for using LCDA,\nLCDA Team"
             from lowcodeanal.app import mail
             try:
-                mail.send(msg) # Flask-Mail instance named mail
+                mail.send(msg)  # Flask-Mail instance named mail
             except Exception as e:
                 flash('An error occurred while sending the OTP. Please try again.')
                 return redirect(url_for('auth.forgot_password'))
-            session['reset_email'] = email # store the email in session for verification in reset_password() view
-            session['otp'] = otp # store the OTP in session for verification in reset_password() view
-            session['otp_expiry'] = datetime.utcnow() + timedelta(minutes=5) # OTP will expire in 5 minutes # store the OTP expiry in session for verification in reset_password() view
+            session['reset_email'] = email  # store the email in session for verification in reset_password() view
+            session['otp'] = otp  # store the OTP in session for verification in reset_password() view
+            session['otp_expiry'] = datetime.utcnow() + timedelta(
+                minutes=5)  # OTP will expire in 5 minutes # store the OTP expiry in session for verification in reset_password() view
             flash('An OTP has been sent to your email address.')
             return redirect(url_for('auth.reset_password'))
 
@@ -219,11 +225,25 @@ def reset_password():
             user.last_password_change_time = datetime.utcnow()
             try:
                 db_session.commit()
+                flash('Your password has been reset successfully. Please log in with your new password.')
             except Exception as e:
                 flash('An error occurred while resetting your password.')
                 return redirect(url_for('auth.reset_password'))
+            # else:
+            #     # send success email to user
+            #     msg = Message('Your LCDA password was reset', recipients=[email])
+            #     msg.body = f"Hello {user.username},\n\nThis email is to confirm that your LCDA password was changed at {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')}.\n\n"
+            #     msg.body += "If you have not recently changed your password or believe you have been sent this message in error, please contact the LCDA team immediately.\n\n"
+            #     msg.body += "Thank you for using LCDA,\nLCDA Team"
+            #     from lowcodeanal.app import mail
+            #     try:
+            #         mail.send(msg)  # Flask-Mail instance named mail
+            #     except Exception as e:
+            #         pass
+            # # flash('Your password has been reset successfully. Please log in with your new password.')
+            # # clear the session
+            # session.clear()
             session.pop('reset_email', None)
-            flash('Your password has been reset successfully. Please log in with your new password.')
             return redirect(url_for('auth.login'))
 
     return render_template('auth/reset_password.html')
