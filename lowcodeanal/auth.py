@@ -21,6 +21,7 @@ from sqlalchemy import exc
 from datetime import datetime
 
 from database import db_session
+
 from models import User
 
 from flask_mail import Message
@@ -131,14 +132,31 @@ def register():
                 db_session.commit()
                 flash('Your LCDA account has been created successfully.')
                 # send confirmation email
-                msg = Message('Welcome to LCDA', recipients=[email])
-                msg.body = f'Hi {username},\n\nWelcome to LCDA. Your account has been created successfully.\n\nThank you,\nLCDA Team'
-                from lowcodeanal.app import mail
-                try:
-                    mail.send(msg)  # Flask-Mail instance named mail
-                except Exception as e:
+                subject = 'Welcome to LCDA'
+                body = f'Hi {username},\n\nWelcome to LCDA. Your account has been created successfully.\n\nThank you,\nLCDA Team'
+                recipients = [email]
+                from lowcodeanal import email_sender
+                error = email_sender.send(recipients, subject, body)
+                if error:
                     flash('Welcome email failed to send.')
                     return redirect(url_for("auth.login"))
+                # ## old code
+                # msg = Message('Welcome to LCDA', recipients=[email])
+                # msg.body = f'Hi {username},\n\nWelcome to LCDA. Your account has been created successfully.\n\nThank you,\nLCDA Team'
+                # from lowcodeanal.app import mail
+                # try:
+                #     mail.send(msg)  # Flask-Mail instance named mail
+                # except Exception as e:
+                #     flash('Welcome email failed to send.')
+                #     return redirect(url_for("auth.login"))
+                # ##
+                # ## failed code
+                # from concurrent.futures import ThreadPoolExecutor
+                # executor = ThreadPoolExecutor(2)
+                # executor.submit(email_sender.send, recipients, subject, body)
+                # print('email rerquest sent')
+                # ##
+
             except exc.IntegrityError:
                 error = f'User {username} is already registered.'
             else:
