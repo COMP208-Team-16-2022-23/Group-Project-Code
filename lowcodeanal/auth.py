@@ -150,6 +150,13 @@ def register():
                 #     flash('Welcome email failed to send.')
                 #     return redirect(url_for("auth.login"))
                 # ##
+                # ## failed code
+                # from concurrent.futures import ThreadPoolExecutor
+                # executor = ThreadPoolExecutor(2)
+                # executor.submit(email_sender.send, recipients, subject, body)
+                # print('email rerquest sent')
+                # ##
+
             except exc.IntegrityError:
                 error = f'User {username} is already registered.'
             else:
