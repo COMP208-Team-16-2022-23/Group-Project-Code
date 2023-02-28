@@ -56,14 +56,14 @@
           {% if g.user %}
           <li><span>{{ g.user['username'] }}</span>
             <button type="button" class="btn btn-danger me-3">
-              <a href="/auth/logout"></a>Log out
+              <a href="/auth/logout" class="text-white">Log out</a>
             </button>
             {% else %}
             <button type="button" class="btn btn-link px-3 me-2">
               <a href="/auth/login">Login</a>
             </button>
             <button type="button" class="btn btn-primary me-3">
-              <a href="/auth/register"></a>Register
+              <a href="/auth/register" class="text-white">Register</a>
             </button>
           {% endif %}
         </div>

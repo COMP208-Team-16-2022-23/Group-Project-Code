@@ -6,7 +6,11 @@
 <body>
 
 <h1>Test webpage for 2022/23-COMP208-Team16</h1>
+{% if g.user %}
+<p>Welcome back, {{g.user['username']}}</p>
+{% else%}
 <p>Nice to see you!</p>
+{% endif%}
 
 <!-- set the link to sign up page?-->
 <p>Don't have an account? <br><a href='/auth/register'><b>Sign up here</b></a></p>

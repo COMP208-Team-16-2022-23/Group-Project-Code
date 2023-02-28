@@ -85,7 +85,7 @@ def login():
             session['user_id'] = user.id
             user.last_login = datetime.utcnow()
             db_session.commit()
-            return redirect(url_for('index'))
+            return redirect(url_for('my_data.mydata', g=g))
 
         flash(error)
 
@@ -151,7 +151,7 @@ def register():
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('index', g=g))
 
 # password reset
 # route to render the forgot password page
