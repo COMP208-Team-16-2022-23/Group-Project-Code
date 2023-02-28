@@ -2,18 +2,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-with open('database.config', 'r') as f:
-    lines = f.read().split(',\n')
+import config
 
-host = lines[0].strip().split('=')[1].replace("'", "")
-port = lines[1].strip().split('=')[1].replace("'", "")
-user = lines[2].strip().split('=')[1].replace("'", "")
-password = lines[3].strip().split('=')[1].replace("'", "")
-database = lines[4].strip().split('=')[1].replace("'", "")
-prefix = lines[5].strip().split('=')[1].replace("'", "")
+hostname = config.HOSTNAME
+port = config.PORT
+database = config.DATABASE
+username = config.USERNAME
+password = config.PASSWORD
 
 # build the connection string
-connection_string = f'{prefix}://{user}:{password}@{host}:{port}/{database}'
+connection_string = f'mysql+pymysql://{username}:{password}@{hostname}:{port}/{database}'
 
 # dialect://username:password@host:port/database e.g. mysql://scott:tiger@localhost/project
 engine = create_engine(connection_string)

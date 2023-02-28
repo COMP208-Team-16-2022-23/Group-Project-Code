@@ -3,12 +3,12 @@ from datetime import timedelta
 SECRET_KEY = 'COMP208_Team16'
 PERMANENT_SESSION_LIFETIME = timedelta(minutes=45)
 
-# Configuration variables for the database
-HOSTNAME = '127.0.0.1'
+# Configuration for the database
+HOSTNAME = 'comp208-team16.ctw17gkeyu80.eu-west-2.rds.amazonaws.com'
 PORT = '3306'
-DATABASE = 'comp208'
+DATABASE = 'project'
 USERNAME = 'root'
-PASSWORD = '11111111'
+PASSWORD = '5hqYXX55sFnIirPD868G'
 
 # Configuration variables for email
 # configure the mail settings
