@@ -124,6 +124,16 @@ def register():
                             password_reminder=password_reminder)
                 db_session.add(user)
                 db_session.commit()
+                flash('Your account has been created successfully.')
+                # send confirmation email
+                msg = Message('Welcome to LCDA', recipients=[email])
+                msg.body = f'Hi {username},\n\nWelcome to LCDA. Your account has been created successfully.\n\nThank you,\nLCDA Team'
+                from lowcodeanal.app import mail
+                try:
+                    mail.send(msg)  # Flask-Mail instance named mail
+                except Exception as e:
+                    flash('Welcome email failed to send.')
+                    return redirect(url_for("auth.login"))
             except exc.IntegrityError:
                 error = f'User {username} is already registered.'
             else:
@@ -144,7 +154,11 @@ def logout():
 def forgot_password():
     if request.method == 'POST':
         email = request.form['email']
-        user = User.query.filter_by(email=email).first()
+        try:
+            user = User.query.filter_by(email=email).first()
+        except Exception as e:
+            flash('An error occurred while processing your request. Please try again.')
+            return redirect(url_for('auth.forgot_password'))
         if not user:
             flash('Email address not found.')
             return redirect(url_for('auth.forgot_password'))
@@ -157,8 +171,11 @@ def forgot_password():
             msg = Message('Reset Password - OTP Verification', recipients=[email])
             msg.body = f"Hello {user.username},\n\nYour OTP for resetting your password is {otp}. This OTP will expire in 5 minutes. Please use this OTP to reset your password.\n\nThank you,\nLCDA Team"
             from lowcodeanal.app import mail
-            mail.send(msg) # assuming you have a Flask-Mail instance named mail
-
+            try:
+                mail.send(msg) # Flask-Mail instance named mail
+            except Exception as e:
+                flash('An error occurred while sending the OTP. Please try again.')
+                return redirect(url_for('auth.forgot_password'))
             session['reset_email'] = email # store the email in session for verification in reset_password() view
             session['otp'] = otp # store the OTP in session for verification in reset_password() view
             session['otp_expiry'] = datetime.utcnow() + timedelta(minutes=5) # OTP will expire in 5 minutes # store the OTP expiry in session for verification in reset_password() view
@@ -200,8 +217,11 @@ def reset_password():
             user.password = generate_password_hash(password, salt_length=128)
             # update the last password reset time
             user.last_password_change_time = datetime.utcnow()
-            db_session.commit()
-
+            try:
+                db_session.commit()
+            except Exception as e:
+                flash('An error occurred while resetting your password.')
+                return redirect(url_for('auth.reset_password'))
             session.pop('reset_email', None)
             flash('Your password has been reset successfully. Please log in with your new password.')
             return redirect(url_for('auth.login'))
