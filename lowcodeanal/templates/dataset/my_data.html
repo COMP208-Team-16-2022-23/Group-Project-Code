@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-{%extends "base.html" %}
-<body>
-    <p>
-        <a href="/my_data"><button>My Data</button></a>
-        <a href="/data_analysis"><button>Data Analysis</button></a>
-        <a href="/data_process"><button>Data Process</button></a>
-<!--        <a href="/node_editor"><button>Node Editor</button></a>-->
-        <b><a href = '/signin'>Sign in</a></b>
-    </p>
-</body>
+{% extends 'base.html' %}
+
+{% block title %}{% endblock %}
+
+{% block content %}
+    <form action = "" method = "POST"
+         enctype = "multipart/form-data">
+         <input type = "file" name = "file" />
+         <input type = "submit"/>
+    </form>
+{% endblock %}
