@@ -22,6 +22,7 @@ def mydata():
 
 @my_data.route('/my_data/uploader', methods=['GET', 'POST'])
 def uploader():
+    dict_files = os.listdir('temp_files')
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -41,8 +42,9 @@ def uploader():
             filename = secure_filename(file.filename)
             file.save(os.path.join('temp_files', filename))
             # todo fix that cannot fetch g or session
-            a = g
+            # a = g
             # change to a new page e.g. preview page
-            return render_template('dataset/my_data.html')
-    return render_template('dataset/my_data.html')
+            dict_files = os.listdir('temp_files')
+            return render_template('dataset/my_data.html', list=dict_files)
+    return render_template('dataset/my_data.html', list=dict_files)
 
