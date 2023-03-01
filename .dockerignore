@@ -5,3 +5,7 @@ README.md
 *.pyd
 __pycache__
 .pytest_cache
+misc
+instance
+.idea
+.DS_Store
