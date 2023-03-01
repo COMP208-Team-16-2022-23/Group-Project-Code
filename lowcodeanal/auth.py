@@ -193,7 +193,7 @@ def forgot_password():
             # send the OTP to user's email
             msg = Message('Reset your LCDA password - OTP Verification', recipients=[email])
             msg.body = f"Hello {user.username},\n\nYour OTP for resetting your password is {otp}. This OTP will expire in 5 minutes. Please use this OTP to reset your password.\n\nThank you for using LCDA,\nLCDA Team"
-            from lowcodeanal.app import mail
+            from app import mail
             try:
                 mail.send(msg)  # Flask-Mail instance named mail
             except Exception as e:
