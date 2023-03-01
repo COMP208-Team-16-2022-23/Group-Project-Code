@@ -7,20 +7,21 @@ from flask import Blueprint, request, render_template, session, redirect, g, fla
 from werkzeug.utils import secure_filename
 import os
 
-my_data = Blueprint('my_data', __name__, template_folder='templates')
+bp = Blueprint('my_data', __name__, template_folder='templates')
 
 
-@my_data.route("/my_data", methods=['GET', 'POST'])
+@bp.route("/my_data", methods=['GET', 'POST'])
 def mydata():
-    return redirect(url_for('my_data.uploader'))
+    # return redirect(url_for('my_data.uploader'))
 
+    return render_template('dataset/my_data.html')
 
 # define file allowance
 # def allowed_file(filename):
 #     return '.' in filename and \
 #            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@my_data.route('/my_data/uploader', methods=['GET', 'POST'])
+@bp.route('/my_data/uploader', methods=['GET', 'POST'])
 def uploader():
     dict_files = os.listdir('temp_files')
     if request.method == 'POST':

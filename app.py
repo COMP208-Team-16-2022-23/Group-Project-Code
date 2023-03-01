@@ -6,7 +6,7 @@ from components import auth
 
 from flask_mail import Mail
 
-from components.data_manager import my_data
+from components import data_manager
 # from . import data_analyse
 # from blueprints.node_editor import node_editer
 
@@ -43,9 +43,7 @@ def index():
 
 
 app.register_blueprint(auth.bp)
-
-
-app.register_blueprint(my_data)
+app.register_blueprint(data_manager.bp)
 # app.register_blueprint(data_analyse)
 
 
