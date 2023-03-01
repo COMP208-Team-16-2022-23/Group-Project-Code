@@ -1,4 +1,5 @@
 # Low-Code Data Analysis Platform
+
 University of
 Liverpool [2022/23 COMP208 Group Software Project](https://tulip.liv.ac.uk/mods/student/COMP208_202223.htm) - Team 16:
 Project Source Code
@@ -6,6 +7,24 @@ Project Source Code
 ### Welcome
 
 This is the code repo of COMP208 Team 16.
+
+### Documents
+
+**Offical documents:**
+
+*
+Flask: [English](https://flask.palletsprojects.com/en/latest/) | [Simplified Chinese](https://dormousehole.readthedocs.io/en/latest/)
+* Flask-SQLAlchemy: [English](https://flask-sqlalchemy.palletsprojects.com/en/latest/)
+* Flask-Email: [English](https://pythonhosted.org/Flask-Mail/)
+*
+Vue: [English](https://vuejs.org/guide/introduction.html) | [Simplified Chinese](https://cn.vuejs.org/guide/introduction.html)
+*
+Bootstrap: [English](https://getbootstrap.com/docs/5.3/getting-started/introduction/) | [Simplified Chinese](https://v5.bootcss.com/docs/getting-started/introduction/)
+* MDBootstrap: [English](https://mdbootstrap.com/)
+
+**Unofficial documents**
+
+* Flask extension documentation: [Simplified Chinese](https://wizardforcel.gitbooks.io/flask-extension-docs/content/)
 
 ### Creating an environment from a yaml file
 
