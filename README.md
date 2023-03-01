@@ -8,20 +8,26 @@ Project Source Code
 
 This is the code repo of COMP208 Team 16.
 
+### Warning
+
+<strong>Think twice before git PUSH. 三思而后行</strong>(Chinese) It may affect other contributors and the web server.
+
+Please ensure that your push does not interfere with the normal function of the original. Please carry out tests first.
+
 ### Documents
 
 **Offical documents:**
 
-* Flask: [English](https://flask.palletsprojects.com/en/latest/) | [Simplified Chinese](https://dormousehole.readthedocs.io/en/latest/)
+* Flask: [English](https://flask.palletsprojects.com/en/latest/) | [简体中文](https://dormousehole.readthedocs.io/en/latest/)
 * Flask-SQLAlchemy: [English](https://flask-sqlalchemy.palletsprojects.com/en/latest/)
 * Flask-Email: [English](https://pythonhosted.org/Flask-Mail/)
-* Vue: [English](https://vuejs.org/guide/introduction.html) | [Simplified Chinese](https://cn.vuejs.org/guide/introduction.html)
-* Bootstrap: [English](https://getbootstrap.com/docs/5.3/getting-started/introduction/) | [Simplified Chinese](https://v5.bootcss.com/docs/getting-started/introduction/)
+* Vue: [English](https://vuejs.org/guide/introduction.html) | [简体中文](https://cn.vuejs.org/guide/introduction.html)
+* Bootstrap: [English](https://getbootstrap.com/docs/5.3/getting-started/introduction/) | [简体中文](https://v5.bootcss.com/docs/getting-started/introduction/)
 * MDBootstrap: [English](https://mdbootstrap.com/)
 
 **Unofficial documents**
 
-* Flask extension documentation: [Simplified Chinese](https://wizardforcel.gitbooks.io/flask-extension-docs/content/)
+* Flask extension documentation: [简体中文](https://wizardforcel.gitbooks.io/flask-extension-docs/content/)
 
 ### Creating an environment from a yaml file
 
@@ -65,11 +71,9 @@ pipreqs . --encoding=utf8
 
 ### Advice
 
-Think twice before git PUSH.
-
 You can learn more about git from git-scm.com: [English](https://git-scm.com/book/en/v2)
-| [Simplified Chinese](https://git-scm.com/book/zh/v2)
+| [简体中文](https://git-scm.com/book/zh/v2)
 
 Or you can read “Flight rules for Git” for a more accessible
 tutorial: [English](https://github.com/k88hudson/git-flight-rules/blob/master/README.md)
-| [Simplified Chinese](https://github.com/k88hudson/git-flight-rules/blob/master/README_zh-CN.md)
+| [简体中文](https://github.com/k88hudson/git-flight-rules/blob/master/README_zh-CN.md)
