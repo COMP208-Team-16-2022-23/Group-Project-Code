@@ -246,20 +246,20 @@ def reset_password():
             except Exception as e:
                 flash('An error occurred while resetting your password.')
                 return redirect(url_for('auth.reset_password'))
-            # else:
-            #     # send success email to user
-            #     msg = Message('Your LCDA password was reset', recipients=[email])
-            #     msg.body = f"Hello {user.username},\n\nThis email is to confirm that your LCDA password was changed at {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')}.\n\n"
-            #     msg.body += "If you have not recently changed your password or believe you have been sent this message in error, please contact the LCDA team immediately.\n\n"
-            #     msg.body += "Thank you for using LCDA,\nLCDA Team"
-            #     from lowcodeanal.app import mail
-            #     try:
-            #         mail.send(msg)  # Flask-Mail instance named mail
-            #     except Exception as e:
-            #         pass
-            # # flash('Your password has been reset successfully. Please log in with your new password.')
-            # # clear the session
-            # session.clear()
+            else:
+                # send success email to user
+                msg = Message('Your LCDA password was reset', recipients=[email])
+                msg.body = f"Hello {user.username},\n\nThis email is to confirm that your LCDA password was changed at {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')}.\n\n"
+                msg.body += "If you have not recently changed your password or believe you have been sent this message in error, please contact the LCDA team immediately.\n\n"
+                msg.body += "Thank you for using LCDA,\nLCDA Team"
+                from app import mail
+                try:
+                    mail.send(msg)  # Flask-Mail instance named mail
+                except Exception as e:
+                    pass
+            # flash('Your password has been reset successfully. Please log in with your new password.')
+            # clear the session
+            session.clear()
             session.pop('reset_email', None)
             return redirect(url_for('auth.login'))
 
