@@ -25,5 +25,4 @@ Base.query = db_session.query_property()
 
 
 def init_db():
-    import models  # import all tables from models.py, do not remove this line even if it is marked as unused
     Base.metadata.create_all(bind=engine)

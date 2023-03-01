@@ -1,6 +1,4 @@
-from datetime import timedelta
-
-from flask import Flask, request, session, url_for, redirect, render_template
+from flask import Flask, render_template
 import os
 
 import database as db

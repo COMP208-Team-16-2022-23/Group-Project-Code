@@ -3,3 +3,4 @@ Flask_Mail
 PyMySQL
 SQLAlchemy
 Werkzeug
+gunicorn==20.1.0

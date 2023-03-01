@@ -4,8 +4,7 @@
 """User System. Handle operations including signin, signup and sign out. Get and update user state"""
 import functools
 from random import randint
-from datetime import datetime, timedelta
-from time import timezone
+from datetime import timedelta
 
 from flask import Blueprint
 from flask import flash
