@@ -21,7 +21,7 @@ from datetime import datetime
 
 from database import db_session
 
-from models import User
+from util.models import User
 
 from flask_mail import Message
 
@@ -134,7 +134,7 @@ def register():
                 subject = 'Welcome to LCDA'
                 body = f'Hi {username},\n\nWelcome to LCDA. Your account has been created successfully.\n\nThank you,\nLCDA Team'
                 recipients = [email]
-                import email_sender
+                from util import email_sender
                 error = email_sender.send(recipients, subject, body)
                 if error:
                     flash('Welcome email failed to send.')

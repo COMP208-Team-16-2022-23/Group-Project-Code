@@ -2,11 +2,11 @@ from flask import Flask, render_template
 import os
 
 import database as db
-import auth
+from components import auth
 
 from flask_mail import Mail
 
-from data_manager import my_data
+from components.data_manager import my_data
 # from . import data_analyse
 # from blueprints.node_editor import node_editer
 
