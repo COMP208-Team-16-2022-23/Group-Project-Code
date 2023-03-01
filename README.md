@@ -8,13 +8,36 @@ Project Source Code
 
 This is the code repo of COMP208 Team 16.
 
-### Warning
+## Reqirements
+
+### git PUSH
 
 <strong>Think twice before git PUSH. 三思而后行</strong>(Chinese) It may affect other contributors and the web server.
 
 Please ensure that your push does not interfere with the normal function of the original. Please carry out tests first.
 
-### Documents
+### ```requirements.txt```
+
+>Python requirements files are a great way to keep track of the Python modules. It is a simple text file that saves a list of the modules and packages required by your project. By creating a Python requirements.txt file, you save yourself the hassle of having to track down and install all of the required modules manually.
+[Reference](https://learnpython.com/blog/python-requirements-file/)
+
+<strong>This is one of the key file for deployment.</strong>
+Deployment fails if the package used is not in this list.
+So make sure that you update the requirements.txt file when using new Python packages.
+```shell
+# install pipreqs if you don't have it
+pip install pipreqs
+```
+
+```shell
+# generate requirements.txt in the current directory
+pipreqs . --encoding=utf8
+```
+
+All done!
+
+
+## Documents
 
 **Offical documents:**
 
@@ -50,26 +73,27 @@ both x86 and arm64 architectures.
 
 ### Install python packages use requirements.txt
 
-**Please use conda first to install python packages.** Mixed use of conda and pip may cause some problems.
+**Please use conda first to install python packages.** Mixed use of conda and pip might cause some problems.
+Chances are, some packages would only be available through pip.
 
-Jetbrains IDEs will automatically detect the requirements.txt file and install the packages with one click.
+Jetbrains IDEs will automatically detect the requirements.txt file. 
+Click "Install" to install all the packages.
+(Recommended)
 
-Or you can use the following command to install the packages:
+Or you can use one of the following commands to install the packages:
+
 
 ```shell
+# Use conda
 conda install --yes --file requirements.txt
-```    
-
-Please remember to update the requirements.txt file when using new python packages.
-
-```shell
-# install pipreqs if you don't have it
-conda install -c conda-forge pipreqs
-# generate requirements.txt in the current directory
-pipreqs . --encoding=utf8
 ```
 
-### Advice
+```shell
+# Use pip
+pip install -r requirements.txt
+```
+
+### Others
 
 You can learn more about git from git-scm.com: [English](https://git-scm.com/book/en/v2)
 | [简体中文](https://git-scm.com/book/zh/v2)
