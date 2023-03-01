@@ -63,10 +63,6 @@ conda install -c conda-forge pipreqs
 pipreqs . --encoding=utf8
 ```
 
-### Code Requirements
-
-To ensure successfully deployed, please do not include
-
 ### Advice
 
 Think twice before git PUSH.
