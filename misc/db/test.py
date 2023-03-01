@@ -1,4 +1,4 @@
-import mysql.connector
+# import mysql.connector
 import pymysql
 
 
@@ -16,15 +16,15 @@ def mysql_connector():
 
     ## connecting to the database using 'connect()' method
     ## it takes 3 required parameters 'host', 'user', 'password'
-    db = mysql.connector.connect(
-        host=data[0],
-        user=data[1],
-        password=data[2]
-    )
-
-    print(db)  # it will print a connection object if everything is fine
-
-    db.close()
+    # db = mysql.connector.connect(
+    #     host=data[0],
+    #     user=data[1],
+    #     password=data[2]
+    # )
+    #
+    # print(db)  # it will print a connection object if everything is fine
+    #
+    # db.close()
 
 
 def pymysql():

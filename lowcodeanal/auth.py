@@ -135,7 +135,7 @@ def register():
                 subject = 'Welcome to LCDA'
                 body = f'Hi {username},\n\nWelcome to LCDA. Your account has been created successfully.\n\nThank you,\nLCDA Team'
                 recipients = [email]
-                from lowcodeanal import email_sender
+                import email_sender
                 error = email_sender.send(recipients, subject, body)
                 if error:
                     flash('Welcome email failed to send.')

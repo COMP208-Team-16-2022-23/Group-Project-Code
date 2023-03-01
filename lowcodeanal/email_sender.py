@@ -1,5 +1,5 @@
 from flask_mail import Message
-from lowcodeanal.app import mail
+from app import mail
 
 
 def send(recipients, subject, body):
