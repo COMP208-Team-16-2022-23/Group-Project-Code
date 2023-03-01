@@ -1,102 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
     <title>{% block title %}{% endblock %} - LCDA</title>
     <!-- MDB icon -->
-    <link rel="icon" href="../static/img/mdb-favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="../static/img/LCDA.ico" type="image/x-icon"/>
     <!-- Font Awesome -->
-    <!--    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">-->
     <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
     />
-    <!-- Google Fonts Roboto -->
+    <!-- Google Fonts -->
     <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+            rel="stylesheet"
     />
     <!-- MDB -->
-    <link rel="stylesheet" href='../static/css/mdb.min.css' />
-  </head>
-  <body>
-    <!-- Start your project here-->
-    <div class="container-fluid">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css"
+            rel="stylesheet"
+    />
+</head>
+<body>
+<!-- Start your project here-->
+<div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <button
                 class="navbar-toggler"
                 type="button"
-                data-mdb-toggle=""
-                data-mdb-target="#navbarNav"
-                aria-controls="navbarNav"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarCenteredExample"
+                aria-controls="navbarCenteredExample"
                 aria-expanded="false"
                 aria-label="Toggle navigation"
         >
-          <i class="fas fa-bars"></i>LCDA
+            <i class="fas fa-bars"></i>LCDA
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav mx-auto fs-4">
-            <li class="nav-item">
-              <a class="nav-link active ms-5 me-5 text-center" href="/my_data">My Data</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active ms-5 me-5 text-center" href="/data_process">Data Process</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active ms-5 me-5 text-center" aria-current="page" href="/data_analysis">Data Analysis</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active ms-5 me-5 text-center" aria-current="page" href="/node_editor">Node Editor</a>
-            </li>
-          </ul>
+
+        <!-- Collapsible wrapper -->
+        <div
+                class="collapse navbar-collapse justify-content-center"
+                id="navbar"
+        >
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/my_data">My Data</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active ms-5 me-5 text-center" href="/data_process">Data Process</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active ms-5 me-5 text-center" aria-current="page" href="/data_analysis">Data
+                        Analysis</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active ms-5 me-5 text-center" aria-current="page" href="/node_editor">Node
+                        Editor</a>
+                </li>
+            </ul>
         </div>
         <div class="d-flex align-items-center fs-5">
-          {% if g.user %}
-          <li><span>{{ g.user['username'] }}</span>
-            <button type="button" class="btn btn-danger me-3">
-              <a href="/auth/logout" class="text-white">Log out</a>
-            </button>
-            {% else %}
-            <button type="button" class="btn btn-link px-3 me-2">
-              <a href="/auth/login">Login</a>
-            </button>
-            <button type="button" class="btn btn-primary me-3">
-              <a href="/auth/register" class="text-white">Register</a>
-            </button>
-          {% endif %}
+            {% if g.user %}
+            <li><span>{{ g.user['username'] }}</span>
+                <button type="button" class="btn btn-danger me-3">
+                    <a href="/auth/logout" class="text-white">Log out</a>
+                </button>
+                {% else %}
+                <button type="button" class="btn btn-link px-3 me-2">
+                    <a href="/auth/login">Login</a>
+                </button>
+                <button type="button" class="btn btn-primary me-3">
+                    <a href="/auth/register" class="text-white">Register</a>
+                </button>
+                {% endif %}
         </div>
-      </nav>
-    </div>
-    {% block content %}{% endblock %}
-    <!-- End your project here-->
+    </nav>
+</div>
+{% block content %}{% endblock %}
+<!-- End your project here-->
 
-    <!-- MDB -->
-    <script type="text/javascript" src="../static/js/mdb.min.js"></script>
-    <!-- Custom scripts -->
-    <script type="text/javascript"></script>
-  </body>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
+</body>
 </html>
-
-<!-- old base.html (relic)-->
-<!--<nav>-->
-<!--    <h1>Low-Code Data Analysis Platform</a></h1>-->
-<!--    <ul>-->
-<!--        {% if g.user %}-->
-<!--        <li><span>{{ g.user['username'] }}</span>-->
-<!--        <li><a href="{{ url_for('auth.logout') }}">Log Out</a>-->
-<!--            {% else %}-->
-<!--        <li><a href="{{ url_for('auth.register') }}">Register</a>-->
-<!--        <li><a href="{{ url_for('auth.login') }}">Log In</a>-->
-<!--            {% endif %}-->
-<!--    </ul>-->
-<!--</nav>-->
-<!--<section class="content">-->
-<!--    <header>-->
-<!--        {% block header %}{% endblock %}-->
-<!--    </header>-->
-<!--    {% for message in get_flashed_messages() %}-->
-<!--    <div class="flash">{{ message }}</div>-->
-<!--    {% endfor %}-->
-<!--</section>-->
