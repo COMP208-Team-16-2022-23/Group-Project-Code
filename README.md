@@ -12,14 +12,11 @@ This is the code repo of COMP208 Team 16.
 
 **Offical documents:**
 
-*
-Flask: [English](https://flask.palletsprojects.com/en/latest/) | [Simplified Chinese](https://dormousehole.readthedocs.io/en/latest/)
+* Flask: [English](https://flask.palletsprojects.com/en/latest/) | [Simplified Chinese](https://dormousehole.readthedocs.io/en/latest/)
 * Flask-SQLAlchemy: [English](https://flask-sqlalchemy.palletsprojects.com/en/latest/)
 * Flask-Email: [English](https://pythonhosted.org/Flask-Mail/)
-*
-Vue: [English](https://vuejs.org/guide/introduction.html) | [Simplified Chinese](https://cn.vuejs.org/guide/introduction.html)
-*
-Bootstrap: [English](https://getbootstrap.com/docs/5.3/getting-started/introduction/) | [Simplified Chinese](https://v5.bootcss.com/docs/getting-started/introduction/)
+* Vue: [English](https://vuejs.org/guide/introduction.html) | [Simplified Chinese](https://cn.vuejs.org/guide/introduction.html)
+* Bootstrap: [English](https://getbootstrap.com/docs/5.3/getting-started/introduction/) | [Simplified Chinese](https://v5.bootcss.com/docs/getting-started/introduction/)
 * MDBootstrap: [English](https://mdbootstrap.com/)
 
 **Unofficial documents**
