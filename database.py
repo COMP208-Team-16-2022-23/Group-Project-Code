@@ -25,4 +25,5 @@ Base.query = db_session.query_property()
 
 
 def init_db():
+    from util import models  # import all models here to ensure they are registered properly on the metadata
     Base.metadata.create_all(bind=engine)
