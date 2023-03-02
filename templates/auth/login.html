@@ -6,7 +6,7 @@
 
 {% block content %}
 <div  class="m-auto" style="max-width: 400px">
-    <h1 class="text-center m-5">Log In</h1>
+    <h1 class="text-center m-5">LCDA</h1>
     {% if error %}
         <div class="alert alert-danger" role="alert">
             {{ error }}
@@ -24,11 +24,11 @@
             <input type="password" name="password" id="password" class="form-control" required/>
             <label class="form-label" for="password">Password</label>
         </div>
-        <button type="submit" class="btn btn-primary btn-block mb-4">Log In</button>
+        <button type="submit" class="btn btn-primary btn-block mb-4">Sign In</button>
     </form>
 
-    <a href="{{ url_for('auth.forgot_password') }}">  Reset password</a></p>
-    <a href="{{ url_for('auth.register') }}">  Sign up</a> </p>
+    <a href="{{ url_for('auth.forgot_password') }}">  Forgotten your password?</a></p>
+    <a href="{{ url_for('auth.register') }}">  Create a new account</a> </p>
 
 </div>
 {% endblock %}
