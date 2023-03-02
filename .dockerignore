@@ -8,4 +8,6 @@ __pycache__
 misc
 instance
 .idea
+.git
+.gitignore
 .DS_Store
