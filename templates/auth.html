@@ -1,24 +1,117 @@
-<!doctype html>
-<title>LCDA</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<nav>
-    <h1>Low-Code Data Analysis Platform</h1>
-    <ul>
-        {% if g.user %}
-        <li><span>{{ g.user['username'] }}</span>
-        <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
-            {% else %}
-        <li><a href="{{ url_for('auth.register') }}">Register</a>
-        <li><a href="{{ url_for('auth.login') }}">Log In</a>
-            {% endif %}
-    </ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <title>{% block title %}{% endblock %} - LCDA</title>
+    <!-- Web icon -->
+    <link rel="icon" href="../static/img/LCDA.ico" type="image/x-icon"/>
+    <!-- Font Awesome -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+            href="../static/css/Roboto.fonts.css"
+            rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css"
+            rel="stylesheet"
+    />
+
+</head>
+<body>
+<!-- Start your project here-->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+
+        <!-- Toggle button -->
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Collapsible wrapper -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!-- Navbar brand -->
+            <a class="navbar-brand mb-0 h1" href="{{ url_for('index') }}">LCDA</a>
+
+            <!-- Avatar -->
+            <div class="d-flex align-items-center ms-auto">
+                {% if g.user %}
+                    <div class="dropdown">
+                        <a
+                                class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                                href="#"
+                                id="navbarDropdownMenuAvatar"
+                                role="button"
+                                data-mdb-toggle="dropdown"
+                                aria-expanded="false"
+                        >
+                            <img
+                                    src="../static/img/LCDA.ico"
+                                    class="rounded-circle"
+                                    height="25"
+                                    alt="LCDA Logo"
+                                    loading="lazy"
+                            />
+                            {{ g.user['username'] }}
+                        </a>
+
+                        <ul
+                                class="dropdown-menu dropdown-menu-end"
+                                aria-labelledby="navbarDropdownMenuAvatar"
+                        >
+
+                            <li>
+                                <a class="dropdown-item" href="#">Settings</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                {% else %}
+
+                    <a class="btn btn-link px-3 me-2" href="{{ url_for('auth.register') }}" role="button">
+                        Sign up
+                    </a>
+                    <a class="btn btn-primary me-3" href="{{ url_for('auth.login') }}" role="button">
+                        Login
+                    </a>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
 </nav>
-<section class="content">
-    <header>
-        {% block header %}{% endblock %}
-    </header>
-    {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-    {% endfor %}
+
+<div class="container-sm mt-5">
+    <div class="d-flex justify-content-center">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-primary" role="alert" style="width: 400px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+
     {% block content %}{% endblock %}
-</section>
+</div>
+
+<!-- End your project here-->
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
+</body>
+</html>
