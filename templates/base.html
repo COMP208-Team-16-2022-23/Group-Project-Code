@@ -17,11 +17,12 @@
             href="../static/css/Roboto.fonts.css"
             rel="stylesheet"
     />
-
+    <!-- MDB -->
     <link
             href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css"
             rel="stylesheet"
     />
+
 </head>
 <body>
 <!-- Start your project here-->
@@ -45,7 +46,7 @@
         <!-- Collapsible wrapper -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Navbar brand -->
-            <span class="navbar-brand mb-0 h1">LCDA</span>
+            <a class="navbar-brand mb-0 h1" href="{{ url_for('index') }}">LCDA</a>
 
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
@@ -115,7 +116,15 @@
     </div>
 </nav>
 
-{% block content %}{% endblock %}
+<div class="container-sm mt-5 mx-auto">
+    {% for message in get_flashed_messages() %}
+        <div class="alert alert-danger" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    {% block content %}{% endblock %}
+</div>
 <!-- End your project here-->
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
