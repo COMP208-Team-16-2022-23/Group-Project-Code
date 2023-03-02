@@ -67,7 +67,7 @@
             <!-- Right elements -->
 
             <!-- Avatar -->
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center ms-auto">
                 {% if g.user %}
                     <div class="dropdown">
                         <a
@@ -82,7 +82,7 @@
                                     src="../static/img/LCDA.ico"
                                     class="rounded-circle"
                                     height="25"
-                                    alt="Black and White Portrait of a Man"
+                                    alt="LCDA Logo"
                                     loading="lazy"
                             />
                             {{ g.user['username'] }}
@@ -116,12 +116,14 @@
     </div>
 </nav>
 
-<div class="container-sm mt-5 mx-auto">
-    {% for message in get_flashed_messages() %}
-        <div class="alert alert-danger" role="alert">
-            {{ message }}
-        </div>
-    {% endfor %}
+<div class="container-sm mt-5">
+    <div class="d-flex justify-content-center">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-primary" role="alert" style="width: 410px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
 
     {% block content %}{% endblock %}
 </div>

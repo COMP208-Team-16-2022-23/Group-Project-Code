@@ -1,4 +1,4 @@
-{% extends 'auth.html' %}
+{% extends 'base.html' %}
 
 {% block header %}
 <div class="container">
@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-<h1 class="text-center m-0">New Account</h1>
+<h1 class="text-center m-0">Welcome</h1>
 <div class="container-sm mt-5 mx-auto" style="max-width: 400px;">
 
     {% if error %}
@@ -42,7 +42,9 @@
         </div>
     </form>
 
-    <!--  <p>Already have an account? <a href="{{ url_for('auth.login') }}">Sign In</a></p>-->
+    <div >
+        <p>Already have an account? <a href="{{ url_for('auth.login') }}">Sign In</a></p>
+    </div>
 
-</div>
+    </div>
 {% endblock %}
