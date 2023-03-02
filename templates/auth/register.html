@@ -1,21 +1,48 @@
-{% extends 'auth.old.html' %}
+{% extends 'auth.html' %}
 
 {% block header %}
-<h1>{% block title %}Sign Up{% endblock %}</h1>
+<div class="container">
+    <h1 class="text-center">{% block title %}Sign Up{% endblock %}</h1>
+</div>
 {% endblock %}
 
 {% block content %}
-<form method="post">
-    <label for="email">Email</label>
-    <input type='email' name="email" id="email" required>
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <label for="password_confirm">Confirm Password</label>
-    <input type="password" name="password_confirm" id="password_confirm" required>
-    <label for="password_reminder">Password Hint</label>
-    <input name="password_reminder" id="password_reminder">
-    <input type="submit" value="Register">
-</form>
+<h1 class="text-center m-0">New Account</h1>
+<div class="container-sm mt-5 mx-auto" style="max-width: 400px;">
+
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="post">
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" id="email" required>
+        </div>
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input name="username" class="form-control" id="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" id="password" required>
+        </div>
+        <div class="mb-3">
+            <label for="password_confirm" class="form-label">Confirm Password</label>
+            <input type="password" name="password_confirm" class="form-control" id="password_confirm" required>
+        </div>
+        <div class="mb-3">
+            <label for="password_reminder" class="form-label">Password Hint</label>
+            <input name="password_reminder" class="form-control" id="password_reminder">
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-block mb-4">Register</button>
+        </div>
+    </form>
+
+    <!--  <p>Already have an account? <a href="{{ url_for('auth.login') }}">Sign In</a></p>-->
+
+</div>
 {% endblock %}
