@@ -1,7 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'auth.html' %}
 
 {% block header %}
-    <h1>{% block title %}Log In{% endblock %}</h1>
+    <h1>{% block title %}Sign In{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -13,7 +13,7 @@
         </div>
     {% endif %}
     <form method="post">
-        <!-- Email input -->
+        <!-- Username input -->
         <div class="form-outline mb-4">
             <input id="username" name="username" class="form-control" required/>
             <label class="form-label" for="username">Username</label>
