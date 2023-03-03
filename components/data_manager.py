@@ -16,6 +16,7 @@ def mydata():
 
     return render_template('dataset/my_data.html')
 
+
 # define file allowance
 # def allowed_file(filename):
 #     return '.' in filename and \
@@ -48,4 +49,3 @@ def uploader():
             dict_files = os.listdir('temp_files')
             return render_template('dataset/my_data.html', list=dict_files)
     return render_template('dataset/my_data.html', list=dict_files)
-

@@ -6,17 +6,19 @@ Project Source Code
 
 ### Welcome
 
-This is the code repo of COMP208 Team 16.
+This is the code repo of COMP208 Team 16. 
 
-## Reqirements
+[Online Demo](https://lcda-vgnazlwvxa-nw.a.run.app/).
 
-### git PUSH
+### Requirements
+
+#### Git push
 
 <strong>Think twice before git PUSH. 三思而后行</strong>(Chinese) It may affect other contributors and the web server.
 
 Please ensure that your push does not interfere with the normal function of the original. Please carry out tests first.
 
-### ```requirements.txt```
+#### `requirements.txt` file
 
 >Python requirements files are a great way to keep track of the Python modules. It is a simple text file that saves a list of the modules and packages required by your project. By creating a Python requirements.txt file, you save yourself the hassle of having to track down and install all of the required modules manually.
 [Reference](https://learnpython.com/blog/python-requirements-file/)
@@ -24,17 +26,33 @@ Please ensure that your push does not interfere with the normal function of the 
 <strong>This is one of the key file for deployment.</strong>
 Deployment fails if the package used is not in this list.
 So make sure that you update the requirements.txt file when using new Python packages.
+
+Install pipreqs if you don't have it
+
+In virtual environment created by venv
 ```shell
-# install pipreqs if you don't have it
 pip install pipreqs
 ```
 
+In virtual environment created by conda
 ```shell
-# generate requirements.txt in the current directory
+conda install pipreqs
+```
+
+If you have installed pipreqs, you can use the following command to generate `requirements.txt` in the current directory
+```shell
 pipreqs . --encoding=utf8
 ```
 
-All done!
+#### Virtual environment package management
+
+We recommend using [miniconda](https://docs.conda.io/en/latest/miniconda.html) to manage your virtual environment.
+
+> Don't mix `conda install` and `pip install` within conda environment. It may cause some problems. [Reference](https://stackoverflow.com/a/56141684)
+
+If the package is not available in conda default channel, you can search "conda [package name]" in [Google](https://www.google.com/search?q=conda+flask+sqlalchemy) to find the package in correct channel.
+
+If you are sure that the package is not available in conda, you can use pip to install it.
 
 
 ## Documents
@@ -54,9 +72,23 @@ All done!
 
 ### Creating an environment from a yaml file
 
-You can find the YAML file `environment.yml` [here](./misc/conda_env_config). Please refer to
-the [instructions](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-from-an-environment-yml-file)
-to create the environment.
+You can find the YAML file `environment.yml` [here](./misc).
+1. Create the environment using yaml file (make sure you are in the root directory of the project):
+    ```shell
+    conda env create -f ./misc/environment.yml
+    ```
+
+2. Activate the new environment: 
+
+    ```shell
+    conda activate COMP208
+    ```
+
+3. Verify that the new environment was installed correctly:
+
+    ```shell
+    conda info --envs
+    ```
 
 Alternatively, you can update your environment using:
 
