@@ -20,8 +20,12 @@ MAIL_PASSWORD = 'uwiyqlxbdizognpr'
 MAIL_DEFAULT_SENDER = 'LCDA Team'
 MAIL_MAX_EMAILS = None
 
+# Configuration variables for Google Cloud Storage
+GOOGLE_APPLICATION_CREDENTIALS = 'lcda-platform-b100d9a8d523.json'
+BUCKET_NAME = 'lcda'
+
 # Configuration variables for the file upload
-UPLOAD_FOLDER = 'lowcodeanal/static/uploads'
+UPLOAD_FOLDER = 'temp_files'
 
 # product name
 PRODUCT_NAME = 'LCDA'

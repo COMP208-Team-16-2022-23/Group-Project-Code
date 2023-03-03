@@ -4,7 +4,10 @@ import os
 import database as db
 from components import auth
 
+from datetime import timedelta
 from flask_mail import Mail
+from flask_googlestorage import GoogleStorage, Bucket
+import config
 
 from components import data_manager
 # from . import data_analyse
@@ -18,10 +21,20 @@ app.config.from_pyfile('config.py')
 # initialize the mail extension
 mail = Mail(app)
 
+# initialize the storage client
+files = Bucket(config.BUCKET_NAME)
+storage = GoogleStorage(files)
+
+app.config.update(
+        GOOGLE_STORAGE_LOCAL_DEST = app.instance_path,
+        GOOGLE_STORAGE_SIGNATURE = {"expiration": timedelta(minutes=5)},
+        GOOGLE_STORAGE_FILES_BUCKET = config.BUCKET_NAME
+    )
+
 # todo session initialization
 
-
 db.init_db()
+storage.init_app(app)
 
 # ensure the instance folder exists
 try:
