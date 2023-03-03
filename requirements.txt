@@ -1,5 +1,6 @@
 Flask
 Flask_Mail
+Flask_GoogleStorage
 PyMySQL
 SQLAlchemy
 Werkzeug
