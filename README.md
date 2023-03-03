@@ -12,7 +12,7 @@ This is the code repo of COMP208 Team 16.
 
 ### Requirements
 
-#### Git push
+#### Git Push
 
 <strong>Think twice before git PUSH. 三思而后行</strong>(Chinese) It may affect other contributors and the web server.
 
@@ -27,16 +27,15 @@ Please ensure that your push does not interfere with the normal function of the 
 Deployment fails if the package used is not in this list.
 So make sure that you update the requirements.txt file when using new Python packages.
 
-Install pipreqs if you don't have it
+Install pipreqs if you don't have it.
 
-In virtual environment created by venv
 ```shell
 pip install pipreqs
 ```
 
-In virtual environment created by conda
+Alternatively, in conda virtual environment:
 ```shell
-conda install pipreqs
+conda install -c conda-forge pipreqs
 ```
 
 If you have installed pipreqs, you can use the following command to generate `requirements.txt` in the current directory
@@ -46,13 +45,13 @@ pipreqs . --encoding=utf8
 
 #### Virtual environment package management
 
-We recommend using [miniconda](https://docs.conda.io/en/latest/miniconda.html) to manage your virtual environment.
+We recommend using conda virtual environment, such as [Anaconda](https://www.anaconda.com/) or [miniconda](https://docs.conda.io/en/latest/miniconda.html) to manage your virtual environment.
 
-> Don't mix `conda install` and `pip install` within conda environment. It may cause some problems. [Reference](https://stackoverflow.com/a/56141684)
-
+Be cautious using Pip in a Conda environment. [Read more](https://www.anaconda.com/blog/using-pip-in-a-conda-environment)
+ 
 If the package is not available in conda default channel, you can search "conda [package name]" in [Google](https://www.google.com/search?q=conda+flask+sqlalchemy) to find the package in correct channel.
 
-If you are sure that the package is not available in conda, you can use pip to install it.
+If the package is not available in conda, you can use pip to install it.
 
 
 ## Documents

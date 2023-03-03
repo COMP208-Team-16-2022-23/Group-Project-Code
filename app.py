@@ -10,6 +10,7 @@ from flask_googlestorage import GoogleStorage, Bucket
 import config
 
 from components import data_manager
+from components import legal
 # from . import data_analyse
 # from blueprints.node_editor import node_editer
 
@@ -34,7 +35,7 @@ app.config.update(
 # todo session initialization
 
 db.init_db()
-storage.init_app(app)
+# storage.init_app(app)
 
 # ensure the instance folder exists
 try:
@@ -57,6 +58,7 @@ def index():
 
 app.register_blueprint(auth.bp)
 app.register_blueprint(data_manager.bp)
+app.register_blueprint(legal.bp)
 # app.register_blueprint(data_analyse)
 
 
