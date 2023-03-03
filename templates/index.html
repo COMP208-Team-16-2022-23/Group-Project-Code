@@ -8,6 +8,15 @@
 {% block content %}
 
     <h1>Test webpage for 2022/23-COMP208-Team16</h1>
+
+    <div class="note note-primary mb-3">
+        <strong>Kind tips:</strong> Thank you for visiting our website! Please note that our website is currently
+        undergoing development, and some content may be subject to change. We apologize for any inconvenience this may
+        cause. Additionally, to ensure the best user experience, we may periodically delete user data. We recommend that
+        you regularly back up any important information to avoid any potential data loss. Thank you for your
+        understanding and support as we continue to improve our website.
+    </div>
+
     {% if g.user %}
         <p>Welcome back, {{ g.user['username'] }}</p>
     {% else %}
