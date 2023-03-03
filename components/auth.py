@@ -170,6 +170,7 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
+
 # password reset
 # route to render the forgot password page
 @bp.route('/forgot_password', methods=['GET', 'POST'])
@@ -207,6 +208,7 @@ def forgot_password():
 
     return render_template('auth/forgot_password.html')
 
+
 # route to render the reset password page
 @bp.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
@@ -216,7 +218,7 @@ def reset_password():
         password_confirm = request.form['password_confirm']
         email = session.get('reset_email')
         otp_session = session.get('otp')
-        otp_expiry= session.get('otp_expiry')
+        otp_expiry = session.get('otp_expiry')
         # check if all fields are valid
         # check otp is an 6-digit integer
         if not otp.isdigit() or len(otp) != 6:
