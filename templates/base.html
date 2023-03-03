@@ -128,9 +128,18 @@
     {% block content %}{% endblock %}
 </div>
 
-<div style="text-align:center; color:grey; padding: 10px;">
-    &copy; 2023 LCDA | <a href="{{ url_for('legal.terms') }}">Terms &amp; Conditions</a> | <a href="{{ url_for('legal.privacy') }}">Privacy</a>
-</div>
+<!-- Footer -->
+<footer class="text-center text-lg-start bg-light text-muted">
+    <!-- Copyright -->
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+        <a class="text-reset" href="{{ url_for('index') }}">&copy; 2023 LCDA</a> |
+        <a href="{{ url_for('legal.terms') }}">Terms &amp; Conditions</a> |
+        <a href="{{ url_for('legal.privacy') }}">Privacy</a>
+    </div>
+    <!-- Copyright -->
+</footer>
+<!-- Footer -->
+
 <!-- End your project here-->
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>

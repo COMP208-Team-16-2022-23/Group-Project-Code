@@ -92,7 +92,7 @@ You can find the YAML file `environment.yml` [here](./misc).
 Alternatively, you can update your environment using:
 
 ```shell
-conda env update --name COMP208 --file environment.yml --prune
+conda env update --name COMP208 --file ./misc/environment.yml --prune
 ```
 
 Please remember
