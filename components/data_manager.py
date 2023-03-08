@@ -10,20 +10,14 @@ import os
 bp = Blueprint('my_data', __name__, template_folder='templates')
 
 
-@bp.route("/my_data", methods=['GET', 'POST'])
-def mydata():
-    # return redirect(url_for('my_data.uploader'))
-
-    return render_template('dataset/my_data.html')
-
-
 # define file allowance
 # def allowed_file(filename):
 #     return '.' in filename and \
 #            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@bp.route('/my_data/uploader', methods=['GET', 'POST'])
-def uploader():
+@bp.route("/my_data", methods=['GET', 'POST'])
+def mydata():
+    # fetch directory
     dict_files = os.listdir('temp_files')
     if request.method == 'POST':
         # check if the post request has the file part
@@ -45,7 +39,6 @@ def uploader():
             file.save(os.path.join('temp_files', filename))
             # todo fix that cannot fetch g or session
             # a = g
-            # change to a new page e.g. preview page
             dict_files = os.listdir('temp_files')
             return render_template('dataset/my_data.html', list=dict_files)
     return render_template('dataset/my_data.html', list=dict_files)
