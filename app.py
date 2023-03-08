@@ -11,7 +11,7 @@ import config
 
 from components import data_manager
 from components import legal
-# from . import data_analyse
+from components import data_analyse
 # from blueprints.node_editor import node_editer
 
 app = Flask(__name__)
@@ -59,7 +59,7 @@ def index():
 app.register_blueprint(auth.bp)
 app.register_blueprint(data_manager.bp)
 app.register_blueprint(legal.bp)
-# app.register_blueprint(data_analyse)
+app.register_blueprint(data_analyse.bp)
 
 
 @app.teardown_appcontext

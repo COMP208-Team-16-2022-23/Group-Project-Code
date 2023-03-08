@@ -4,15 +4,17 @@
 """Handle data analysis process and visualization"""
 
 from flask import Blueprint, request, render_template, session, redirect
+import os
 
-data_analyse = Blueprint('data_analyse', __name__, template_folder='Backend/templates')
+bp = Blueprint('data_analyse', __name__, template_folder='templates')
 
 
-@data_analyse.route("/data_process", methods=['GET', 'POST'])
+@bp.route("/data_process", methods=['GET', 'POST'])
 def data_process():
-    ...
+    dict_files = os.listdir('temp_files')
+    return render_template('dataset/data_process.html', list=dict_files)
 
 
-@data_analyse.route("/data_analysis", methods=['GET', 'POST'])
+@bp.route("/data_analysis", methods=['GET', 'POST'])
 def data_analysis():
     ...
