@@ -12,7 +12,7 @@ import config
 from components import data_manager
 from components import legal
 from components import data_analyse
-# from blueprints.node_editor import node_editer
+# from components import node_editer
 
 app = Flask(__name__)
 
@@ -27,27 +27,14 @@ files = Bucket(config.BUCKET_NAME)
 storage = GoogleStorage(files)
 
 app.config.update(
-        GOOGLE_STORAGE_LOCAL_DEST = app.instance_path,
-        GOOGLE_STORAGE_SIGNATURE = {"expiration": timedelta(minutes=5)},
-        GOOGLE_STORAGE_FILES_BUCKET = config.BUCKET_NAME
-    )
+    GOOGLE_STORAGE_LOCAL_DEST=app.instance_path,
+    GOOGLE_STORAGE_SIGNATURE={"expiration": timedelta(minutes=5)},
+    GOOGLE_STORAGE_FILES_BUCKET=config.BUCKET_NAME
+)
 
-# todo session initialization
 
 db.init_db()
 # storage.init_app(app)
-
-# ensure the instance folder exists
-try:
-    os.makedirs(app.instance_path)
-except OSError:
-    pass
-
-
-# a simple page that says hello
-@app.route('/hello')
-def hello_world():
-    return "<p>Hello, World!</p>"
 
 
 @app.route('/')
