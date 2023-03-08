@@ -44,16 +44,4 @@ def mydata():
             return render_template('dataset/my_data.html', list=dict_files)
     return render_template('dataset/my_data.html', list=dict_files)
 
-@bp.route("/view_document", methods=['GET'])
-def view_document():
-    # Replace the URL with the URL of your Office document
-    document_url = 'https://binaries.templates.cdn.office.net/support/templates/zh-cn/tf55871247_win32.dotx'
-    # Replace the 'Office Online' string with your desired title for the viewer
-    title = 'Office Online'
-    # Build the HTML code for the viewer
-    viewer_html = requests.get(f'https://view.officeapps.live.com/op/embed.aspx?src={document_url}').text
-    return render_template('dataset/document_viewer.html', title=title, viewer_html=viewer_html)
-
-
-
 
