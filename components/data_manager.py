@@ -18,8 +18,12 @@ bp = Blueprint('my_data', __name__, template_folder='templates')
 
 @bp.route("/my_data", methods=['GET', 'POST'])
 def mydata():
-    # fetch directory
-    dict_files = os.listdir('temp_files')
+    private_path = os.path.join('temp_files', g.user['username'])
+    if not os.path.exists(private_path):
+        os.mkdir(private_path)
+    public_files = os.listdir('temp_files')
+    public_files.remove(g.user['username'])
+    dict_files = os.listdir(private_path) + public_files
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -37,10 +41,8 @@ def mydata():
         #     return redirect(url_for('download_file', name=filename))
         if file:
             filename = secure_filename(file.filename)
-            file.save(os.path.join('temp_files', filename))
-            # todo fix that cannot fetch g or session
-            # a = g
-            dict_files = os.listdir('temp_files')
+            file.save(os.path.join(private_path, filename))
+            dict_files = os.listdir(private_path) + public_files
             return render_template('dataset/my_data.html', list=dict_files)
     return render_template('dataset/my_data.html', list=dict_files)
 
