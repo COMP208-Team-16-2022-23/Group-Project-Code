@@ -24,20 +24,14 @@ app.config.from_pyfile('config.py')
 # initialize the mail extension
 mail = Mail(app)
 
-# initialize the storage client
-files = Bucket(config.BUCKET_NAME)
-storage = GoogleStorage(files)
-
-app.config.update(
-    GOOGLE_STORAGE_LOCAL_DEST=app.instance_path,
-    GOOGLE_STORAGE_SIGNATURE={"expiration": timedelta(minutes=5)},
-    GOOGLE_STORAGE_FILES_BUCKET=config.BUCKET_NAME
-)
-
 db.init_db()
 
-
-# storage.init_app(app)
+# app.config.update(
+#     GOOGLE_STORAGE_LOCAL_DEST='sandbox',
+#     GOOGLE_STORAGE_SIGNATURE={"expiration": timedelta(minutes=5)},
+#     GOOGLE_STORAGE_FILES_BUCKET=config.BUCKET_NAME
+# )
+# data_manager.storage.init_app(app)
 
 
 @app.route('/')
@@ -59,4 +53,4 @@ def shutdown_session(exception=None):
 
 
 if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

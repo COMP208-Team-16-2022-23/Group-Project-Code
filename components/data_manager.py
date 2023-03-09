@@ -8,27 +8,28 @@ from werkzeug.utils import secure_filename
 import os
 import requests
 import config
+from util.file_manager import my_bucket
+from util.file_manager import list_blobs, upload_blob, delete_blob
 
 bp = Blueprint('my_data', __name__, template_folder='templates')
 
 
+# initialize the storage client
 # define file allowance
 # def allowed_file(filename):
 #     return '.' in filename and \
 #            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
 @bp.route("/my_data", methods=['GET', 'POST'])
 def mydata():
-    # todo encapsulate files fetch function
     private_files = []
-    public_files = os.listdir(config.SANBOX_PATH)
+    bucket_name = config.BUCKET_NAME
+    public_files = list_blobs(bucket_name, 'public')
     if g.user:
-        private_path = os.path.join(config.SANBOX_PATH, g.user.username)
-        if not os.path.exists(private_path):
-            os.mkdir(private_path)
-        public_files.remove(g.user.username)
-        private_files = os.listdir(private_path)
-    dict_files = private_files + public_files
+        private_path = g.user.username
+        private_files = list_blobs(bucket_name, private_path)
+    dict_files = public_files + private_files
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -46,7 +47,7 @@ def mydata():
         #     return redirect(url_for('download_file', name=filename))
         if file and g.user:
             filename = secure_filename(file.filename)
-            file.save(os.path.join(private_path, filename))
-            dict_files = os.listdir(private_path) + public_files
+            upload_blob(file, filename, my_bucket, prefix=private_path)
+            dict_files = list_blobs(bucket_name, private_path) + public_files
             return render_template('dataset/my_data.html', list=dict_files)
     return render_template('dataset/my_data.html', list=dict_files)
