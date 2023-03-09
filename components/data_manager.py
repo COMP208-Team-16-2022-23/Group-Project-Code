@@ -18,12 +18,16 @@ bp = Blueprint('my_data', __name__, template_folder='templates')
 
 @bp.route("/my_data", methods=['GET', 'POST'])
 def mydata():
-    private_path = os.path.join('temp_files', g.user['username'])
-    if not os.path.exists(private_path):
-        os.mkdir(private_path)
+    # todo encapsulate files fetch function
+    private_files = []
     public_files = os.listdir('temp_files')
-    public_files.remove(g.user['username'])
-    dict_files = os.listdir(private_path) + public_files
+    if g.user:
+        private_path = os.path.join('temp_files', g.user.username)
+        if not os.path.exists(private_path):
+            os.mkdir(private_path)
+        public_files.remove(g.user.username)
+        private_files = os.listdir(private_path)
+    dict_files = private_files + public_files
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -39,7 +43,7 @@ def mydata():
         #     filename = secure_filename(file.filename)
         #     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         #     return redirect(url_for('download_file', name=filename))
-        if file:
+        if file and g.user:
             filename = secure_filename(file.filename)
             file.save(os.path.join(private_path, filename))
             dict_files = os.listdir(private_path) + public_files
