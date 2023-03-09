@@ -13,6 +13,7 @@ from components import data_manager
 from components import legal
 from components import data_analyse
 from components import file_viewer
+
 # from components import node_editer
 
 app = Flask(__name__)
@@ -33,8 +34,9 @@ app.config.update(
     GOOGLE_STORAGE_FILES_BUCKET=config.BUCKET_NAME
 )
 
-
 db.init_db()
+
+
 # storage.init_app(app)
 
 

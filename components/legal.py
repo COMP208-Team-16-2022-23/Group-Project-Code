@@ -14,9 +14,7 @@ bp = Blueprint('legal', __name__, url_prefix='/legal')
 def terms():
     return render_template('legal/terms.html')
 
+
 @bp.route("/privacy", methods=['GET'])
 def privacy():
     return render_template('legal/privacy.html')
-
-
-

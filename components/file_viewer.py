@@ -4,6 +4,7 @@ import requests
 
 bp = Blueprint('file_viewer', __name__, template_folder='templates')
 
+
 ## embedded viewer that works
 @bp.route("/view_document", methods=['GET'])
 def view_document_demo():
@@ -37,5 +38,3 @@ def download_file(file_path='temp_files/helloWorld.csv'):
     filename = file_path.split('/')[-1]
     # Send the file to the client
     return send_file(file_path, as_attachment=True, download_name=filename)
-
-
