@@ -5,4 +5,4 @@ SQLAlchemy
 Werkzeug
 gunicorn==20.1.0
 requests
-google
+google-cloud-storage
