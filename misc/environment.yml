@@ -10,4 +10,5 @@ dependencies:
   - flask-sqlalchemy
   - flask-login
   - conda-forge::flask-mail
+  - conda-forge::google-cloud-storage
   - pymysql

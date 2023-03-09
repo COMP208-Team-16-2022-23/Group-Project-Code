@@ -7,7 +7,7 @@ from google.cloud import storage
 
 import config
 
-storage_client = storage.Client.from_service_account_json('lcda-platform-b100d9a8d523.json')
+storage_client = storage.Client.from_service_account_json(config.GOOGLE_APPLICATION_CREDENTIALS)
 my_bucket = storage_client.get_bucket(config.BUCKET_NAME)
 
 
