@@ -3,7 +3,6 @@
 # @File: file_manager.PY
 import os.path
 
-from flask_googlestorage import GoogleStorage, Bucket
 from google.cloud import storage
 
 import config
@@ -20,14 +19,12 @@ def upload_blob(file, blob_name, bucket, public=False, prefix=''):
         # blob.md5_hash = base64.b64encode(md5_hash.digest()).decode()
         if prefix:
             blob_name = os.path.join(prefix, blob_name)
-            os.path.pathsep
         blob = bucket.blob(blob_name)
         blob.upload_from_file(file)
         if public:
             blob.make_public()
         return blob_name
     except Exception as e:
-        print(e)
         return False
 
 
@@ -40,18 +37,14 @@ def delete_blob(blob_name, bucket):
         return False
 
 
-def download_blob(source_blob_name, destination_file_name, bucket):
+def download_blob(source_blob_name, destination_filename, bucket_name):
     """Downloads a blob from the bucket."""
     try:
-        blob = bucket.blob(source_blob_name)
-
-        blob.download_to_filename(destination_file_name)
-
-        print('Blob {} downloaded to {}.'.format(
-            source_blob_name,
-            destination_file_name))
+        bucket = storage_client.get_bucket(bucket_name)
+        blob = bucket.blob(source_blob_name.replace('/', '\\'))
+        blob.download_to_filename(destination_filename)
         return True
-    except:
+    except Exception as e:
         return False
 
 
@@ -64,7 +57,6 @@ def list_blobs(bucket_name, parent=''):
             listData.append(blob.name.replace(parent + '\\', ""))
         return listData
     except Exception as e:
-        print(e)
         return False
 
 # reference to https://github.com/faizan170/google-cloud-storage-flask.git

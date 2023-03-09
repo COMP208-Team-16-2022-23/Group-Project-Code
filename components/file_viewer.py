@@ -2,6 +2,8 @@ from flask import Blueprint, render_template
 from flask import send_file
 import requests
 import os
+from util.file_manager import download_blob
+from config import BUCKET_NAME
 
 
 bp = Blueprint('file_viewer', __name__, template_folder='templates')
@@ -37,14 +39,15 @@ def view_document(file_path='https://binaries.templates.cdn.office.net/support/t
 
 ## download file
 @bp.route('/download_file/<path:file_path>')
-def download_file(file_path='sandbox/sample_user/hello_world.csv'):
+def download_file(file_path='public/hello_world.csv'):
     # Specify the file path
     
     # safety check
     #if file_path do not contain 'sandbox', return 404
-    if 'sandbox' not in file_path:
-        return '404'
-    
+    # if 'sandbox' not in file_path:
+    #     return '404'
     filename = file_path.split('/')[-1]
+    temp_file = f'temp_files/{filename}'
+    download_blob(file_path, temp_file, BUCKET_NAME)
     # Send the file to the client
-    return send_file(file_path, as_attachment=True, download_name=filename)
+    return send_file(temp_file, as_attachment=True, download_name=filename)
