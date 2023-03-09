@@ -7,6 +7,7 @@ from flask import Blueprint, request, render_template, session, redirect, g, fla
 from werkzeug.utils import secure_filename
 import os
 import requests
+import config
 
 bp = Blueprint('my_data', __name__, template_folder='templates')
 
@@ -20,9 +21,9 @@ bp = Blueprint('my_data', __name__, template_folder='templates')
 def mydata():
     # todo encapsulate files fetch function
     private_files = []
-    public_files = os.listdir('temp_files')
+    public_files = os.listdir(config.SANBOX_PATH)
     if g.user:
-        private_path = os.path.join('temp_files', g.user.username)
+        private_path = os.path.join(config.SANBOX_PATH, g.user.username)
         if not os.path.exists(private_path):
             os.mkdir(private_path)
         public_files.remove(g.user.username)

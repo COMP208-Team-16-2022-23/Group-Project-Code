@@ -250,5 +250,4 @@ cython_debug/
 
 *.db
 *.docx
-*.xlsx
 *.pptx

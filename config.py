@@ -24,8 +24,9 @@ MAIL_MAX_EMAILS = None
 GOOGLE_APPLICATION_CREDENTIALS = 'lcda-platform-b100d9a8d523.json'
 BUCKET_NAME = 'lcda'
 
-# Configuration variables for the file upload
-UPLOAD_FOLDER = 'temp_files'
+# Configuration variables for the sandbox
+SANDBOX_NAME = 'sandbox'
+SANBOX_PATH = 'sandbox'
 
 # product name
 PRODUCT_NAME = 'LCDA'
