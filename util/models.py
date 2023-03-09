@@ -15,6 +15,7 @@ class User(Base):
     last_password_change_time = Column(DateTime, default=datetime.utcnow)
     last_login = Column(DateTime, unique=False, nullable=True)
 
+
     def __init__(self, email=None, username=None, password=None, password_reminder=None):
         self.email = email
         self.username = username

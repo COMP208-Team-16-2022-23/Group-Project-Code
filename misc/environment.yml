@@ -1,6 +1,7 @@
 name: COMP208
 dependencies:
   - python=3.10
+  - pip
   - flask
   - numpy
   - scikit-learn

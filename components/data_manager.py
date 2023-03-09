@@ -43,5 +43,3 @@ def mydata():
             dict_files = os.listdir('temp_files')
             return render_template('dataset/my_data.html', list=dict_files)
     return render_template('dataset/my_data.html', list=dict_files)
-
-
