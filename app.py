@@ -6,7 +6,6 @@ from components import auth
 
 from datetime import timedelta
 from flask_mail import Mail
-from flask_googlestorage import GoogleStorage, Bucket
 import config
 
 from components import data_manager
@@ -53,4 +52,6 @@ def shutdown_session(exception=None):
 
 
 if __name__ == "__main__":
+    # only set debug to True when run locally
+    # do not commit debug=True
     app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

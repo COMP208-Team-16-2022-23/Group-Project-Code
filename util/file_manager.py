@@ -3,7 +3,6 @@
 # @File: file_manager.PY
 import os.path
 
-from flask_googlestorage import GoogleStorage, Bucket
 from google.cloud import storage
 
 import config
