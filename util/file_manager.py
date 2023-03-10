@@ -1,9 +1,12 @@
 # -*- coding = utf-8 -*-
 # @Time: 2023/3/9 14:48
 # @File: file_manager.PY
-import os.path
+
+
+import tempfile
 
 from google.cloud import storage
+from flask import send_file
 
 import config
 
@@ -11,14 +14,15 @@ storage_client = storage.Client.from_service_account_json(config.GOOGLE_APPLICAT
 my_bucket = storage_client.get_bucket(config.BUCKET_NAME)
 
 
-def upload_blob(file, blob_name, bucket, public=False, prefix=''):
+def upload_blob(file, blob_name, bucket=my_bucket, public=False, prefix=''):
     """Uploads a file to the bucket."""
     # todo limit size of files
     try:
         # md5_hash = hashlib.md5(filepath.read_bytes())  # nosec
         # blob.md5_hash = base64.b64encode(md5_hash.digest()).decode()
         if prefix:
-            blob_name = os.path.join(prefix, blob_name)
+            # blob_name = os.path.join(prefix, blob_name)
+            blob_name = prefix + '/' + blob_name
         blob = bucket.blob(blob_name)
         blob.upload_from_file(file)
         if public:
@@ -37,24 +41,36 @@ def delete_blob(blob_name, bucket):
         return False
 
 
-def download_blob(source_blob_name, destination_filename, bucket_name):
+def download_blob(source_blob_name, destination_filename, bucket_name=config.BUCKET_NAME):
     """Downloads a blob from the bucket."""
     try:
         bucket = storage_client.get_bucket(bucket_name)
-        blob = bucket.blob(source_blob_name.replace('/', '\\'))
+        blob = bucket.blob(source_blob_name)
         blob.download_to_filename(destination_filename)
         return True
     except Exception as e:
         return False
 
 
-def list_blobs(bucket_name, parent=''):
+def download_with_response(src_path, des_path=''):
+    """Download file from Cloud temporarily and respond"""
+    filename = src_path.split('/')[-1]
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        blob = my_bucket.blob(src_path)
+        blob.download_to_file(temp_file)
+        if des_path:
+            filename = des_path
+        response = send_file(temp_file.name, as_attachment=True, download_name=filename)
+        return response
+
+
+def list_blobs(bucket_name=config.BUCKET_NAME, parent=''):
     """Lists all the blobs in the bucket."""
     try:
         blobs = storage_client.list_blobs(bucket_name, prefix=parent)
         listData = []
         for blob in blobs:
-            listData.append(blob.name.replace(parent + '\\', ""))
+            listData.append(blob.name.replace(parent + '/', ""))
         return listData
     except Exception as e:
         return False

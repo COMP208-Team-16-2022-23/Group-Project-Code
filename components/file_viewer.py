@@ -2,7 +2,7 @@ from flask import Blueprint, render_template
 from flask import send_file
 import requests
 import os
-from util.file_manager import download_blob
+from util.file_manager import download_blob, download_with_response
 from config import BUCKET_NAME
 
 
@@ -46,8 +46,11 @@ def download_file(file_path='public/hello_world.csv'):
     #if file_path do not contain 'sandbox', return 404
     # if 'sandbox' not in file_path:
     #     return '404'
+
     filename = file_path.split('/')[-1]
-    temp_file = f'temp_files/{filename}'
-    download_blob(file_path, temp_file, BUCKET_NAME)
+    return download_with_response(file_path, filename)
+    # temp_file = f'temp_files/{filename}'
+    # download_blob(file_path, temp_file, BUCKET_NAME)
+
     # Send the file to the client
-    return send_file(temp_file, as_attachment=True, download_name=filename)
+    # return send_file(temp_file, as_attachment=True, download_name=filename)
