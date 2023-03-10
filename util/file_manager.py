@@ -1,8 +1,7 @@
 # -*- coding = utf-8 -*-
 # @Time: 2023/3/9 14:48
 # @File: file_manager.PY
-
-
+import os
 import tempfile
 
 from google.cloud import storage
@@ -55,13 +54,13 @@ def download_blob(source_blob_name, destination_filename, bucket_name=config.BUC
 def download_with_response(src_path, des_path=''):
     """Download file from Cloud temporarily and respond"""
     filename = src_path.split('/')[-1]
-    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+    with tempfile.NamedTemporaryFile(dir='temp_files', delete=False) as temp_file:
         blob = my_bucket.blob(src_path)
         blob.download_to_file(temp_file)
-        if des_path:
-            filename = des_path
-        response = send_file(temp_file.name, as_attachment=True, download_name=filename)
-        return response
+    if des_path:
+        filename = des_path
+    response = send_file(temp_file.name, as_attachment=True, download_name=filename)
+    return response
 
 
 def list_blobs(bucket_name=config.BUCKET_NAME, parent=''):
