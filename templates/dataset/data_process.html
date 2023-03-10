@@ -1,13 +1,31 @@
 {% extends 'base.html' %}
 
-{% block title %}{% endblock %}
+{% block title %}Data process{% endblock %}
 
 {% block content %}
-<ul>
-    {% for item in list %}
-    <li>
-        <p>{{item}}</p>
-    </li>
-    {% endfor %}
-</ul>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href={{ url_for("index") }}>Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Data Process</li>
+        </ol>
+    </nav>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-4">
+                <ul>
+                    {% for item in list %}
+                        <li>
+                            <p>{{ item }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-8">
+                .col-md-8
+            </div>
+        </div>
+
+    </div>
 {% endblock %}

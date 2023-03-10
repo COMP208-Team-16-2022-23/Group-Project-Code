@@ -1,13 +1,9 @@
 from flask import Flask, render_template
 import os
-
+from flask_mail import Mail
 import database as db
 from components import auth
-
-from datetime import timedelta
-from flask_mail import Mail
-import config
-
+from components import data_processing
 from components import data_manager
 from components import legal
 from components import data_analyse
@@ -24,6 +20,7 @@ app.config.from_pyfile('config.py')
 mail = Mail(app)
 
 db.init_db()
+
 
 # app.config.update(
 #     GOOGLE_STORAGE_LOCAL_DEST='sandbox',
@@ -44,6 +41,7 @@ app.register_blueprint(data_manager.bp)
 app.register_blueprint(legal.bp)
 app.register_blueprint(data_analyse.bp)
 app.register_blueprint(file_viewer.bp)
+app.register_blueprint(data_processing.bp)
 
 
 @app.teardown_appcontext

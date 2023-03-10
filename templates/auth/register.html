@@ -1,50 +1,58 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<div class="container">
-    <h1 class="text-center">{% block title %}Sign Up{% endblock %}</h1>
-</div>
+    <div class="container">
+        <h1 class="text-center">{% block title %}Sign Up{% endblock %}</h1>
+    </div>
 {% endblock %}
 
 {% block content %}
-<h1 class="text-center m-0">Welcome</h1>
-<div class="container-sm mt-5 mx-auto" style="max-width: 400px;">
-
-    {% if error %}
-    <div class="alert alert-danger" role="alert">
-        {{ error }}
+    <div class="d-flex justify-content-center my-3">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-primary" role="alert" style="width: 410px;">
+                {{ message }}
+            </div>
+        {% endfor %}
     </div>
-    {% endif %}
 
-    <form method="post">
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" name="email" class="form-control" id="email" required>
-        </div>
-        <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input name="username" class="form-control" id="username" required>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" name="password" class="form-control" id="password" required>
-        </div>
-        <div class="mb-3">
-            <label for="password_confirm" class="form-label">Confirm Password</label>
-            <input type="password" name="password_confirm" class="form-control" id="password_confirm" required>
-        </div>
-        <div class="mb-3">
-            <label for="password_reminder" class="form-label">Password Hint</label>
-            <input name="password_reminder" class="form-control" id="password_reminder">
-        </div>
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary btn-block mb-4">Register</button>
-        </div>
-    </form>
+    <h1 class="text-center mb-4">Welcome</h1>
+    <div class="container-sm mt-3 mx-auto" style="max-width: 400px;">
 
-    <div >
-        <p>Already have an account? <a href="{{ url_for('auth.login') }}">Sign In</a></p>
-    </div>
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" id="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input name="username" class="form-control" id="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" id="password" required>
+            </div>
+            <div class="mb-3">
+                <label for="password_confirm" class="form-label">Confirm Password</label>
+                <input type="password" name="password_confirm" class="form-control" id="password_confirm" required>
+            </div>
+            <div class="mb-3">
+                <label for="password_reminder" class="form-label">Password Hint</label>
+                <input name="password_reminder" class="form-control" id="password_reminder">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-block mb-4">Register</button>
+            </div>
+        </form>
+
+        <div>
+            <p>Already have an account? <a href="{{ url_for('auth.login') }}">Sign In</a></p>
+        </div>
 
     </div>
 {% endblock %}
