@@ -73,7 +73,6 @@ def list_blobs(bucket_name=config.BUCKET_NAME, prefix=''):
     try:
         return storage_client.list_blobs(bucket_name, prefix=prefix)
     except Exception as e:
-        print(e)
         return False
 
 
