@@ -63,16 +63,37 @@ def download_with_response(src_path, des_path=''):
     return response
 
 
-def list_blobs(bucket_name=config.BUCKET_NAME, parent=''):
-    """Lists all the blobs in the bucket."""
+def list_blobs(bucket_name=config.BUCKET_NAME, prefix=''):
+    """
+    Lists all the blobs in the bucket.
+    :param bucket_name: name of the bucket
+    :param prefix: prefix of the blob name
+    :return: list of blobs
+    """
     try:
-        blobs = storage_client.list_blobs(bucket_name, prefix=parent)
-        listData = []
+        return storage_client.list_blobs(bucket_name, prefix=prefix)
+    except Exception as e:
+        print(e)
+        return False
+
+
+def list_blobs_names(bucket_name=config.BUCKET_NAME, prefix=''):
+    """
+    Lists all the blobs name in the bucket.
+    :param bucket_name: name of the bucket
+    :param prefix: prefix of the blob name
+    :return: list of blobs name
+    """
+    try:
+        blobs = list_blobs(bucket_name=bucket_name, prefix=prefix)
+        blobs_name_list = []
         for blob in blobs:
-            listData.append(blob.name.replace(parent + '/', ""))
-        return listData
+            if blob.name.replace(prefix + '/', ""):  # remove empty string
+                blobs_name_list.append(blob.name.replace(prefix + '/', ""))
+        return blobs_name_list
     except Exception as e:
         return False
+
 
 # reference to https://github.com/faizan170/google-cloud-storage-flask.git
 # not tested

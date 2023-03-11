@@ -5,9 +5,9 @@
 
 from flask import Blueprint, request, render_template, session, redirect
 
-node_editor = Blueprint('node_editor', __name__, template_folder='Backend/templates')
+node_editor = Blueprint('node_editor', __name__, url_prefix='/node_editor')
 
 
-@node_editor.route("/node_editor", methods=['GET', 'POST'])
+@node_editor.route("/", methods=['GET', 'POST'])
 def node_editer():
     ...

@@ -5,12 +5,11 @@ import os
 from util.file_manager import download_blob, download_with_response
 from config import BUCKET_NAME
 
-
-bp = Blueprint('file_viewer', __name__, template_folder='templates')
+bp = Blueprint('file_viewer', __name__, url_prefix='/file_viewer')
 
 
 ## embedded viewer that works
-@bp.route("/view_document", methods=['GET'])
+@bp.route("/", methods=['GET'])
 def view_document_demo():
     # Replace the URL with the URL of your Office document
     document_url = 'https://www.labnol.org/files/excel.xlsx'
@@ -23,7 +22,7 @@ def view_document_demo():
 
 ## embedded viewer
 ## not working
-@bp.route('/view_document/<path:file_path>', methods=['GET'])
+@bp.route('/<path:file_path>', methods=['GET'])
 def view_document(file_path='public/hello_world.csv'):
     # Replace the URL with the URL of your Office document
     # document_url = f'https://lcda-vgnazlwvxa-nw.a.run.app/download_file/{file_path}'
@@ -44,9 +43,9 @@ def view_document(file_path='public/hello_world.csv'):
 @bp.route('/download_file/<path:file_path>')
 def download_file(file_path='public/hello_world.csv'):
     # Specify the file path
-    
+
     # safety check
-    #if file_path do not contain 'sandbox', return 404
+    # if file_path do not contain 'sandbox', return 404
     # if 'sandbox' not in file_path:
     #     return '404'
 
@@ -58,6 +57,7 @@ def download_file(file_path='public/hello_world.csv'):
     # Send the file to the client
     # return send_file(temp_file, as_attachment=True, download_name=filename)
 
+
 @bp.route('/embedded_view/<path:file_path>')
 def embedded_view(file_path='public/hello_world.csv'):
     # Specify the file path
@@ -67,4 +67,3 @@ def embedded_view(file_path='public/hello_world.csv'):
 
     # Send the file to the client
     return send_file(temp_file, as_attachment=True, download_name=filename)
-

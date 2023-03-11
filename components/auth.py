@@ -85,7 +85,7 @@ def login():
             session['user_id'] = user.id
             user.last_login = datetime.utcnow()
             db_session.commit()
-            return redirect(url_for('my_data.mydata'))
+            return redirect(url_for('my_data.my_data'))
 
         flash(error)
 

@@ -9,9 +9,9 @@ import os
 import requests
 import config
 from util.file_manager import my_bucket
-from util.file_manager import list_blobs, upload_blob, delete_blob
+from util.file_manager import list_blobs_names, upload_blob, delete_blob
 
-bp = Blueprint('my_data', __name__, template_folder='templates')
+bp = Blueprint('my_data', __name__, url_prefix='/my_data')
 
 
 # initialize the storage client
@@ -21,14 +21,14 @@ bp = Blueprint('my_data', __name__, template_folder='templates')
 #            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-@bp.route("/my_data", methods=['GET', 'POST'])
-def mydata():
+@bp.route("/", methods=['GET', 'POST'])
+def my_data():
     private_files = []
     bucket_name = config.BUCKET_NAME
-    public_files = list_blobs(bucket_name, 'public')
+    public_files = list_blobs_names(bucket_name, 'public')
     if g.user:
         private_path = g.user.username
-        private_files = list_blobs(bucket_name, private_path)
+        private_files = list_blobs_names(bucket_name, private_path)
     dict_files = public_files + private_files
     if request.method == 'POST':
         # check if the post request has the file part
@@ -48,6 +48,6 @@ def mydata():
         if file and g.user:
             filename = secure_filename(file.filename)
             upload_blob(file, filename, my_bucket, prefix=private_path)
-            dict_files = list_blobs(bucket_name, private_path) + public_files
+            dict_files = list_blobs_names(bucket_name, private_path) + public_files
             return render_template('dataset/my_data.html', list=dict_files)
     return render_template('dataset/my_data.html', list=dict_files)

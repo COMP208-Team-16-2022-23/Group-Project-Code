@@ -1,34 +1,45 @@
 {% extends 'base.html' %}
 
 {% block header %}
-    <h1>{% block title %}My Data{% endblock %}</h1>
+    {% block title %}My Data{% endblock %}
 {% endblock %}
 
 {% block content %}
-    <form action = "" method = "POST"
-         enctype = "multipart/form-data">
-         <input type = "file" name = "file" />
-         <input type = "submit"/>
-    </form>
-    <ul>
-        {% for item in list %}
-        <li>
-            <p>{{item}}</p>
-        </li>
-        {% endfor %}
-    </ul>
+    <div class="container mt-3">
+        <form action="" method="POST"
+              enctype="multipart/form-data">
+            <input type="file" name="file"/>
+            <input type="submit"/>
+        </form>
+        <ul>
+            {% for item in list %}
+                <li>
+                    <p>{{ item }}</p>
+                </li>
+            {% endfor %}
+        </ul>
 
-<p>Document viewer Demo<br><a href='/view_document'><b>Try</b></a></p>
-<!--DO NOT modify ⁣⁣⁣⁣　! This is used to hide the link. Click it only in test for document viewer.-->
-<!--<p>Advanced document viewer (under construction)<br><a href='/embedded_view/public/hello_world.csv'><b>⁣⁣⁣⁣　</b></a></p>-->
-<!--<p>Advanced document viewer (under construction)<br><a href='/download_file/public/hello_world.csv'><b>⁣⁣⁣⁣　</b></a></p>-->
-<p>Download a demo CSV file <br><a href='/download_file/public/hello_world.csv'><b>Try</b></a></p>
+        <p>
+            <a href='{{ url_for('file_viewer.view_document_demo') }}'>
+                <b>Document viewer Demo</b>
+            </a>
+        </p>
+        <!--DO NOT modify ⁣⁣⁣⁣　! This is used to hide the link. Click it only in test for document viewer.-->
+        <!--<p>Advanced document viewer (under construction)<br><a href='/embedded_view/public/hello_world.csv'><b>⁣⁣⁣⁣　</b></a></p>-->
+        <!--<p>Advanced document viewer (under construction)<br><a href='/download_file/public/hello_world.csv'><b>⁣⁣⁣⁣　</b></a></p>-->
+        <p>
+            <a href='{{ url_for('file_viewer.download_file', file_path='public/hello_world.csv') }}'>
+                <b>Download a demo CSV file </b>
+            </a>
+        </p>
 
-<iframe
-  src="https://view.officeapps.live.com/op/embed.aspx?src=https://www.labnol.org/files/excel.xlsx"
-  width="800px"
-  height="603px"
-  frameborder="0"
-></iframe>
+        <iframe
+                src="https://view.officeapps.live.com/op/embed.aspx?src=https://www.labnol.org/files/excel.xlsx"
+                width="800px"
+                height="603px"
+                frameborder="0"
+        ></iframe>
+    </div>
+
 
 {% endblock %}
