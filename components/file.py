@@ -2,10 +2,11 @@ from flask import Blueprint, render_template
 from flask import send_file
 import requests
 import os
-from util.file_manager import download_blob, download_with_response
-from config import BUCKET_NAME
+from util.file_manager import download_blob, download_with_response, download_for_embedding
+import config
+import pandas as pd
 
-bp = Blueprint('file_viewer', __name__, url_prefix='/file_viewer')
+bp = Blueprint('file', __name__, url_prefix='/file')
 
 
 ## embedded viewer that works
@@ -28,20 +29,25 @@ def view_document(file_path='public/hello_world.csv'):
     # document_url = f'https://lcda-vgnazlwvxa-nw.a.run.app/download_file/{file_path}'
     document_url = f'https://lcda-vgnazlwvxa-nw.a.run.app/embedded_view/{file_path}'
     # document_url = 'https://lcda-vgnazlwvxa-nw.a.run.app/download_file/temp_files/helloWorld.csv'
+
+    import urllib.parse
+
+    safe_document_url = urllib.parse.quote(document_url, safe='')
+
     # from app import app
     # document_path = os.path.join(app.root_path, file_path)
     # Replace the 'Office Online' string with your desired title for the viewer
     title = 'Document Viewer'
     # Build the HTML code for the viewer
     # viewer_html = requests.get(f'https://view.officeapps.live.com/op/embed.aspx?src={document_path}').text
-    viewer_html = requests.get(f'https://view.officeapps.live.com/op/embed.aspx?src={document_url}').text
+    viewer_html = requests.get(f'https://view.officeapps.live.com/op/embed.aspx?src={safe_document_url}').text
 
     return render_template('dataset/document_viewer.html', title=title, viewer_html=viewer_html)
 
 
 ## download file
-@bp.route('/download_file/<path:file_path>')
-def download_file(file_path='public/hello_world.csv'):
+@bp.route('/download/<path:file_path>')
+def download(file_path='public/hello_world.csv'):
     # Specify the file path
 
     # safety check
@@ -58,12 +64,27 @@ def download_file(file_path='public/hello_world.csv'):
     # return send_file(temp_file, as_attachment=True, download_name=filename)
 
 
-@bp.route('/embedded_view/<path:file_path>')
+@bp.route('/embedded/<path:file_path>')
 def embedded_view(file_path='public/hello_world.csv'):
     # Specify the file path
     filename = file_path.split('/')[-1]
-    temp_file = f'temp_files/{filename}'
-    download_blob(file_path, temp_file, BUCKET_NAME)
+    # get the file extension
+    file_extension = filename.split('.')[-1]
+    file_name = filename.split('.')[0]
+    temp_file = f'{config.TEMP_PATH}/{filename}'
 
-    # Send the file to the client
-    return send_file(temp_file, as_attachment=True, download_name=filename)
+    #if is csv
+    if file_extension == 'csv':
+        filename, temp_name = download_for_embedding(file_path, filename)
+        temp_path_xlsx = csv_to_xlsx(filename, temp_name)
+        # temp_file = f'{config.TEMP_PATH}/{temp_name_xlsx}'
+
+        # Send the file to the client
+        return send_file(temp_path_xlsx, as_attachment=True, download_name=f'{file_name}.xlsx')
+    else:
+        download(file_path)
+
+def csv_to_xlsx(filename, temp_path):
+    csv = pd.read_csv(temp_path, encoding='utf-8')
+    csv.to_excel(f'{temp_path}.xlsx', sheet_name=filename, index=False)
+    return f'{temp_path}.xlsx'

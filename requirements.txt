@@ -6,3 +6,5 @@ Werkzeug
 gunicorn==20.1.0
 requests
 google-cloud-storage
+pandas
+openpyxl

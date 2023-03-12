@@ -62,6 +62,15 @@ def download_with_response(src_path, des_path=''):
     response = send_file(temp_file.name, as_attachment=True, download_name=filename)
     return response
 
+def download_for_embedding(src_path, des_path=''):
+    ## Download file from Cloud temporarily and respond file name and path
+    filename = src_path.split('/')[-1]
+    with tempfile.NamedTemporaryFile(dir='temp_files', delete=False) as temp_file:
+        blob = my_bucket.blob(src_path)
+        blob.download_to_file(temp_file)
+    if des_path:
+        filename = des_path
+    return filename, temp_file.name
 
 def list_blobs(bucket_name=config.BUCKET_NAME, prefix=''):
     """

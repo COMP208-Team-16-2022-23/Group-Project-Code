@@ -28,5 +28,8 @@ BUCKET_NAME = 'lcda'
 SANDBOX_NAME = 'sandbox'
 SANBOX_PATH = 'sandbox'
 
+# Configuration variables for the temp files
+TEMP_PATH = 'temp_files'
+
 # product name
 PRODUCT_NAME = 'LCDA'
