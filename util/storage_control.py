@@ -1,7 +1,7 @@
 # -*- coding = utf-8 -*-
 # @Time: 2023/3/9 14:48
 # @File: file_manager.PY
-import io
+from io import BytesIO
 import os
 
 from flask import send_file
@@ -39,10 +39,10 @@ def delete_blob(blob_name, bucket_name=config.BUCKET_NAME):
         return False
 
 
-def download(src_path, bucket_name=config.BUCKET_NAME):
-    """Downloads a blob from the bucket and store in disk temporary"""
+def download_to_memory(src_path, bucket_name=config.BUCKET_NAME) -> BytesIO:
+    """Downloads a blob from the bucket and store in memory"""
     # todo verification
-    file_data = io.BytesIO()
+    file_data = BytesIO()
     try:
         bucket = storage_client.get_bucket(bucket_name)
         blob = bucket.blob(src_path)
@@ -58,14 +58,7 @@ def download_for_embedding(src_path, dest_path='', bucket_name=config.BUCKET_NAM
     Download file from Cloud temporarily and respond file name and file data
     :return: file name and file data in memory
     """
-    temp_path = download(src_path, bucket_name)
-    # print(temp_path)
-    #  fetch file data into memory
-    # file_data = io.BytesIO()
-    # with open(temp_path, 'rb') as f:
-    #     file_data.write(f.read())
-    # file_data.seek(0)
-    # os.remove(temp_path)
+    temp_path = download_to_memory(src_path, bucket_name)
     if dest_path:
         filename = dest_path
     return filename, temp_path
@@ -74,8 +67,7 @@ def download_for_embedding(src_path, dest_path='', bucket_name=config.BUCKET_NAM
 def download_with_response(src_path, dest_path='', bucket_name=config.BUCKET_NAME):
     """Download file from Cloud and respond"""
     filename, file_data = download_for_embedding(src_path, dest_path, bucket_name)
-    response = send_file(file_data, as_attachment=True, download_name=filename)
-    return response
+    return send_file(file_data, as_attachment=True, download_name=filename)
 
 
 def list_blobs(bucket_name=config.BUCKET_NAME, prefix=''):
