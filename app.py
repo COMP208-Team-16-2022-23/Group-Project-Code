@@ -1,7 +1,5 @@
 from flask import Flask, render_template
 import os
-import threading
-import time
 from flask_mail import Mail
 import database as db
 from components import auth
@@ -62,7 +60,5 @@ def run_app():
     app.run(debug=False, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
 
 if __name__ == "__main__":
-    first_thread = threading.Thread(target=create_temp_folder)
-    second_thread = threading.Thread(target=run_app)
-    first_thread.start()
-    second_thread.start()
+    create_temp_folder()
+    run_app()

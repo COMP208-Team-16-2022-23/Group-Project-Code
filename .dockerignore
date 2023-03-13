@@ -11,3 +11,4 @@ instance
 .git
 .gitignore
 .DS_Store
+temp_files
