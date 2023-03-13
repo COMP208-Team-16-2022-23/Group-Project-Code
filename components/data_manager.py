@@ -5,16 +5,11 @@
 
 from flask import Blueprint, request, render_template, session, redirect, g, flash, url_for
 from werkzeug.utils import secure_filename
-import os
-import requests
 import config
-from util.file_manager import my_bucket
-from util.file_manager import list_blobs_names, upload_blob, delete_blob
+from util.storage_control import list_blobs_names, upload_blob, delete_blob
 
 bp = Blueprint('my_data', __name__, url_prefix='/my_data')
 
-
-# initialize the storage client
 # define file allowance
 # def allowed_file(filename):
 #     return '.' in filename and \
@@ -47,7 +42,7 @@ def my_data():
         #     return redirect(url_for('download_file', name=filename))
         if file and g.user:
             filename = secure_filename(file.filename)
-            upload_blob(file, filename, my_bucket, prefix=private_path)
-            dict_files = list_blobs_names(bucket_name, private_path) + public_files
+            upload_blob(file, filename, prefix=private_path)
+            dict_files = list_blobs_names(prefix=private_path) + public_files
             return render_template('dataset/my_data.html', list=dict_files)
     return render_template('dataset/my_data.html', list=dict_files)

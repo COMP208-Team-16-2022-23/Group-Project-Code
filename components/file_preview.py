@@ -2,7 +2,7 @@ from flask import Blueprint, render_template
 from flask import send_file
 import requests
 import os
-import util.file_manager as fmgr
+import util.storage_control as sc
 import util.file_util as file
 import config
 
@@ -47,18 +47,8 @@ def view_document(file_path='public/hello_world.csv'):
 def download(file_path='public/hello_world.csv'):
     # Specify the file path
 
-    # safety check
-    # if file_path do not contain 'sandbox', return 404
-    # if 'sandbox' not in file_path:
-    #     return '404'
-
     filename = file_path.split('/')[-1]
-    return fmgr.download_with_response(file_path, filename)
-    # temp_file = f'temp_files/{filename}'
-    # download_blob(file_path, temp_file, BUCKET_NAME)
-
-    # Send the file to the client
-    # return send_file(temp_file, as_attachment=True, download_name=filename)
+    return sc.download_with_response(file_path, filename)
 
 
 @bp.route('/embedded/<path:file_path>')
@@ -68,16 +58,14 @@ def embedded_view(file_path='public/hello_world.csv'):
     # get the file extension
     file_extension = filename.split('.')[-1]
     file_name = filename.split('.')[0]
-    temp_file = f'{config.TEMP_PATH}/{filename}'
 
     #if is csv
     if file_extension == 'csv':
-        filename, temp_name = fmgr.download_for_embedding(file_path, filename)
-        temp_path_xlsx = file.csv_to_xlsx(filename, temp_name)
-        # temp_file = f'{config.TEMP_PATH}/{temp_name_xlsx}'
+        filename, temp_data = sc.download_for_embedding(file_path, filename)
+        temp_xlsx = file.csv_to_xlsx(filename, temp_data)
 
         # Send the file to the client
-        return send_file(temp_path_xlsx, as_attachment=True, download_name=f'{file_name}.xlsx')
+        return send_file(temp_xlsx, as_attachment=True, download_name=f'{file_name}.xlsx')
     else:
         return download(file_path)
 
