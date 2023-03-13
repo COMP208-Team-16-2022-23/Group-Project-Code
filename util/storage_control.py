@@ -53,7 +53,7 @@ def download(src_path, bucket_name=config.BUCKET_NAME):
         return None
 
 
-def download_for_embedding(src_path, dest_path='', bucket_name=config.BUCKET_NAME) -> [str | io.BytesIO]:
+def download_for_embedding(src_path, dest_path='', bucket_name=config.BUCKET_NAME):
     """
     Download file from Cloud temporarily and respond file name and file data
     :return: file name and file data in memory
