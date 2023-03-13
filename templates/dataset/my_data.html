@@ -22,18 +22,18 @@
                 </ul>
 
                 <p>
-                    <a href='{{ url_for('file.view_document_demo') }}'>
+                    <a href='{{ url_for('file_preview.view_document_demo') }}'>
                         <b>Document viewer Demo</b>
                     </a>
                 </p>
                 <!--Advanced document viewer-->
                 <p>
-                    <a href='{{ url_for('file.embedded_view', file_path='public/hello_world.csv') }}'>
+                    <a href='{{ url_for('file_preview.embedded_view', file_path='public/hello_world.csv') }}'>
                         <b>Download sample data in xlsx</b>
                     </a>
                 </p>
                 <p>
-                    <a href='{{ url_for('file.download', file_path='public/hello_world.csv') }}'>
+                    <a href='{{ url_for('file_preview.download', file_path='public/hello_world.csv') }}'>
                         <b>Download a demo CSV file </b>
                     </a>
                 </p>

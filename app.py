@@ -7,7 +7,7 @@ from components import data_processing
 from components import data_manager
 from components import legal
 from components import data_analysis
-from components import file
+from components import file_preview
 
 # from components import node_editer
 
@@ -40,9 +40,11 @@ app.register_blueprint(auth.bp)
 app.register_blueprint(data_manager.bp)
 app.register_blueprint(data_processing.bp)
 app.register_blueprint(data_analysis.bp)
-app.register_blueprint(file.bp)
+app.register_blueprint(file_preview.bp)
 app.register_blueprint(legal.bp)
 
+
+@app.before_first_request
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
