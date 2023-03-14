@@ -40,7 +40,7 @@
                                         <th scope="row">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="file_selection"
-                                                       id="{{ file['ID'] }}" value="{{ file['ID'] }}"/>
+                                                       id="{{ file['id'] }}" value="{{ file['id'] }}"/>
                                             </div>
                                         </th>
                                         <td>
@@ -75,7 +75,7 @@
 
 
 
-    {% if processings %}
+    {% if processing_project_list %}
         <table class="table align-middle mb-0 bg-white">
             <thead class="bg-light">
             <tr>
@@ -85,21 +85,23 @@
             </tr>
             </thead>
             <tbody>
-            {% for processing in processings %}
+            {% for processing_project in processing_project_list %}
                 <tr>
                     <td>
                         <div class="d-flex align-items-center">
                             <i class="fa fa-table fa-4" aria-hidden="true"></i>
-                            <p class="fw-bold ms-3 mb-0">{{ processing['file_name'] }}</p>
+                            <p class="fw-bold ms-3 mb-0">{{ processing_project['current_file_name'] }}</p>
                         </div>
                     </td>
                     <td>
-                        <p class="fw-normal mb-0">{{ processing['date_modified'] }}</p>
+                        <p class="fw-normal mb-0">{{ processing_project['modified_date'] }}</p>
                     </td>
                     <td>
-                        <button type="button" class="btn btn-link btn-sm btn-rounded">
+
+                        <a type="button" class="btn btn-link btn-sm btn-rounded"
+                           href="{{ url_for('data_processing.project', processing_project_id=processing_project['id']) }}">
                             Edit
-                        </button>
+                        </a>
                     </td>
                 </tr>
             {% endfor %}

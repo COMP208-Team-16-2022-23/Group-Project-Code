@@ -12,3 +12,4 @@ dependencies:
   - conda-forge::flask-mail
   - conda-forge::google-cloud-storage
   - pymysql
+  - openpyxl
