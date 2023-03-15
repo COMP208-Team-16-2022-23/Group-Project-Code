@@ -2,7 +2,6 @@
 # @Time: 2023/3/9 14:48
 # @File: file_manager.PY
 from io import BytesIO
-import os
 
 from flask import send_file
 from google.cloud import storage
@@ -19,7 +18,6 @@ def upload_blob(file, blob_name, bucket_name=config.BUCKET_NAME, public=False, p
         # md5_hash = hashlib.md5(filepath.read_bytes())  # nosec
         # blob.md5_hash = base64.b64encode(md5_hash.digest()).decode()
         if prefix:
-            # blob_name = os.path.join(prefix, blob_name)
             blob_name = prefix + '/' + blob_name
         blob = storage_client.bucket(bucket_name).blob(blob_name)
         blob.upload_from_file(file)
@@ -78,7 +76,16 @@ def list_blobs(bucket_name=config.BUCKET_NAME, prefix=''):
     :return: list of blobs
     """
     try:
-        return storage_client.list_blobs(bucket_name, prefix=prefix)
+        processed_blob_list = []
+        blob_list = storage_client.list_blobs(bucket_name, prefix=prefix)
+        for blob in blob_list:
+            processed_blob_list.append(
+                {'file_name': blob.name,
+                 'base_name': blob.name.split('/')[-1],
+                 'date_modified': str(blob.updated).split('.')[0],
+                 'id': str(blob.id).split('/')[-1]
+                 })
+        return processed_blob_list
     except Exception as e:
         return False
 
@@ -92,10 +99,7 @@ def list_blobs_names(bucket_name=config.BUCKET_NAME, prefix=''):
     """
     try:
         blobs = list_blobs(bucket_name=bucket_name, prefix=prefix)
-        blobs_name_list = []
-        for blob in blobs:
-            if blob.name.replace(prefix + '/', ""):  # remove empty string
-                blobs_name_list.append(blob.name.replace(prefix + '/', ""))
+        blobs_name_list = [blob['base_name'] for blob in blobs]
         return blobs_name_list
     except Exception as e:
         return False
@@ -131,8 +135,6 @@ def delete_folder(path, bucket):
     try:
         if path[-1] != "/":
             path += "/"
-        blob = bucket.blob(path)
-
         blob = bucket.blob(path)
 
         blob.delete()

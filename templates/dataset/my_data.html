@@ -8,11 +8,13 @@
     <div class="container mt-3">
         <div class="row d-flex">
             <div class="col-4">
+                <!--file upload area-->
                 <form action="" method="POST"
                       enctype="multipart/form-data">
                     <input type="file" name="file"/>
                     <input type="submit"/>
                 </form>
+                <!--file list-->
                 <ul>
                     {% for item in list %}
                         <li>

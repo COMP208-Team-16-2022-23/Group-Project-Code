@@ -17,12 +17,7 @@ def remove_prefix(text):
 
 def get_blob_dicts(prefix):
     blobs_list = list_blobs(prefix=prefix)
-    file_list = []
-    for blob in blobs_list:
-        file_list.append(
-            {'file_name': blob.name, 'date_modified': str(blob.updated).split('.')[0],
-             'id': str(blob.id).split('/')[-1]})
-    return file_list
+    return blobs_list
 
 
 @bp.route("/", methods=['GET', 'POST'])
