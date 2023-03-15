@@ -9,12 +9,18 @@ from util.models import ProcessingProject, User
 bp = Blueprint('data_processing', __name__, url_prefix='/data_processing')
 
 
-def get_date_and_id(prefix):
+def remove_prefix(text):
+    # delete every character before the first slash and the first slash
+    return text[text.find('/') + 1:]
+
+
+
+def get_blob_dicts(prefix):
     blobs_list = list_blobs(prefix=prefix)
     file_list = []
     for blob in blobs_list:
         file_list.append(
-            {'file_name': blob.name.replace(prefix + '/', ""), 'date_modified': str(blob.updated).split('.')[0],
+            {'file_name': blob.name, 'date_modified': str(blob.updated).split('.')[0],
              'id': str(blob.id).split('/')[-1]})
     return file_list
 
@@ -23,10 +29,10 @@ def get_date_and_id(prefix):
 def index():
     # todo: add logic for data processing project list and add new project button
     prefix = 'public'
-    file_list = get_date_and_id(prefix)
+    file_list = get_blob_dicts(prefix)
     if g.user:
         prefix = g.user.username
-        file_list += get_date_and_id(prefix)
+        file_list += get_blob_dicts(prefix)
 
     # get user's processing project list from database
     if g.user:
@@ -70,6 +76,12 @@ def index():
 
         return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
 
+    # for file in file_list:
+    #     file['file_name'] = remove_prefix(file['file_name'])
+    #
+    # for processing_project in processing_project_list:
+    #     processing_project.original_file_name = remove_prefix(processing_project.original_file_name)
+
     return render_template('data_processing/index.html', file_list=file_list,
                            processing_project_list=processing_project_list)
 
@@ -77,4 +89,13 @@ def index():
 @bp.route("/project/<processing_project_id>", methods=['GET', 'POST'])
 def project(processing_project_id):
     # todo: restrict access to the project page if the user is not the owner of the project
-    return render_template('data_processing/project.html', project_id=processing_project_id)
+
+    # get blob from processing project id
+    processing_project = ProcessingProject.query.filter_by(id=processing_project_id).first()
+    if processing_project is None:
+        return redirect(url_for('data_processing.index'))
+
+    # get file name from file id
+
+
+    return render_template('data_processing/project.html', project_id=processing_project_id, file_path=processing_project.current_file_name)

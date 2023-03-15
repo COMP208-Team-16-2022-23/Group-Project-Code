@@ -1,14 +1,82 @@
 {% extends 'base.html' %}
 
-{% block title %}Data process{% endblock %}
+{% block title %}Data processing{% endblock %}
 
 {% block content %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for("index") }}">Home</a></li>
+            <li class="breadcrumb-item"><a herf="{{ url_for("data_processing.index") }}">Data Processing</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ file_path[file_path.find('/') + 1:] }}</li>
+        </ol>
+    </nav>
+
     <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>Data process</h1>
-                <p>Project ID: {{ project_id }}</p>
+
+        <div class="row justify-content-between">
+            <div class="col-md-4">
+                <h2>Processing methods</h2>
+                <div class="row justify-content-between">
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-outline-primary" data-mdb-toggle="modal"
+                                data-mdb-target="#algorithm_1">
+                            Algorithm 1
+                        </button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="button" class="btn btn-outline-primary" data-mdb-toggle="modal"
+                                data-mdb-target="#algorithm_2">
+                            Algorithm 2
+                        </button>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-md-8">
+                <iframe
+                        src="https://view.officeapps.live.com/op/embed.aspx?src=https://lcda-vgnazlwvxa-nw.a.run.app/file/embedded/{{ file_path }}"
+                        width="100%"
+                        height="600px"
+                ></iframe>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Vertically centered scrollable modal -->
+    <div class="modal fade modal-lg" id="algorithm_1" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Some Algorithm 1</h5>
+                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">...</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="modal fade modal-lg" id="algorithm_2" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Some Algorithm 2</h5>
+                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">...</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 {% endblock %}
