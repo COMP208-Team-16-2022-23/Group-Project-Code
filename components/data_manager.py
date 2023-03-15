@@ -6,7 +6,7 @@
 from flask import Blueprint, request, render_template, session, redirect, g, flash, url_for
 from werkzeug.utils import secure_filename
 import config
-from util.storage_control import list_blobs_names, upload_blob, delete_blob
+from util.storage_control import list_blobs, list_blobs_names, upload_blob, delete_blob
 
 bp = Blueprint('my_data', __name__, url_prefix='/my_data')
 
@@ -20,10 +20,10 @@ bp = Blueprint('my_data', __name__, url_prefix='/my_data')
 def my_data():
     private_files = []
     bucket_name = config.BUCKET_NAME
-    public_files = list_blobs_names(bucket_name, 'public')
+    public_files = list_blobs(bucket_name, 'public')
     if g.user:
         private_path = g.user.username
-        private_files = list_blobs_names(bucket_name, private_path)
+        private_files = list_blobs(bucket_name, private_path)
     dict_files = public_files + private_files
     if request.method == 'POST':
         # check if the post request has the file part
@@ -43,6 +43,6 @@ def my_data():
         if file and g.user:
             filename = secure_filename(file.filename)
             upload_blob(file, filename, prefix=private_path)
-            dict_files = list_blobs_names(prefix=private_path) + public_files
+            dict_files = list_blobs(prefix=private_path) + public_files
             return render_template('dataset/my_data.html', list=dict_files)
     return render_template('dataset/my_data.html', list=dict_files)

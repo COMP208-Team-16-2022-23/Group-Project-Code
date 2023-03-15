@@ -15,12 +15,28 @@
                     <input type="submit"/>
                 </form>
                 <!--file list-->
-                <ul>
-                    {% for item in list %}
-                        <li>
-                            <p>{{ item }}</p>
-                        </li>
-                    {% endfor %}
+                <ul class="list-group list-group-light">
+
+                {% for item in list %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div class="dropend px-3 border-0">
+                        <button class="btn btn-secondary" style="width: 300px">
+                            {{ item['base_name'] }}
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-tertiary dropdown-toggle dropdown-toggle-split"
+                            data-mdb-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <span class="visually-hidden">Toggle Dropright</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Delete</a></li>
+                        </ul>
+                    </div>
+                </li>
+                {% endfor %}
                 </ul>
 
                 <p>
