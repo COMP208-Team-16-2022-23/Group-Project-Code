@@ -20,7 +20,8 @@
                 {% for item in list %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <div class="dropend px-3 border-0">
-                        <button class="btn btn-secondary" style="width: 300px">
+                        <button class="btn btn-secondary" style="width: 300px"
+                                onclick="go({{ '\'' + item['file_name'] + '\''}})">
                             {{ item['base_name'] }}
                         </button>
                         <button
@@ -63,15 +64,23 @@
 <!--                        height="603px"-->
 <!--                        frameborder="0"-->
 <!--                ></iframe>-->
-                 <iframe
-                        src="https://view.officeapps.live.com/op/embed.aspx?src=https://lcda-vgnazlwvxa-nw.a.run.app/file/embedded/public/CW_Data.csv"
-                        width="800px"
-                        height="603px"
-                        frameborder="0"
+                <iframe
+                    id="data_view"
+                    src="https://view.officeapps.live.com/op/embed.aspx?src=https://lcda-vgnazlwvxa-nw.a.run.app/file/embedded/public/CW_Data.csv"
+                    width="800px"
+                    height="603px"
+                    frameborder="0"
                 ></iframe>
             </div>
         </div>
     </div>
+    <script>
+        function go(loc) {
+            let path = "";
+            path = "https://view.officeapps.live.com/op/embed.aspx?src=https://lcda-vgnazlwvxa-nw.a.run.app/file/embedded/".concat(loc)
+            document.getElementById('data_view').src = path;
+        }
+    </script>
 
 
 {% endblock %}
