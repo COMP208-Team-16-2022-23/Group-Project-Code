@@ -8,3 +8,6 @@ requests
 google-cloud-storage
 pandas
 openpyxl
+numpy
+scipy
+scikit-learn
