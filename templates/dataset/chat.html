@@ -4,7 +4,9 @@
     <title>Chat Demo</title>
 </head>
 <body>
-    <h1>Chat with ChatGPT</h1>
+    <h1>Chat Demo</h1>
+    <p> This is only a demo that verifies that the chatGPT intergration is working. </p>
+    <p> Please do not overuse. </p>
     <div id="chatbox"></div>
     <form id="message-form">
         <input type="text" id="message-input" name="message" placeholder="Type your message here...">
@@ -21,11 +23,12 @@
             const message = messageInput.value;
             messageInput.value = '';
             appendMessage(`You: ${message}`);
-            console.log(message)
-            console.log(new FormData(messageForm));
+            console.log(new FormData(messageForm)); // added log statement
+            const data = new URLSearchParams();
+            data.append('message', message);
             fetch('/chat/send', {
                 method: 'POST',
-                body: new FormData(messageForm)
+                body: data
             })
             .then(response => response.text())
             .then(response => {
