@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Demo</title>
+</head>
+<body>
+    <h1>Chat with ChatGPT</h1>
+    <div id="chatbox"></div>
+    <form id="message-form">
+        <input type="text" id="message-input" name="message" placeholder="Type your message here...">
+        <button type="submit">Send</button>
+    </form>
+
+    <script>
+        const chatbox = document.getElementById('chatbox');
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+
+        messageForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const message = messageInput.value;
+            messageInput.value = '';
+            appendMessage(`You: ${message}`);
+            console.log(message)
+            console.log(new FormData(messageForm));
+            fetch('/chat/send', {
+                method: 'POST',
+                body: new FormData(messageForm)
+            })
+            .then(response => response.text())
+            .then(response => {
+                appendMessage(`ChatGPT: ${response}`);
+            })
+            .catch(error => console.error(error));
+        });
+
+        function appendMessage(message) {
+            const messageElement = document.createElement('div');
+            messageElement.innerText = message;
+            chatbox.appendChild(messageElement);
+        }
+    </script>
+</body>
+</html>
