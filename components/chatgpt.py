@@ -11,7 +11,6 @@ def index():
 @bp.route("/send", methods=["POST"])
 def send_message():
     from util.gpt import generate_response
-    print(request.form)
     prompt = request.form['message']
     response = generate_response(prompt)
     return response

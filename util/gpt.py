@@ -1,9 +1,8 @@
 import config
 import openai
 
-# Reference: https://platform.openai.com/docs/guides/chat
 
-# Define a function to generate a response using ChatGPT
+# Reference: https://platform.openai.com/docs/guides/chat
 def generate_response(prompt) -> str:
     # stop response if Chinese characters are detected
     if any(u'\u4e00' <= c <= u'\u9fff' for c in prompt):
@@ -22,4 +21,3 @@ def generate_response(prompt) -> str:
     )
     # print(prompt)
     return response['choices'][0]['message']['content']
-
