@@ -32,31 +32,23 @@ class ProcessingProject(Base):
     Attributes:
         id: the id of the processing project
         user_id: the id of the user who created the processing project
-        original_file_id: the id of the original file
-        original_file_name: the name of the original file
-        current_file_id: the id of the current file
-        current_file_name: the name of the current file
-        modified_date: the date when the processing project is modified
+        original_file_path: the path of the original file
+        current_file_path: the path of the current file
+        modified_date: the date when the file is modified
     """
 
     __tablename__ = 'processing_projects'
     id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, nullable=False)
-    original_file_id = Column(String(500), nullable=False)
-    original_file_name = Column(String(500), nullable=False)
-    current_file_id = Column(String(500), nullable=False)
-    current_file_name = Column(String(500), nullable=False)
+    original_file_path = Column(String(500), nullable=False)
+    current_file_path = Column(String(500), nullable=False)
     modified_date = Column(DateTime, default=datetime.utcnow)
 
-    def __init__(self, user_id=None, original_file_id=None, original_file_name=None, current_file_id=original_file_id,
-                 current_file_name=original_file_name):
+    def __init__(self, user_id=None, original_file_path=None, current_file_path=original_file_path):
         self.user_id = user_id
-        self.original_file_id = original_file_id
-        self.original_file_name = original_file_name
-        self.current_file_id = current_file_id
-        self.current_file_name = current_file_name
+        self.original_file_path = original_file_path
+        self.current_file_path = current_file_path
 
     def __repr__(self):
-        return {'id': self.id, 'user_id': self.user_id, 'original_file_id': self.original_file_id,
-                'original_file_name': self.original_file_name, 'current_file_id': self.current_file_id,
-                'current_file_name': self.current_file_name, 'modified_date': self.modified_date}
+        return {'id': self.id, 'user_id': self.user_id, 'original_file_path': self.original_file_path,
+                'current_file_path': self.current_file_path, 'modified_date': self.modified_date}
