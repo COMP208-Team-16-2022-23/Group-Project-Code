@@ -71,5 +71,34 @@ def project(processing_project_id):
     if processing_project is None:
         return redirect(url_for('data_processing.index'))
 
+    # read algorithm list from json file in ../algorithm/data_processing_algorithm_config.json
+    import os
+    import json
+    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    file_path = os.path.join(parent_dir, 'algorithms', 'data_processing_algorithms_config.json')
+    with open(file_path, 'r') as f:
+        data_processing_algorithms_config = json.load(f)
+
+    if request.method == 'POST':
+        print(request.form)
+        # get the algorithm name from the form
+        # algorithm_name = request.form['algorithm_selection']
+        #
+        # # get the algorithm config from the form
+        # algorithm_config = {}
+        # for key in request.form.keys():
+        #     if key != 'algorithm_selection':
+        #         algorithm_config[key] = request.form[key]
+        #
+        # # add the algorithm to the processing project
+        # processing_project.add_algorithm(algorithm_name, algorithm_config)
+        #
+        # # update the database
+        # db_session.commit()
+        #
+        # # redirect to the project page
+        # return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
+
     return render_template('data_processing/project.html', project_id=processing_project_id,
-                           file_path=processing_project.current_file_path)
+                           file_path=processing_project.current_file_path,
+                           data_processing_algorithms=data_processing_algorithms_config)
