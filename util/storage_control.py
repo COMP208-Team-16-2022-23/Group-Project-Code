@@ -80,8 +80,8 @@ def list_blobs(bucket_name=config.BUCKET_NAME, prefix=''):
         blob_list = storage_client.list_blobs(bucket_name, prefix=prefix)
         for blob in blob_list:
             processed_blob_list.append(
-                {'file_name': blob.name,
-                 'base_name': blob.name.split('/')[-1],
+                {'file_path': blob.name,
+                 'file_name': blob.name.split('/')[-1],
                  'date_modified': str(blob.updated).split('.')[0],
                  'id': str(blob.id).split('/')[-1]
                  })

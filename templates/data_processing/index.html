@@ -40,13 +40,13 @@
                                         <th scope="row">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="file_selection"
-                                                       id="{{ file['id'] }}" value="{{ file['id'] }}"/>
+                                                       id="{{ file['file_path'] }}" value="{{ file['file_path'] }}"/>
                                             </div>
                                         </th>
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <i class="fa fa-table fa-4" aria-hidden="true"></i>
-                                                <p class="fw-bold ms-3 mb-0">{{ file['file_name'][file['file_name'].find('/') + 1:] }}</p>
+                                                <p class="fw-bold ms-3 mb-0">{{ file['file_name'] }}</p>
                                             </div>
                                         </td>
                                         <td>
@@ -90,7 +90,7 @@
                     <td>
                         <div class="d-flex align-items-center">
                             <i class="fa fa-table fa-4" aria-hidden="true"></i>
-                            <p class="fw-bold ms-3 mb-0">{{ processing_project['current_file_name'][processing_project['current_file_name'].find('/') + 1:] }}</p>
+                            <p class="fw-bold ms-3 mb-0">{{ processing_project['current_file_path'][processing_project['current_file_path'].find('/') + 1:] }}</p>
                         </div>
                     </td>
                     <td>

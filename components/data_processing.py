@@ -9,25 +9,14 @@ from util.models import ProcessingProject, User
 bp = Blueprint('data_processing', __name__, url_prefix='/data_processing')
 
 
-def remove_prefix(text):
-    # delete every character before the first slash and the first slash
-    return text[text.find('/') + 1:]
-
-
-
-def get_blob_dicts(prefix):
-    blobs_list = list_blobs(prefix=prefix)
-    return blobs_list
-
-
 @bp.route("/", methods=['GET', 'POST'])
 def index():
     # todo: add logic for data processing project list and add new project button
     prefix = 'public'
-    file_list = get_blob_dicts(prefix)
+    file_list = list_blobs(prefix=prefix)
     if g.user:
         prefix = g.user.username
-        file_list += get_blob_dicts(prefix)
+        file_list += list_blobs(prefix=prefix)
 
     # get user's processing project list from database
     if g.user:
@@ -38,21 +27,14 @@ def index():
 
     # logic for add new processing project
     if request.method == 'POST':
-        selected_file_id = request.form['file_selection']
+        selected_file_path = request.form['file_selection']
 
         # check whether the file is already in processing, if so, redirect to the processing project page
         for processing_project in processing_project_list:
-            if processing_project.original_file_id == selected_file_id:
-                return redirect(url_for('data_processing.project',
-                                        processing_project_id=processing_project.id))
+            if processing_project.original_file_path == selected_file_path:
+                return redirect(url_for('data_processing.project', processing_project_id=processing_project.id))
 
         # add new processing project to database
-        # get file name from file id
-        file_name = ''
-        for file in file_list:
-            if file['id'] == selected_file_id:
-                file_name = file['file_name']
-                break
 
         # determine whether log in
         if not g.user:
@@ -60,14 +42,13 @@ def index():
         else:
             user_id = g.user.id
 
-        processing_project = ProcessingProject(user_id=user_id, original_file_id=selected_file_id,
-                                               original_file_name=file_name)
+        processing_project = ProcessingProject(user_id=user_id, original_file_path=selected_file_path)
         db_session.add(processing_project)
         db_session.commit()
 
         # get the latest id of the new processing project
-        processing_project_id = ProcessingProject.query.filter_by(user_id=user_id, original_file_id=selected_file_id,
-                                                                  original_file_name=file_name).first().id
+        processing_project_id = ProcessingProject.query.filter_by(user_id=user_id,
+                                                                  original_file_path=selected_file_path, ).first().id
 
         return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
 
@@ -90,7 +71,34 @@ def project(processing_project_id):
     if processing_project is None:
         return redirect(url_for('data_processing.index'))
 
-    # get file name from file id
+    # read algorithm list from json file in ../algorithm/data_processing_algorithm_config.json
+    import os
+    import json
+    parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    file_path = os.path.join(parent_dir, 'algorithms', 'data_processing_algorithms_config.json')
+    with open(file_path, 'r') as f:
+        data_processing_algorithms_config = json.load(f)
 
+    if request.method == 'POST':
+        print(request.form)
+        # get the algorithm name from the form
+        # algorithm_name = request.form['algorithm_selection']
+        #
+        # # get the algorithm config from the form
+        # algorithm_config = {}
+        # for key in request.form.keys():
+        #     if key != 'algorithm_selection':
+        #         algorithm_config[key] = request.form[key]
+        #
+        # # add the algorithm to the processing project
+        # processing_project.add_algorithm(algorithm_name, algorithm_config)
+        #
+        # # update the database
+        # db_session.commit()
+        #
+        # # redirect to the project page
+        # return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
 
-    return render_template('data_processing/project.html', project_id=processing_project_id, file_path=processing_project.current_file_name)
+    return render_template('data_processing/project.html', project_id=processing_project_id,
+                           file_path=processing_project.current_file_path,
+                           data_processing_algorithms=data_processing_algorithms_config)

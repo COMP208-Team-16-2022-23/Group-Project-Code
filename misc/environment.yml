@@ -11,5 +11,6 @@ dependencies:
   - flask-login
   - conda-forge::flask-mail
   - conda-forge::google-cloud-storage
+  - conda-forge::openai
   - pymysql
   - openpyxl

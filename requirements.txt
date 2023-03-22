@@ -12,3 +12,5 @@ numpy
 scipy
 scikit-learn
 openai
+seaborn
+matplotlib

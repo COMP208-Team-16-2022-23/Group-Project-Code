@@ -1,0 +1,39 @@
+[
+  {
+    "name": "Algorithm 1 test",
+    "function_name": "algorithm1",
+    "parameters": [
+      {
+        "name": "Parameter 1",
+        "type": "text"
+      },
+      {
+        "name": "Parameter 2",
+        "type": "number"
+      }
+    ]
+  },
+
+
+  {
+    "name": "Algorithm 2",
+    "function_name": "algorithm2",
+    "parameters": [
+      {
+        "name": "Parameter 1",
+        "type": "checkbox"
+      },
+      {
+        "name": "Parameter 2",
+        "type": "select",
+        "options": [
+          "Option 1",
+          "Option 2",
+          "Option 3"
+        ]
+      }
+    ]
+  }
+
+
+]

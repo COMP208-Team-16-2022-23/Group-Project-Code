@@ -16,19 +16,17 @@
         <div class="row justify-content-between">
             <div class="col-md-4">
                 <h2>Processing methods</h2>
-                <div class="row justify-content-between">
-                    <div class="col-md-6">
-                        <button type="button" class="btn btn-outline-primary" data-mdb-toggle="modal"
-                                data-mdb-target="#algorithm_1">
-                            Algorithm 1
-                        </button>
-                    </div>
-                    <div class="col-md-6">
-                        <button type="button" class="btn btn-outline-primary" data-mdb-toggle="modal"
-                                data-mdb-target="#algorithm_2">
-                            Algorithm 2
-                        </button>
-                    </div>
+
+                <div class="row g-3">
+                    {% for algorithm in data_processing_algorithms %}
+                        <div class="col-6">
+                            <button type="button" class="btn btn-outline-primary" data-mdb-toggle="modal"
+                                    data-mdb-target="#{{ algorithm["function_name"] }}">
+                                {{ algorithm["name"] }}
+                            </button>
+                        </div>
+                    {% endfor %}
+
                 </div>
 
 
@@ -45,38 +43,96 @@
 
     </div>
 
-    <!-- Vertically centered scrollable modal -->
-    <div class="modal fade modal-lg" id="algorithm_1" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Some Algorithm 1</h5>
-                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">...</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% for algorithm in data_processing_algorithms %}
+        <!-- Vertically centered scrollable modal -->
+        <div class="modal fade modal-lg" id="{{ algorithm["function_name"] }}" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">{{ algorithm["name"] }}</h5>
+                        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="post">
+                        <div class="modal-body">
+                            {% for parameter in algorithm["parameters"] %}
+                                {% if parameter['type'] == 'text' %}
+                                    <div class="form-group">
+                                        <label for="{{ parameter['name'] }}">{{ parameter['name'] }}</label>
+                                        <input type="text" class="form-control" id="{{ parameter['name'] }}"
+                                               placeholder="{{ parameter['name'] }}" name="{{ parameter['name'] }}">
+                                    </div>
+                                {% elif parameter['type'] == 'number' %}
+                                    <div class="form-group"><label
+                                            for="{{ parameter['name'] }}">{{ parameter['name'] }}</label>
+                                        <input type="number" class="form-control" id="{{ parameter['name'] }}"
+                                               placeholder="{{ parameter['name'] }}" name="{{ parameter['name'] }}"
+                                               step="0.01">
+                                    </div>
+                                {% elif parameter['type'] == 'checkbox' %}
+                                    <div class="form-check"><input class="form-check-input" type="checkbox"
+                                                                   id="{{ parameter['name'] }}"
+                                                                   name="{{ parameter['name'] }}"><label
+                                            class="form-check-label"
+                                            for="{{ parameter['name'] }}">{{ parameter['name'] }}</label>
+                                    </div>
+                                {% elif parameter['type'] == 'select' %}
+                                    <div class="form-group"><label
+                                            for="{{ parameter['name'] }}">{{ parameter['name'] }}</label>
+                                        <select class="form-control" id="{{ parameter['name'] }}"
+                                                name="{{ parameter['name'] }}">
+                                            {% for option in parameter['options'] %}
+                                                <option value="{{ option }}">{{ option }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
 
-    <div class="modal fade modal-lg" id="algorithm_2" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Some Algorithm 2</h5>
-                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">...</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </div>
+        </div>
+    {% endfor %}
+
+
+    <!-- Vertically centered scrollable modal -->
+    {#    <div class="modal fade modal-lg" id="algorithm1" tabindex="-1">#}
+    {#        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">#}
+    {#            <div class="modal-content">#}
+    {#                <div class="modal-header">#}
+    {#                    <h5 class="modal-title" id="exampleModalLabel">Some Algorithm 1</h5>#}
+    {#                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>#}
+    {#                </div>#}
+    {#                <div class="modal-body">...</div>#}
+    {#                <div class="modal-footer">#}
+    {#                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>#}
+    {#                    <button type="button" class="btn btn-primary">Save changes</button>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
+    {##}
+    {#    <div class="modal fade modal-lg" id="algorithm_2" tabindex="-1">#}
+    {#        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">#}
+    {#            <div class="modal-content">#}
+    {#                <div class="modal-header">#}
+    {#                    <h5 class="modal-title" id="exampleModalLabel">Some Algorithm 2</h5>#}
+    {#                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>#}
+    {#                </div>#}
+    {#                <div class="modal-body">...</div>#}
+    {#                <div class="modal-footer">#}
+    {#                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>#}
+    {#                    <button type="button" class="btn btn-primary">Save changes</button>#}
+    {#                </div>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
 
 
 {% endblock %}
