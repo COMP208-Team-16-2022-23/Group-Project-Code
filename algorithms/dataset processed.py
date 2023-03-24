@@ -4,26 +4,8 @@ import numpy as np
 from scipy import stats
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 
-
-# app = Flask(__name__)
-#
-#
-# @app.route('/')
-# def home():
-#     return render_template('index.html')
-#
-# @app.route('/upload', methods=['POST'])
-# def upload():
-#     file = request.files['file'] #dataset to be processed
-#     df = pd.read_csv(file, header=1) #convert .csv to dataframe
-#     para_received = request.form.get("para"); #parameter dictionary received from html
-#     df = process(df, para_received)
-#     return 0
-
 pd_reader = pd.read_csv("./CountyGDP_ECON215.csv")
 print(pd_reader)
-
-
 
 
 def process(df, para_received):
@@ -40,6 +22,7 @@ def process(df, para_received):
         "median": value_replace_median(df, identification_method),
         "mode": value_replace_mode(df, identification_method),
         "3std": value_replace_3std(df, identification_method),
+        "tail": tail_shrinkage_or_truncation_processing(df, para_received),
     }.get(filling_method, None)
 
 
@@ -106,6 +89,37 @@ def value_replace_3std(df, identification_method):
 
     return df
 
-paraset = {'identification_method': ['y', 'y', 'y', ''], 'fill_type' : 'normal', }
-process(pd_reader, paraset);
 
+def tail_shrinkage_or_truncation_processing(df, para_received):
+    method = para_received["method_selection"]
+    column_name = para_received["variable_to_be_processed"]
+    upper_percentile = para_received["upper_limit"]
+    lower_percentile = para_received["lower_limit"]
+    processing_method = para_received["processing_method"]
+
+    # Select the column to process
+    col = df.loc[:, column_name]
+
+    # Calculate the upper and lower limits
+    upper_limit = np.percentile(col, 100 - upper_percentile)
+    lower_limit = np.percentile(col, lower_percentile)
+
+    # Select the method
+    if method == "tail_shrinkage":
+        col_without_outliers = col.clip(lower_limit, upper_limit)
+        df[column_name] = col_without_outliers
+
+    elif method == "tail_truncation":
+        if processing_method == "delete_value":
+            col_without_outliers = col[(col >= lower_limit) & (col <= upper_limit)]
+            df.iloc[:, column_name] = col_without_outliers
+
+        elif processing_method == "delete_row":
+            df_without_outliers = df[(col >= lower_limit) & (col <= upper_limit)]
+            df = df.drop(df.index.difference(df_without_outliers.index))
+
+    return df
+
+
+paraset = {'identification_method': ['y', 'y', 'y', ''], 'fill_type': 'normal', }
+process(pd_reader, paraset);
