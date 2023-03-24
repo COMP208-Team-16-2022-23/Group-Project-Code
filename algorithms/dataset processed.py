@@ -1,8 +1,8 @@
-from flask import Flask, request, render_template
 import pandas as pd
 import numpy as np
-from scipy import stats
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import RandomOverSampler
+from imblearn.combine import SMOTEENN
 
 pd_reader = pd.read_csv("./CountyGDP_ECON215.csv")
 print(pd_reader)
@@ -23,6 +23,7 @@ def process(df, para_received):
         "mode": value_replace_mode(df, identification_method),
         "3std": value_replace_3std(df, identification_method),
         "tail": tail_shrinkage_or_truncation_processing(df, para_received),
+        "sample_balancing": sample_balancing(df, para_received),
     }.get(filling_method, None)
 
 
@@ -121,5 +122,39 @@ def tail_shrinkage_or_truncation_processing(df, para_received):
     return df
 
 
+def sample_balancing(df, para_received):
+    # Get the target column name and balancing method from parameters
+    target_col = para_received['target_col']
+    balancing_method = para_received['balancing_method']
+
+    # Separate the target column and features from the dataframe
+    y = df[target_col]
+    x = df.drop(target_col, axis=1)
+
+    if balancing_method == 'undersample':
+        # Create an instance of RandomUnderSampler and balance the classes
+        sampler = RandomUnderSampler()
+        x_resampled, y_resampled = sampler.fit_resample(x, y)
+
+    elif balancing_method == 'oversample':
+        # Create an instance of RandomOverSampler and balance the classes
+        sampler = RandomOverSampler()
+        x_resampled, y_resampled = sampler.fit_resample(x, y)
+
+    elif balancing_method == 'combined':
+        # Create an instance of SMOTEENN and balance the classes
+        sampler = SMOTEENN(ratio='auto')
+        x_resampled, y_resampled = sampler.fit_resample(x, y)
+
+    else:
+        # If balancing_method is invalid, return the original dataframe
+        return df
+
+    # Combine the resampled data and return as a new dataframe
+    resampled_df = pd.concat([x_resampled, y_resampled], axis=1)
+
+    return resampled_df
+
+
 paraset = {'identification_method': ['y', 'y', 'y', ''], 'fill_type': 'normal', }
-process(pd_reader, paraset);
+process(pd_reader, paraset)
