@@ -1,7 +1,7 @@
 import pandas
 from flask import Blueprint, request, render_template, session, redirect, g, url_for
 
-from util.storage_control import list_blobs, download_to_memory
+from util.storage_control import list_blobs, download_to_memory, upload_blob
 from algorithms import data_proc
 
 # database import
@@ -92,7 +92,10 @@ def project(processing_project_id):
         # add the algorithm to the processing project
         file = pandas.read_csv(download_to_memory(processing_project.current_file_path))
         # print(list(algorithm_config.values()))
-        print(data_proc.value_replace_mean(file, algorithm_paras))
+        file = data_proc.standardization(file, None)
+        print(file)
+        upload_blob(file, processing_project.current_file_path)
+
         # # update the database
         # db_session.commit()
         #
