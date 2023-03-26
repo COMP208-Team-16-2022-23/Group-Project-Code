@@ -155,6 +155,30 @@ def sample_balancing(df, para_received):
 
     return resampled_df
 
+def standardization(df, para_received): # Z-score standardization
+    # Create a new dataframe with only numerical columns
+    num_df = df.select_dtypes(include=[np.number])
+    # Create a dictionary to store the standardization parameters
+
+
+    # Standardize each column
+    for col in num_df.columns:
+        col_mean = num_df[col].mean()
+        col_std = num_df[col].std()
+        num_df[col] = (num_df[col] - col_mean) / col_std
+
+
+    # Merge the standardized numerical columns with the non-numerical columns
+    df_std = pd.concat([num_df, df.select_dtypes(exclude=[np.number])], axis=1)
+
+    # Apply the standardization parameters to the received dataframe (if specified)
+    if para_received is not None:
+        for col, para in para_received.items():
+            if col in num_df.columns:
+                df_std[col] = (df_std[col] - para["mean"]) / para["std"]
+
+    return df_std
+
 
 paraset = {'identification_method': ['y', 'y', 'y', ''], 'fill_type': 'normal', }
 # process(pd_reader, paraset)

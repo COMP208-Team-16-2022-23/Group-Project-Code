@@ -50,6 +50,7 @@ def my_data():
             if filename.split('.')[-1] == 'csv':
                 pass
             elif (filename.split('.')[-1] == 'xlsx') or (filename.split('.')[-1] == 'xls'):
+                # TODO: fix the bug that the file is not saved
                 try:
                     file = xlsx_to_csv_upload(file)
                 except:
@@ -61,4 +62,8 @@ def my_data():
             upload_blob(file, filename, prefix=private_path)
             dict_files = list_blobs(prefix=private_path) + public_files
             return render_template('dataset/my_data.html', list=dict_files)
+        else:
+            flash('Please log in first')
+            return redirect(url_for('auth.login'))
+
     return render_template('dataset/my_data.html', list=dict_files)
