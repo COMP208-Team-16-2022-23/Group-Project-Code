@@ -85,6 +85,17 @@
                                             {% endfor %}
                                         </select>
                                     </div>
+                                {% elif parameter['type'] == 'radio' %}
+                                    <label for="{{ parameter['name'] }}">{{ parameter['name'] }}</label>
+                                    {% for option in parameter['options'] %}
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio"
+                                                id="{{ option }}" name="{{ parameter['name'] }}">
+                                            <label class="form-check-label" for="{{ option }}">
+                                                {{ option }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
                                 {% endif %}
                             {% endfor %}
 
