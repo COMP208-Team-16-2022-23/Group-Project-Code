@@ -35,7 +35,7 @@ def my_data():
         # If the user does not select a file, the browser submits an
         # empty file without a filename.
         if file.filename == '':
-            flash('No selected file')
+            flash('No file selected for uploading')
             return redirect(request.url)
         # if file and allowed_file(file.filename):
         #     filename = secure_filename(file.filename)
@@ -43,10 +43,17 @@ def my_data():
         #     return redirect(url_for('download_file', name=filename))
         if file and g.user:
             filename = secure_filename(file.filename)
+            # check the size of the file
+            if file.content_length > config.MAX_CONTENT_LENGTH:
+                flash('The file you uploaded is too large')
+                return redirect(request.url)
             if filename.split('.')[-1] == 'csv':
                 pass
             elif (filename.split('.')[-1] == 'xlsx') or (filename.split('.')[-1] == 'xls'):
-                file = xlsx_to_csv_upload(file)
+                try:
+                    file = xlsx_to_csv_upload(file)
+                except:
+                    flash('An error occurred while processing your file')
                 filename = filename.split('.')[0] + '.csv'
             else:
                 flash('File type not supported')

@@ -24,6 +24,9 @@ MAIL_MAX_EMAILS = None
 GOOGLE_APPLICATION_CREDENTIALS = 'lcda-platform-b100d9a8d523.json'
 BUCKET_NAME = 'lcda'
 
+# File limitations
+MAX_CONTENT_LENGTH = 3145728  # 3MB
+
 # Configuration variables for the temp files
 TEMP_PATH = 'temp_files'
 

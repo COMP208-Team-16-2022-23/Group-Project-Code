@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block content %}
+    {% for message in get_flashed_messages() %}
+    <script>
+        alert("{{ message }}");
+    </script>
+    {% endfor %}
+
     <div class="container mt-3">
         <div class="row d-flex">
             <div class="col-4">
