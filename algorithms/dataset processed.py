@@ -1,24 +1,12 @@
-from flask import Flask, request, render_template
 import pandas as pd
 import numpy as np
-from scipy import stats
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import RandomOverSampler
+from imblearn.combine import SMOTEENN
 
+pd_reader = pd.read_csv("./CountyGDP_ECON215.csv")
+print(pd_reader)
 
-# app = Flask(__name__)
-#
-#
-# @app.route('/')
-# def home():
-#     return render_template('index.html')
-#
-# @app.route('/upload', methods=['POST'])
-# def upload():
-#     file = request.files['file'] #dataset to be processed
-#     df = pd.read_csv(file, header=1) #convert .csv to dataframe
-#     para_received = request.form.get("para"); #parameter dictionary received from html
-#     df = process(df, para_received)
-#     return 0
 
 def process(df, para_received):
     # identification_method should be an array
@@ -34,6 +22,8 @@ def process(df, para_received):
         "median": value_replace_median(df, identification_method),
         "mode": value_replace_mode(df, identification_method),
         "3std": value_replace_3std(df, identification_method),
+        "tail": tail_shrinkage_or_truncation_processing(df, para_received),
+        "sample_balancing": sample_balancing(df, para_received),
     }.get(filling_method, None)
 
 
@@ -101,42 +91,70 @@ def value_replace_3std(df, identification_method):
     return df
 
 
+def tail_shrinkage_or_truncation_processing(df, para_received):
+    method = para_received["method_selection"]
+    column_name = para_received["variable_to_be_processed"]
+    upper_percentile = para_received["upper_limit"]
+    lower_percentile = para_received["lower_limit"]
+    processing_method = para_received["processing_method"]
 
-'''
-    # Finding missing values
-    df.isnull().sum()
-    # Dropping missing values
-    df.dropna(inplace=True)
-    # Filling missing values with a specific value
-    df.fillna(value=0, inplace=True)
+    # Select the column to process
+    col = df.loc[:, column_name]
 
+    # Calculate the upper and lower limits
+    upper_limit = np.percentile(col, 100 - upper_percentile)
+    lower_limit = np.percentile(col, lower_percentile)
 
-    # Detecting outliers using Z-Score method
-    z_scores = stats.zscore(df)
-    abs_z_scores = np.abs(z_scores)
-    filtered_entries = (abs_z_scores < 3).all(axis=1)
-    df = df[filtered_entries]
+    # Select the method
+    if method == "tail_shrinkage":
+        col_without_outliers = col.clip(lower_limit, upper_limit)
+        df[column_name] = col_without_outliers
 
+    elif method == "tail_truncation":
+        if processing_method == "delete_value":
+            col_without_outliers = col[(col >= lower_limit) & (col <= upper_limit)]
+            df.iloc[:, column_name] = col_without_outliers
 
-    # Finding duplicate values
-    df.duplicated().sum()
-    # Dropping duplicate values
-    df.drop_duplicates(inplace=True)
+        elif processing_method == "delete_row":
+            df_without_outliers = df[(col >= lower_limit) & (col <= upper_limit)]
+            df = df.drop(df.index.difference(df_without_outliers.index))
 
-
-    # Converting data types
-    df['col_name'] = df['col_name'].astype('int')
-    # Standardizing data
-    scaler = StandardScaler()
-    df[['col1', 'col2', 'col3']] = scaler.fit_transform(df[['col1', 'col2', 'col3']])
-    # Encoding categorical data
-    encoder = LabelEncoder()
-    df['category_col'] = encoder.fit_transform(df['category_col'])
+    return df
 
 
+def sample_balancing(df, para_received):
+    # Get the target column name and balancing method from parameters
+    target_col = para_received['target_col']
+    balancing_method = para_received['balancing_method']
 
-    return 'Dataset processed successfully.'
+    # Separate the target column and features from the dataframe
+    y = df[target_col]
+    x = df.drop(target_col, axis=1)
 
-if __name__ == '__main__':
-    app.run(debug=True)
-'''
+    if balancing_method == 'undersample':
+        # Create an instance of RandomUnderSampler and balance the classes
+        sampler = RandomUnderSampler()
+        x_resampled, y_resampled = sampler.fit_resample(x, y)
+
+    elif balancing_method == 'oversample':
+        # Create an instance of RandomOverSampler and balance the classes
+        sampler = RandomOverSampler()
+        x_resampled, y_resampled = sampler.fit_resample(x, y)
+
+    elif balancing_method == 'combined':
+        # Create an instance of SMOTEENN and balance the classes
+        sampler = SMOTEENN(ratio='auto')
+        x_resampled, y_resampled = sampler.fit_resample(x, y)
+
+    else:
+        # If balancing_method is invalid, return the original dataframe
+        return df
+
+    # Combine the resampled data and return as a new dataframe
+    resampled_df = pd.concat([x_resampled, y_resampled], axis=1)
+
+    return resampled_df
+
+
+paraset = {'identification_method': ['y', 'y', 'y', ''], 'fill_type': 'normal', }
+process(pd_reader, paraset)
