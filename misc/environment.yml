@@ -15,3 +15,4 @@ dependencies:
   - pymysql
   - openpyxl
   - seaborn
+  - conda-forge::imbalanced-learn
