@@ -4,7 +4,7 @@ from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import RandomOverSampler
 from imblearn.combine import SMOTEENN
 
-pd_reader = pd.read_csv("./CountyGDP_ECON215.csv")
+pd_reader = pd.read_csv("../misc/temp/CountyGDP_ECON215.csv")
 print(pd_reader)
 
 

@@ -75,7 +75,7 @@ def project(processing_project_id):
     import os
     import json
     parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    file_path = os.path.join(parent_dir, 'algorithms', 'data_processing_algorithms_config.json')
+    file_path = os.path.join(parent_dir, 'algorithms', 'data_proc_para_cfg.json')
     with open(file_path, 'r') as f:
         data_processing_algorithms_config = json.load(f)
 
