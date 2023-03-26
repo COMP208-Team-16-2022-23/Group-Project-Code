@@ -4,8 +4,8 @@ from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import RandomOverSampler
 from imblearn.combine import SMOTEENN
 
-pd_reader = pd.read_csv("../misc/temp/CountyGDP_ECON215.csv")
-print(pd_reader)
+# pd_reader = pd.read_csv("../misc/temp/CountyGDP_ECON215.csv")
+# print(pd_reader)
 
 
 def process(df, para_received):
@@ -30,11 +30,11 @@ def process(df, para_received):
 def value_replace_mean(df, identification_method):
     i = 0
     while i <= df.shape[1]:
-        if identification_method[0] == "y":
+        if identification_method[0] == "on":
             df[i].replace("", value=df[i].mean(), inplace=True)
-        if identification_method[1] == "y":
+        if identification_method[1] == "on":
             df.replace(" ", value=df[i].mean(), inplace=True)
-        if identification_method[2] == "y":
+        if identification_method[2] == "on":
             df.replace("None", value=df[i].mean(), inplace=True)
         if identification_method[3] != "":
             customize_value = identification_method[3]
@@ -46,11 +46,11 @@ def value_replace_mean(df, identification_method):
 def value_replace_median(df, identification_method):
     i = 0
     while i <= df.shape[1]:
-        if identification_method[0] == "y":
+        if identification_method[0] == "on":
             df[i].replace("", value=df[i].median(), inplace=True)
-        if identification_method[1] == "y":
+        if identification_method[1] == "on":
             df.replace(" ", value=df[i].median(), inplace=True)
-        if identification_method[2] == "y":
+        if identification_method[2] == "on":
             df.replace("None", value=df[i].median(), inplace=True)
         if identification_method[3] != "":
             customize_value = identification_method[3]
@@ -157,4 +157,4 @@ def sample_balancing(df, para_received):
 
 
 paraset = {'identification_method': ['y', 'y', 'y', ''], 'fill_type': 'normal', }
-process(pd_reader, paraset)
+# process(pd_reader, paraset)

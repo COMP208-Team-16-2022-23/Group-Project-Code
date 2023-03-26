@@ -33,7 +33,28 @@
         ]
       }
     ]
+  },
+
+  {
+    "name": "Mean",
+    "function_name": "Mean",
+    "parameters": [
+      {
+        "name": "Parameter 1",
+        "type": "checkbox"
+      },
+      {
+        "name": "Parameter 2",
+        "type": "checkbox"
+      },
+      {
+        "name": "Parameter 3",
+        "type": "checkbox"
+      },
+      {
+        "name": "Parameter 4",
+        "type": "checkbox"
+      }
+    ]
   }
-
-
 ]

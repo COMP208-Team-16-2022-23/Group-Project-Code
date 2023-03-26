@@ -1,6 +1,8 @@
+import pandas
 from flask import Blueprint, request, render_template, session, redirect, g, url_for
 
-from util.storage_control import list_blobs
+from util.storage_control import list_blobs, download_to_memory
+from algorithms import data_proc
 
 # database import
 from database import db_session
@@ -80,19 +82,17 @@ def project(processing_project_id):
         data_processing_algorithms_config = json.load(f)
 
     if request.method == 'POST':
-        print(request.form)
+        algorithm_config = request.form.to_dict()
+        # print(algorithm_config)
         # get the algorithm name from the form
-        # algorithm_name = request.form['algorithm_selection']
-        #
-        # # get the algorithm config from the form
-        # algorithm_config = {}
-        # for key in request.form.keys():
-        #     if key != 'algorithm_selection':
-        #         algorithm_config[key] = request.form[key]
-        #
-        # # add the algorithm to the processing project
-        # processing_project.add_algorithm(algorithm_name, algorithm_config)
-        #
+        algorithm_name = request.form['function_name']
+        # get the algorithm config from the form
+        algorithm_config.pop('function_name')
+        algorithm_paras = list(algorithm_config.values())
+        # add the algorithm to the processing project
+        file = pandas.read_csv(download_to_memory(processing_project.current_file_path))
+        # print(list(algorithm_config.values()))
+        print(data_proc.value_replace_mean(file, algorithm_paras))
         # # update the database
         # db_session.commit()
         #
