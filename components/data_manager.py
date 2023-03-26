@@ -6,6 +6,7 @@
 from flask import Blueprint, request, render_template, session, redirect, g, flash, url_for
 from werkzeug.utils import secure_filename
 import config
+from util.file_util import xlsx_to_csv_upload
 from util.storage_control import list_blobs, list_blobs_names, upload_blob, delete_blob
 
 bp = Blueprint('my_data', __name__, url_prefix='/my_data')
@@ -42,6 +43,14 @@ def my_data():
         #     return redirect(url_for('download_file', name=filename))
         if file and g.user:
             filename = secure_filename(file.filename)
+            if filename.split('.')[-1] == 'csv':
+                pass
+            elif (filename.split('.')[-1] == 'xlsx') or (filename.split('.')[-1] == 'xls'):
+                file = xlsx_to_csv_upload(file)
+                filename = filename.split('.')[0] + '.csv'
+            else:
+                flash('File type not supported')
+                return redirect(request.url)
             upload_blob(file, filename, prefix=private_path)
             dict_files = list_blobs(prefix=private_path) + public_files
             return render_template('dataset/my_data.html', list=dict_files)

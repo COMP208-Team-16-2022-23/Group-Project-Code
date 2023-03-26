@@ -24,3 +24,24 @@ def xlsx_to_csv(filename, temp_path) -> BytesIO:
     target_csv.seek(0)
     return target_csv
 
+
+def xlsx_to_csv_upload(file):
+    """
+    Convert Excel file (in .xlsx format) to CSV file (in .csv format) and return the transformed file.
+
+    Args:
+        file (FileStorage): Input file to be transformed
+
+    Returns:
+        file: Transformed file in .csv format
+    """
+    # Read the Excel file using pandas
+    xlsx = pd.read_excel(file)
+
+    # Convert the Excel file to CSV format
+    csv = xlsx.to_csv(index=False).encode('utf-8')
+
+    # Convert CSV data to a FileStorage object and return it
+    return csv
+
+

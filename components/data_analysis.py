@@ -11,5 +11,6 @@ bp = Blueprint('data_analysis', __name__, url_prefix='/data_analysis')
 
 @bp.route("/", methods=['GET', 'POST'])
 def data_analysis():
-    dict_files = os.listdir('sandbox')
-    return render_template('dataset/data_analysis.html', list=dict_files)
+    # TODO: Similar interface as data_processing
+    dict_files = os.listdir('misc/temp')
+    return render_template('dataset/data_analysis.html')
