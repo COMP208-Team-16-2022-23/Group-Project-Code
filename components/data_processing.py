@@ -83,18 +83,23 @@ def project(processing_project_id):
 
     if request.method == 'POST':
         algorithm_config = request.form.to_dict()
-        # print(algorithm_config)
         # get the algorithm name from the form
         algorithm_name = request.form['function_name']
         # get the algorithm config from the form
         algorithm_config.pop('function_name')
         algorithm_paras = list(algorithm_config.values())
-        # add the algorithm to the processing project
+
+        # get file
         file = pandas.read_csv(download_to_memory(processing_project.current_file_path))
-        # print(list(algorithm_config.values()))
-        file = data_proc.standardization(file, None)
+
+        # choose algorithm to process
+        # if algorithm_name == 'Mean':
+
+        file = data_proc.standardization(file, None) # test only
+
+        # save and transfer result
         print(file)
-        upload_blob(file, processing_project.current_file_path)
+        # upload_blob(file, processing_project.current_file_path)
 
         # # update the database
         # db_session.commit()
