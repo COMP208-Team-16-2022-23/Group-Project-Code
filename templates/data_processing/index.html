@@ -17,14 +17,14 @@
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <form method="post">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="new_processingLabel">Select a document</h5>
-                        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
-                    </div>
 
-                    <div class="modal-body">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="new_processingLabel">Select a document</h5>
+                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                </div>
 
+                <div class="modal-body">
+                    <form method="post">
                         {% if file_list %}
                             <table class="table align-middle mb-0 bg-white">
                                 <thead class="bg-light">
@@ -59,15 +59,18 @@
                         {% else %}
                             <p class="text-muted text-center">You currently have no file uploaded</p>
                         {% endif %}
+                    </form>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-                        {% if file_list %}
-                            <button type="submit" class="btn btn-primary">Start Processing</button>
-                        {% endif %}
-                    </div>
-                </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                    {% if file_list %}
+                        <button type="submit" class="btn btn-primary" {{ button_status }}>Start Processing</button>
+                    {% endif %}
+                </div>
+
+
             </div>
         </div>
     </div>
@@ -98,7 +101,8 @@
                     </td>
                     <td>
 
-                        <a type="button" class="btn btn-link btn-sm btn-rounded"
+                        <a role="button" class="btn btn-link btn-sm btn-rounded {{ button_status }}"
+                           aria-disabled={% if  button_status %}true{% else %}false{% endif %}
                            href="{{ url_for('data_processing.project', processing_project_id=processing_project['id']) }}">
                             Edit
                         </a>

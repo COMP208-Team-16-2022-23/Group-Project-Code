@@ -9,6 +9,7 @@ from algorithms import data_proc
 # database import
 from database import db_session
 from util.models import ProcessingProject, User
+from components.auth import login_required
 
 
 bp = Blueprint('data_processing', __name__, url_prefix='/data_processing')
@@ -16,15 +17,11 @@ bp = Blueprint('data_processing', __name__, url_prefix='/data_processing')
 
 @bp.route("/", methods=['GET', 'POST'])
 def index():
-    # todo: add logic for data processing project list and add new project button
     prefix = 'public'
     file_list = list_blobs(prefix=prefix)
     if g.user:
         prefix = g.user.username
         file_list += list_blobs(prefix=prefix)
-    else:
-        flash('Please log in first')
-        return redirect(url_for('auth.login'))
 
     # get user's processing project list from database
     if g.user:
@@ -46,30 +43,27 @@ def index():
 
         # determine whether log in
         if not g.user:
-            flash('Please log in first')
-            return redirect(url_for('auth.login'))
+            user_id = User.query.filter(User.username == 'public').first().id
+        else:
+            user_id = g.user.id
 
-        processing_project = ProcessingProject(user_id=g.user.id, original_file_path=selected_file_path)
+        processing_project = ProcessingProject(user_id=user_id, original_file_path=selected_file_path)
         db_session.add(processing_project)
         db_session.commit()
 
         # get the latest id of the new processing project
-        processing_project_id = ProcessingProject.query.filter_by(user_id=g.user.id,
+        processing_project_id = ProcessingProject.query.filter_by(user_id=user_id,
                                                                   original_file_path=selected_file_path, ).first().id
 
         return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
 
-    # for file in file_list:
-    #     file['file_name'] = remove_prefix(file['file_name'])
-    #
-    # for processing_project in processing_project_list:
-    #     processing_project.original_file_name = remove_prefix(processing_project.original_file_name)
-
     return render_template('data_processing/index.html', file_list=file_list,
-                           processing_project_list=processing_project_list)
+                           processing_project_list=processing_project_list,
+                           button_status="disabled" if g.user is None else "")
 
 
 @bp.route("/project/<processing_project_id>", methods=['GET', 'POST'])
+@login_required
 def project(processing_project_id):
     # todo: restrict access to the project page if the user is not the owner of the project
 
@@ -104,31 +98,8 @@ def project(processing_project_id):
         processing_project.modified_date = datetime.datetime.utcnow()
         db_session.commit()
 
+        # refresh the page
         return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
-
-        # # get the algorithm name from the form
-        # algorithm_name = request.form['function_name']
-        # # get the algorithm config from the form
-        # algorithm_config.pop('function_name')
-        # algorithm_paras = list(algorithm_config.values())
-        #
-        # # get file
-        # df = pandas.read_csv(download_to_memory(processing_project.current_file_path))
-        #
-        # # choose algorithm to process
-        # # if algorithm_name == 'Mean':
-        #
-        # df = data_proc.standardization(df, None)  # test only
-        #
-        # # save and transfer result
-        # print(df)
-        # upload_blob(file, processing_project.current_file_path)
-
-        # # update the database
-        # db_session.commit()
-        #
-        # # redirect to the project page
-        # return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
 
     return render_template('data_processing/project.html', project_id=processing_project_id,
                            file_path=processing_project.current_file_path,
