@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, url_for, redirect, flash, g
 from flask import send_file
 import requests
 import os
@@ -69,4 +69,13 @@ def embedded_view(file_path='public/hello_world.csv'):
     else:
         return download(file_path)
 
-###
+
+@bp.route('/delete/my_data/<path:file_path>')
+def delete_dataset(file_path):
+    owner = file_path.split('/')[0]
+    if owner != g.user.username:
+        flash('Deleting This File is NOT ALLOWED!')
+        return redirect(url_for('my_data.my_data'))
+    if not sc.delete_blob(file_path):
+        flash('Error Occur When Deleting File')
+    return redirect(url_for('my_data.my_data'))
