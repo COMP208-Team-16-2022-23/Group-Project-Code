@@ -49,12 +49,12 @@ def index():
             flash('Please log in first')
             return redirect(url_for('auth.login'))
 
-        processing_project = ProcessingProject(user_id=user_id, original_file_path=selected_file_path)
+        processing_project = ProcessingProject(user_id=g.user.id, original_file_path=selected_file_path)
         db_session.add(processing_project)
         db_session.commit()
 
         # get the latest id of the new processing project
-        processing_project_id = ProcessingProject.query.filter_by(user_id=user_id,
+        processing_project_id = ProcessingProject.query.filter_by(user_id=g.user.id,
                                                                   original_file_path=selected_file_path, ).first().id
 
         return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
