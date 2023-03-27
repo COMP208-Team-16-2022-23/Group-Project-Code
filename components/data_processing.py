@@ -20,6 +20,9 @@ def index():
     if g.user:
         prefix = g.user.username
         file_list += list_blobs(prefix=prefix)
+    else:
+        flash('Please log in first')
+        return redirect(url_for('auth.login'))
 
     # get user's processing project list from database
     if g.user:
