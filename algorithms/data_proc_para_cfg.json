@@ -130,6 +130,20 @@
         ]
       }
     ]
+  },
+  {
+    "name": "Data Normalisation",
+    "function_name": "normalisation",
+    "parameters": [
+      {
+        "name": "Calculation function",
+        "type": "select",
+        "options": [
+          "Min-Max",
+          "Z-Score"
+        ]
+      }
+    ]
   }
 ]
 

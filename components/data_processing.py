@@ -40,12 +40,6 @@ def index():
 
         # add new processing project to database
 
-        # determine whether log in
-        if not g.user:
-            user_id = User.query.filter(User.username == 'public').first().id
-        else:
-            user_id = g.user.id
-
         processing_project = ProcessingProject(user_id=user_id, original_file_path=selected_file_path)
         db_session.add(processing_project)
         db_session.commit()
