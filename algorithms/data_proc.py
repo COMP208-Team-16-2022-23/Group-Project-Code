@@ -32,7 +32,7 @@ def process(file_path, parameters):
         pass
 
     # make processed dataframe a file-like object
-    file = io.StringIO(df.to_csv(index=False))
+    file = df.to_csv(index=False)
 
     # save the processed file to the cloud
     new_file_path = file_path.split('.')[0] + "-" + processing_method + "." + file_path.split('.')[-1]

@@ -22,7 +22,10 @@ def upload_blob(file, blob_name, bucket_name=config.BUCKET_NAME, public=False, p
             blob_name = prefix + '/' + blob_name
         blob = storage_client.bucket(bucket_name).blob(blob_name)
         if not isinstance(file, io.IOBase):
-            file = io.StringIO(file)
+            if isinstance(file, str):
+                file = io.StringIO(file)
+            elif isinstance(file, bytes):
+                file = BytesIO(file)
         blob.upload_from_file(file)
         if public:
             blob.make_public()
@@ -37,6 +40,7 @@ def delete_blob(blob_name, bucket_name=config.BUCKET_NAME):
     try:
         blob = storage_client.bucket(bucket_name).blob(blob_name)
         blob.delete()
+        return True
     except:
         return False
 
