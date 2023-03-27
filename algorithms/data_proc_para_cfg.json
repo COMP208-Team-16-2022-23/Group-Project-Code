@@ -1,11 +1,17 @@
 [
   {
-    "name": "Algorithm 1 test",
-    "function_name": "algorithm1",
+    "name": "Outlier handling",
+    "function_name": "outlier_handling",
     "parameters": [
       {
-        "name": "Parameter 1",
-        "type": "text"
+        "name": "Detection method",
+        "type": "select",
+        "options": [
+          "3-sigma",
+          "IQR",
+          "Z-score",
+          "MAD"
+        ]
       },
       {
         "name": "Parameter 2",
@@ -13,8 +19,6 @@
       }
     ]
   },
-
-
   {
     "name": "Algorithm 2",
     "function_name": "algorithm2",
@@ -34,7 +38,6 @@
       }
     ]
   },
-
   {
     "name": "Mean",
     "function_name": "Mean",
@@ -57,7 +60,6 @@
       }
     ]
   },
-
   {
     "name": "tail",
     "function_name": "tail_shrinkage_or_truncation_processing",
@@ -113,7 +115,7 @@
         "name": "target_col",
         "type": "select",
         "options": [
-           "col_name 1",
+          "col_name 1",
           "col_name 2",
           "col_name 3"
         ]

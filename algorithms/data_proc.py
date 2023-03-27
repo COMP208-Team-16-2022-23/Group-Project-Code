@@ -1,31 +1,108 @@
+import io
+
 import pandas as pd
 import numpy as np
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import RandomOverSampler
 from imblearn.combine import SMOTEENN
 
+from util import storage_control
+
 
 # pd_reader = pd.read_csv("../misc/temp/CountyGDP_ECON215.csv")
 # print(pd_reader)
 
+def process(file_path, parameters):
+    """
+    :param file_path: the path of the file to be processed
+    :param parameters: a dictionary of parameters
+    :return: the processed file path
+    """
 
-def process(df, para_received):
-    # identification_method should be an array
-    # and in format: ["empty value", "space", "None", "customize"]
-    identification_method = para_received["identification_method"]
-    # fill_type, filling_method, output_format are strings
-    fill_type = para_received["fill_type"]
-    filling_method = para_received["filling_method"]
-    output_format = para_received["output_format"]
+    # read file as pandas dataframe
+    df = pd.read_csv(storage_control.download_to_memory(file_path))
 
-    return {
-        "mean": value_replace_mean(df, identification_method),
-        "median": value_replace_median(df, identification_method),
-        "mode": value_replace_mode(df, identification_method),
-        "3std": value_replace_3std(df, identification_method),
-        "tail": tail_shrinkage_or_truncation_processing(df, para_received),
-        "sample_balancing": sample_balancing(df, para_received),
-    }.get(filling_method, None)
+    # get processing method
+    processing_method = parameters['function_name']
+
+    # call corresponding function
+    if processing_method == 'outlier_handling':
+        df = outlier_handling(df, parameters)
+    else:
+        pass
+
+    # make processed dataframe a file-like object
+    file = io.StringIO(df.to_csv(index=False))
+
+    # save the processed file to the cloud
+    new_file_path = file_path.split('.')[0] + "-" + processing_method + "." + file_path.split('.')[-1]
+    processed_file_path = storage_control.upload_blob(file=file, blob_name=new_file_path)
+
+    return processed_file_path
+
+
+def outlier_handling(df, parameters):
+    """
+    :param df: the pandas dataframe to be processed
+    :param parameters: a dictionary of parameters
+    :return: the processed dataframe
+    """
+
+    # print(parameters)
+    # get detection method
+    detection_method = parameters['Detection method']
+
+    # better to use a switch case here, but need python 3.10
+    # call corresponding function
+    if detection_method == '3-sigma':
+        for column_name in parameters['column_selected']:
+            df = three_sigma(df, column_name=column_name)
+
+    return df
+
+
+def three_sigma(df, column_name, parameters=None):
+    """
+    Use 3-sigma method to detect outliers
+    :param df: the pandas dataframe to be processed
+    :param parameters: a dictionary of parameters
+    :return: the processed dataframe
+    """
+
+    # get column by name
+    column = df[column_name]
+
+    # get mean and standard deviation
+    mean = column.mean()
+    std = column.std()
+
+    # get lower and upper bound
+    lower_bound = mean - 3 * std
+    upper_bound = mean + 3 * std
+
+    # replace outliers with NaN
+    df[column_name] = df[column_name].apply(lambda x: np.nan if x < lower_bound or x > upper_bound else x)
+
+    return df
+
+
+# def process(df, para_received):
+#     # identification_method should be an array
+#     # and in format: ["empty value", "space", "None", "customize"]
+#     identification_method = para_received["identification_method"]
+#     # fill_type, filling_method, output_format are strings
+#     fill_type = para_received["fill_type"]
+#     filling_method = para_received["filling_method"]
+#     output_format = para_received["output_format"]
+#
+#     return {
+#         "mean": value_replace_mean(df, identification_method),
+#         "median": value_replace_median(df, identification_method),
+#         "mode": value_replace_mode(df, identification_method),
+#         "3std": value_replace_3std(df, identification_method),
+#         "tail": tail_shrinkage_or_truncation_processing(df, para_received),
+#         "sample_balancing": sample_balancing(df, para_received),
+#     }.get(filling_method, None)
 
 
 def value_replace_mean(df, identification_method):

@@ -1,3 +1,5 @@
+import datetime
+
 import pandas
 from flask import Blueprint, request, render_template, session, redirect, g, url_for
 
@@ -73,6 +75,10 @@ def project(processing_project_id):
     if processing_project is None:
         return redirect(url_for('data_processing.index'))
 
+    # get column names from the file
+    df = pandas.read_csv(download_to_memory(processing_project.current_file_path))
+    column_names = list(df.columns)
+
     # read algorithm list from json file in ../algorithm/data_processing_algorithm_config.json
     import os
     import json
@@ -81,24 +87,38 @@ def project(processing_project_id):
     with open(file_path, 'r') as f:
         data_processing_algorithms_config = json.load(f)
 
+    # logic for processing
     if request.method == 'POST':
+        column_selected = request.form.getlist('column_selected')
         algorithm_config = request.form.to_dict()
-        # get the algorithm name from the form
-        algorithm_name = request.form['function_name']
-        # get the algorithm config from the form
-        algorithm_config.pop('function_name')
-        algorithm_paras = list(algorithm_config.values())
+        algorithm_config["column_selected"] = column_selected
+        print(algorithm_config)
 
-        # get file
-        file = pandas.read_csv(download_to_memory(processing_project.current_file_path))
+        processed_file_path = data_proc.process(processing_project.current_file_path, algorithm_config)
 
-        # choose algorithm to process
-        # if algorithm_name == 'Mean':
+        # update the database
+        processing_project.current_file_path = processed_file_path
+        processing_project.modified_date = datetime.datetime.utcnow()
+        db_session.commit()
 
-        file = data_proc.standardization(file, None) # test only
+        return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
 
-        # save and transfer result
-        print(file)
+        # # get the algorithm name from the form
+        # algorithm_name = request.form['function_name']
+        # # get the algorithm config from the form
+        # algorithm_config.pop('function_name')
+        # algorithm_paras = list(algorithm_config.values())
+        #
+        # # get file
+        # df = pandas.read_csv(download_to_memory(processing_project.current_file_path))
+        #
+        # # choose algorithm to process
+        # # if algorithm_name == 'Mean':
+        #
+        # df = data_proc.standardization(df, None)  # test only
+        #
+        # # save and transfer result
+        # print(df)
         # upload_blob(file, processing_project.current_file_path)
 
         # # update the database
@@ -109,4 +129,5 @@ def project(processing_project_id):
 
     return render_template('data_processing/project.html', project_id=processing_project_id,
                            file_path=processing_project.current_file_path,
+                           column_names=column_names,
                            data_processing_algorithms=data_processing_algorithms_config)

@@ -54,18 +54,29 @@
                     </div>
                     <form method="post">
                         <div class="modal-body">
+
                             <input type="hidden" id="function_name" name="function_name"
-                                   value="{{ algorithm['function_name'] }}">
+                                   value="{{ algorithm['function_name'] }}"/>
+
+                            {# select column to be processed #}
+                            <p class="fw-bold">Select the variables to be processed</p>
+
+                            <select class="selectpicker" multiple data-live-search="true" name="column_selected">
+                                {% for column_name in column_names %}
+                                    <option value="{{ column_name }}">{{ column_name }}</option>
+                                {% endfor %}
+                            </select>
+
                             {% for parameter in algorithm["parameters"] %}
+                                <p class="fw-bold mt-3">{{ parameter['name'] }}</p>
+
                                 {% if parameter['type'] == 'text' %}
                                     <div class="form-group">
-                                        <label for="{{ parameter['name'] }}">{{ parameter['name'] }}</label>
                                         <input type="text" class="form-control" id="{{ parameter['name'] }}"
-                                               placeholder="{{ parameter['name'] }}" name="{{ parameter['name'] }}">
+                                               placeholder="{{ parameter['name'] }}" name="{{ parameter['name'] }}"/>
                                     </div>
                                 {% elif parameter['type'] == 'number' %}
-                                    <div class="form-group"><label
-                                            for="{{ parameter['name'] }}">{{ parameter['name'] }}</label>
+                                    <div class="form-group">
                                         <input type="number" class="form-control" id="{{ parameter['name'] }}"
                                                placeholder="{{ parameter['name'] }}" name="{{ parameter['name'] }}"
                                                step="0.01">
@@ -78,8 +89,7 @@
                                             for="{{ parameter['name'] }}">{{ parameter['name'] }}</label>
                                     </div>
                                 {% elif parameter['type'] == 'select' %}
-                                    <div class="form-group"><label
-                                            for="{{ parameter['name'] }}">{{ parameter['name'] }}</label>
+                                    <div class="form-group">
                                         <select class="form-control" id="{{ parameter['name'] }}"
                                                 name="{{ parameter['name'] }}">
                                             {% for option in parameter['options'] %}
@@ -88,11 +98,10 @@
                                         </select>
                                     </div>
                                 {% elif parameter['type'] == 'radio' %}
-                                    <label for="{{ parameter['name'] }}">{{ parameter['name'] }}</label>
                                     {% for option in parameter['options'] %}
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio"
-                                                id="{{ option }}" name="{{ parameter['name'] }}">
+                                                   id="{{ option }}" name="{{ parameter['name'] }}">
                                             <label class="form-check-label" for="{{ option }}">
                                                 {{ option }}
                                             </label>
@@ -100,7 +109,7 @@
                                     {% endfor %}
                                 {% endif %}
                             {% endfor %}
-                            
+
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>

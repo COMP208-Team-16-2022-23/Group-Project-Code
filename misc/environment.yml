@@ -16,3 +16,4 @@ dependencies:
   - openpyxl
   - seaborn
   - conda-forge::imbalanced-learn
+  - xlrd
