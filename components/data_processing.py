@@ -66,9 +66,12 @@ def index():
 
 
 @bp.route("/project/<processing_project_id>", methods=['GET', 'POST'])
-@login_required
 def project(processing_project_id):
     # todo: restrict access to the project page if the user is not the owner of the project
+
+    if not g.user:
+        flash('Please log in first')
+        return redirect(url_for('auth.login'))
 
     # get blob from processing project id
     processing_project = ProcessingProject.query.filter_by(id=processing_project_id).first()
