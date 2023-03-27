@@ -24,7 +24,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <form method="post">
+                    <form method="post" id="file_selection_form">
                         {% if file_list %}
                             <table class="table align-middle mb-0 bg-white">
                                 <thead class="bg-light">
@@ -66,7 +66,9 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
                     {% if file_list %}
-                        <button type="submit" class="btn btn-primary" {{ button_status }}>Start Processing</button>
+                        <button type="submit" class="btn btn-primary" form="file_selection_form" {{ button_status }}>
+                            Start Processing
+                        </button>
                     {% endif %}
                 </div>
 
