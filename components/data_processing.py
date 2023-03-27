@@ -1,7 +1,7 @@
 import datetime
 
 import pandas
-from flask import Blueprint, request, render_template, session, redirect, g, url_for
+from flask import Blueprint, request, render_template, session, redirect, g, url_for, flash
 
 from util.storage_control import list_blobs, download_to_memory, upload_blob
 from algorithms import data_proc
@@ -9,6 +9,7 @@ from algorithms import data_proc
 # database import
 from database import db_session
 from util.models import ProcessingProject, User
+
 
 bp = Blueprint('data_processing', __name__, url_prefix='/data_processing')
 
@@ -21,6 +22,9 @@ def index():
     if g.user:
         prefix = g.user.username
         file_list += list_blobs(prefix=prefix)
+    else:
+        flash('Please log in first')
+        return redirect(url_for('auth.login'))
 
     # get user's processing project list from database
     if g.user:
@@ -39,6 +43,11 @@ def index():
                 return redirect(url_for('data_processing.project', processing_project_id=processing_project.id))
 
         # add new processing project to database
+
+        # determine whether log in
+        if not g.user:
+            flash('Please log in first')
+            return redirect(url_for('auth.login'))
 
         processing_project = ProcessingProject(user_id=user_id, original_file_path=selected_file_path)
         db_session.add(processing_project)
