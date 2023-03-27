@@ -32,6 +32,10 @@ def index():
 
     # logic for add new processing project
     if request.method == 'POST':
+        if not g.user:
+            flash('Please log in first')
+            return redirect(url_for('auth.login'))
+
         selected_file_path = request.form['file_selection']
 
         # check whether the file is already in processing, if so, redirect to the processing project page
@@ -58,8 +62,7 @@ def index():
         return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
 
     return render_template('data_processing/index.html', file_list=file_list,
-                           processing_project_list=processing_project_list,
-                           button_status="disabled" if g.user is None else "")
+                           processing_project_list=processing_project_list)
 
 
 @bp.route("/project/<processing_project_id>", methods=['GET', 'POST'])
