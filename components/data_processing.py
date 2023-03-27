@@ -1,5 +1,5 @@
 import pandas
-from flask import Blueprint, request, render_template, session, redirect, g, url_for
+from flask import Blueprint, request, render_template, session, redirect, g, url_for, flash
 
 from util.storage_control import list_blobs, download_to_memory, upload_blob
 from algorithms import data_proc
@@ -7,6 +7,7 @@ from algorithms import data_proc
 # database import
 from database import db_session
 from util.models import ProcessingProject, User
+
 
 bp = Blueprint('data_processing', __name__, url_prefix='/data_processing')
 
@@ -40,9 +41,8 @@ def index():
 
         # determine whether log in
         if not g.user:
-            user_id = User.query.filter(User.username == 'public').first().id
-        else:
-            user_id = g.user.id
+            flash('Please log in first')
+            return redirect(url_for('auth.login'))
 
         processing_project = ProcessingProject(user_id=user_id, original_file_path=selected_file_path)
         db_session.add(processing_project)
