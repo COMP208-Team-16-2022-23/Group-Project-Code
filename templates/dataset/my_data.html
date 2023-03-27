@@ -39,7 +39,9 @@
                             <span class="visually-hidden">Toggle Dropright</span>
                         </button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Delete</a></li>
+                            <li><a class="dropdown-item"
+                                   href="{{ url_for('file_preview.delete_dataset', file_path=item['file_path']) }}">Delete
+                            </a></li>
                         </ul>
                     </div>
                 </li>
