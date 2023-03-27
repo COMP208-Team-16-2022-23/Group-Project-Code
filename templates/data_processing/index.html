@@ -97,7 +97,13 @@
                         </div>
                     </td>
                     <td>
-                        <p class="fw-normal mb-0">{{ processing_project['modified_date'] }}</p>
+                        <p class="fw-normal mb-0">
+                            {# change utctime to local time #}
+                            <script>
+                                var date = new Date('{{ processing_project['modified_date'] }} UTC');
+                                document.write(date.toLocaleString());
+                            </script>
+                        </p>
                     </td>
                     <td>
 
