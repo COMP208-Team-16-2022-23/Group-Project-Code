@@ -56,5 +56,71 @@
         "type": "checkbox"
       }
     ]
+  },
+
+  {
+    "name": "tail",
+    "function_name": "tail_shrinkage_or_truncation_processing",
+    "parameters": [
+      {
+        "name": "method",
+        "type": "radio",
+        "options": [
+          "tail_shrinkage",
+          "tail_truncation"
+        ]
+      },
+      {
+        "name": "column_name",
+        "type": "select",
+        "options": [
+          "Option 1",
+          "Option 2",
+          "Option 3"
+        ]
+      },
+      {
+        "name": "upper_percentile",
+        "type": "range"
+      },
+      {
+        "name": "lower_percentile",
+        "type": "range"
+      },
+      {
+        "name": "processing_method",
+        "type": "radio",
+        "options": [
+          "delete_value",
+          "delete_row"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "sample_balancing",
+    "function_name": "sample_balancing",
+    "parameters": [
+      {
+        "name": "target_col",
+        "type": "select",
+        "options": [
+           "Option 1",
+          "Option 2",
+          "Option 3"
+        ]
+      },
+      {
+        "name": "balancing_method",
+        "type": "radio",
+        "options": [
+          "undersample",
+          "oversample",
+          "combined"
+        ]
+      }
+    ]
   }
 ]
+
+

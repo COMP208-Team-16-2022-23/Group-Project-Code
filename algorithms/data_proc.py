@@ -4,6 +4,7 @@ from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import RandomOverSampler
 from imblearn.combine import SMOTEENN
 
+
 # pd_reader = pd.read_csv("../misc/temp/CountyGDP_ECON215.csv")
 # print(pd_reader)
 
@@ -155,18 +156,17 @@ def sample_balancing(df, para_received):
 
     return resampled_df
 
-def standardization(df, para_received): # Z-score standardization
+
+def standardization(df, para_received):  # Z-score standardization
     # Create a new dataframe with only numerical columns
     num_df = df.select_dtypes(include=[np.number])
     # Create a dictionary to store the standardization parameters
-
 
     # Standardize each column
     for col in num_df.columns:
         col_mean = num_df[col].mean()
         col_std = num_df[col].std()
         num_df[col] = (num_df[col] - col_mean) / col_std
-
 
     # Merge the standardized numerical columns with the non-numerical columns
     df_std = pd.concat([num_df, df.select_dtypes(exclude=[np.number])], axis=1)
