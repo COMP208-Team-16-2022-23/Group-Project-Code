@@ -1,6 +1,7 @@
 # -*- coding = utf-8 -*-
 # @Time: 2023/3/9 14:48
 # @File: file_manager.PY
+import io
 from io import BytesIO
 
 from flask import send_file
@@ -20,11 +21,14 @@ def upload_blob(file, blob_name, bucket_name=config.BUCKET_NAME, public=False, p
         if prefix:
             blob_name = prefix + '/' + blob_name
         blob = storage_client.bucket(bucket_name).blob(blob_name)
+        if not isinstance(file, io.IOBase):
+            file = io.StringIO(file)
         blob.upload_from_file(file)
         if public:
             blob.make_public()
         return blob_name
     except Exception as e:
+        print(e)
         return False
 
 
