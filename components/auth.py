@@ -112,21 +112,14 @@ def register():
         email = request.form['email']
         password = request.form['password']
         password_confirm = request.form['password_confirm']
-        password_reminder = request.form['password_reminder']
+
         error = None
-        if not username:
-            error = 'Username is required.'
-        elif not password:
-            error = 'Password is required.'
-        elif not email:
-            error = 'Email is required.'
-        elif password != password_confirm:  # the two passwords are not the same
+        if password != password_confirm:  # the two passwords are not the same
             error = 'The passwords you have entered do not match.'
 
         if error is None:
             try:
-                user = User(email=email, username=username, password=generate_password_hash(password, salt_length=128),
-                            password_reminder=password_reminder)
+                user = User(email=email, username=username, password=generate_password_hash(password, salt_length=128))
                 db_session.add(user)
                 db_session.commit()
                 flash('Your LCDA account has been created successfully.')
