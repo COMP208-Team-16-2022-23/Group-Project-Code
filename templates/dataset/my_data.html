@@ -6,47 +6,96 @@
 
 {% block content %}
     {% for message in get_flashed_messages() %}
-    <script>
-        alert("{{ message }}");
-    </script>
+        <script>
+            alert("{{ message }}");
+        </script>
     {% endfor %}
 
-    <div class="container-xxl mt-3">
-        <div class="row d-flex">
-            <div class="col-4">
+    <div class="container-fluid py-3">
+        <div class="row">
+            <div class="col-md-6">
                 <!--file upload area-->
-                <form class="row" action="{{ url_for('file_preview.upload_dataset') }}" method="post"
+                <form class="row justify-content-evenly pb-3" action="{{ url_for('file_preview.upload_dataset') }}"
+                      method="post"
                       enctype="multipart/form-data">
-                    <div class="form-group col-7">
+                    <div class="form-group col-sm-6 col-lg-8 my-3">
                         <input class="form-control" type="file" name="file" id="file">
                     </div>
-                        <button type="submit" class="btn btn-sm btn-primary col-auto">Upload</button>
+                    <button type="submit" class="btn btn-sm btn-primary col-6 col-lg-4 my-3">Upload</button>
                 </form>
                 <!--file list-->
-                <style>
-                    .list-group-scrollable {
-                        max-height: 450px; /* max height of list group */
-                        overflow-y: auto; /* scroll bar for overflow */
-                        max-width: 400px;
-                    }
-                </style>
-                
-                <ol class="list-group list-group-scrollable">
-                    {% for item in list %}
-                    <li class="list-group-item d-flex justify-content-between align-items-start">
-                        <div class="ms-2 me-auto" style="max-width: 300px">
-                            <button class="btn btn-link align-items-start" style="max-width: 300px"
-                                    onclick="go({{ '\'' + item['file_path'] + '\''}})">
-                                {{ item['file_name'] }}
-                            </button>
-                        </div>
-                        <a role="button" class="btn btn-danger btn-sm btn-rounded" aria-disabled=false
-                           href="{{ url_for('file_preview.delete_dataset', file_path=item['file_path']) }}">
-                            Delete
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ol>
+                {#                <style>#}
+                {#                    .list-group-scrollable {#}
+                {#                        max-height: 450px; /* max height of list group */#}
+                {#                        overflow-y: auto; /* scroll bar for overflow */#}
+                {#                        max-width: 400px;#}
+                {#                    }#}
+                {#                </style>#}
+                {##}
+                {#                <ol class="list-group list-group-scrollable">#}
+                {#                {% for item in list %}#}
+                {#                    <li class="list-group-item d-flex justify-content-between align-items-start">#}
+                {#                        <div class="ms-2 me-auto" style="max-width: 300px">#}
+                {#                            <button class="btn btn-link align-items-start" style="max-width: 300px"#}
+                {#                                    onclick="go({{ '\'' + item['file_path'] + '\'' }})">#}
+                {#                                {{ item['file_name'] }}#}
+                {#                            </button>#}
+                {#                        </div>#}
+                {#                        <a role="button" class="btn btn-danger btn-sm btn-rounded" aria-disabled=false#}
+                {#                           href="{{ url_for('file_preview.delete_dataset', file_path=item['file_path']) }}">#}
+                {#                            Delete#}
+                {#                        </a>#}
+                {#                    </li>#}
+                {#                {% endfor %}#}
+                {#                </ol>#}
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle">
+                        <thead class="bg-light">
+                        <tr>
+                            <th>File name</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in list %}
+                            <tr>
+                                <td>{{ item['file_name'] }}</td>
+                                <td>
+                                    <button
+                                            type="button"
+                                            class="btn btn-link btn-sm btn-rounded"
+                                            onclick="go({{ '\'' + item['file_path'] + '\'' }})"
+                                    >
+                                        View
+                                    </button>
+                                    <a
+                                            role="button"
+                                            class="btn btn-danger btn-sm btn-rounded"
+                                            aria-disabled=false
+                                            href="{{ url_for('file_preview.delete_dataset', file_path=item['file_path']) }}"
+                                    >
+                                        Delete
+                                    </a>
+                                </td>
+                            </tr>
+                            {#                        <li class="list-group-item d-flex justify-content-between align-items-start">#}
+                            {#                            <div class="ms-2 me-auto" style="max-width: 300px">#}
+                            {#                                <button class="btn btn-link align-items-start" style="max-width: 300px"#}
+                            {#                                        onclick="go({{ '\'' + item['file_path'] + '\'' }})">#}
+                            {#                                    {{ item['file_name'] }}#}
+                            {#                                </button>#}
+                            {#                            </div>#}
+                            {#                            <a role="button" class="btn btn-danger btn-sm btn-rounded" aria-disabled=false#}
+                            {#                               href="{{ url_for('file_preview.delete_dataset', file_path=item['file_path']) }}">#}
+                            {#                                Delete#}
+                            {#                            </a>#}
+                            {#                        </li>#}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
                 <p>
                     <a href='{{ url_for('file_preview.view_document', file_path='public/CW_Data.csv') }}'>
                         <b>Document viewer</b>
@@ -64,20 +113,19 @@
                     </a>
                 </p>
             </div>
-            <div class="col-8">
-<!--                <iframe-->
-<!--                        src="https://drive.google.com/viewer?embedded=true&hl=en-US&url=https://lcda-vgnazlwvxa-nw.a.run.app/file/download/public/CW_Data.csv"-->
-<!--                        width="800px"-->
-<!--                        height="603px"-->
-<!--                        frameborder="0"-->
-<!--                ></iframe>-->
+            <div class="col-md-6" style="min-height: 600px">
+                <!--                <iframe-->
+                <!--                        src="https://drive.google.com/viewer?embedded=true&hl=en-US&url=https://lcda-vgnazlwvxa-nw.a.run.app/file/download/public/CW_Data.csv"-->
+                <!--                        width="800px"-->
+                <!--                        height="603px"-->
+                <!--                        frameborder="0"-->
+                <!--                ></iframe>-->
                 <iframe
-                    class="align-middle"
-                    id="data_view"
-                    src="https://view.officeapps.live.com/op/embed.aspx?src=https://lcda-vgnazlwvxa-nw.a.run.app/file/embedded/public/CW_Data.csv"
-                    width="100%"
-                    height="603px"
-                    frameborder="0"
+                        class="align-middle"
+                        id="data_view"
+                        src="https://view.officeapps.live.com/op/embed.aspx?src=https://lcda-vgnazlwvxa-nw.a.run.app/file/embedded/public/CW_Data.csv"
+                        width="100%"
+                        height="100%"
                 ></iframe>
             </div>
         </div>

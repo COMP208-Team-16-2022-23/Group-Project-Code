@@ -13,4 +13,4 @@ bp = Blueprint('data_analysis', __name__, url_prefix='/data_analysis')
 def data_analysis():
     # TODO: Similar interface as data_processing
     dict_files = ['Hello_World.csv']
-    return render_template('dataset/data_analysis.html', list=dict_files)
+    return render_template('data_analysis/index.html', list=dict_files)
