@@ -98,6 +98,7 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
     column_name is the column to be processed(I don't know how to get the column name by this way)
     upper_percentile is the upper limit of the percentile, lower_percentile is the lower limit of the percentile
     processing_method is used when method is tail_truncation, there are two methods: delete_value and replace_value
+    test failed
     """
 
     method = parameters['method_selection']
@@ -107,7 +108,7 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
     processing_method = parameters['processing_method']
 
     # Select the column to process
-    col = df.loc[:, column_name]
+    col = df[column_name]
 
     # Calculate the upper and lower limits
     upper_limit = np.percentile(col, 100 - upper_percentile)
@@ -121,11 +122,11 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
     elif method == "tail_truncation":
         if processing_method == "delete_value":
             col_without_outliers = col[(col >= lower_limit) & (col <= upper_limit)]
-            df.iloc[:, column_name] = col_without_outliers
+            df[column_name] = col_without_outliers
 
         elif processing_method == "delete_row":
             df_without_outliers = df[(col >= lower_limit) & (col <= upper_limit)]
-            df = df.drop(df.index.difference(df_without_outliers.index))
+            df.drop(df.index.difference(df_without_outliers.index).tolist())
 
     return df
 
