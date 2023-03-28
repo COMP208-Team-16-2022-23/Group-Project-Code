@@ -28,6 +28,8 @@ def process(file_path, parameters):
     # call corresponding function
     if processing_method == 'outlier_handling':
         df = outlier_handling(df, parameters)
+    elif processing_method == 'tail shrinkage and truncation processing':
+        df = tail_shrinkage_or_truncation_processing(df, parameters)
     else:
         pass
 
@@ -82,6 +84,48 @@ def three_sigma(df, column_name, parameters=None):
 
     # replace outliers with NaN
     df[column_name] = df[column_name].apply(lambda x: np.nan if x < lower_bound or x > upper_bound else x)
+
+    return df
+
+
+def tail_shrinkage_or_truncation_processing(df, parameters):
+    """
+    Use tail shrinkage or truncation method to Exclude extreme values
+    :param df: the pandas dataframe to be processed
+    :param parameters: a dictionary of parameters
+    :return: the processed dataframe
+    method is the method to be used, there are two methods: tail_shrinkage and tail_truncation
+    column_name is the column to be processed(I don't know how to get the column name by this way)
+    upper_percentile is the upper limit of the percentile, lower_percentile is the lower limit of the percentile
+    processing_method is used when method is tail_truncation, there are two methods: delete_value and replace_value
+    """
+
+    method = parameters['method_selection']
+    column_name = parameters['column_selected']
+    upper_percentile = parameters['upper_limit']
+    lower_percentile = parameters['lower_limit']
+    processing_method = parameters['processing_method']
+
+    # Select the column to process
+    col = df.loc[:, column_name]
+
+    # Calculate the upper and lower limits
+    upper_limit = np.percentile(col, 100 - upper_percentile)
+    lower_limit = np.percentile(col, lower_percentile)
+
+    # Select the method
+    if method == "tail_shrinkage":
+        col_without_outliers = col.clip(lower_limit, upper_limit)
+        df[column_name] = col_without_outliers
+
+    elif method == "tail_truncation":
+        if processing_method == "delete_value":
+            col_without_outliers = col[(col >= lower_limit) & (col <= upper_limit)]
+            df.iloc[:, column_name] = col_without_outliers
+
+        elif processing_method == "delete_row":
+            df_without_outliers = df[(col >= lower_limit) & (col <= upper_limit)]
+            df = df.drop(df.index.difference(df_without_outliers.index))
 
     return df
 
@@ -169,35 +213,35 @@ def value_replace_3std(df, identification_method):
     return df
 
 
-def tail_shrinkage_or_truncation_processing(df, para_received):
-    method = para_received["method_selection"]
-    column_name = para_received["variable_to_be_processed"]
-    upper_percentile = para_received["upper_limit"]
-    lower_percentile = para_received["lower_limit"]
-    processing_method = para_received["processing_method"]
-
-    # Select the column to process
-    col = df.loc[:, column_name]
-
-    # Calculate the upper and lower limits
-    upper_limit = np.percentile(col, 100 - upper_percentile)
-    lower_limit = np.percentile(col, lower_percentile)
-
-    # Select the method
-    if method == "tail_shrinkage":
-        col_without_outliers = col.clip(lower_limit, upper_limit)
-        df[column_name] = col_without_outliers
-
-    elif method == "tail_truncation":
-        if processing_method == "delete_value":
-            col_without_outliers = col[(col >= lower_limit) & (col <= upper_limit)]
-            df.iloc[:, column_name] = col_without_outliers
-
-        elif processing_method == "delete_row":
-            df_without_outliers = df[(col >= lower_limit) & (col <= upper_limit)]
-            df = df.drop(df.index.difference(df_without_outliers.index))
-
-    return df
+# def tail_shrinkage_or_truncation_processing(df, para_received):
+#     method = para_received["method_selection"]
+#     column_name = para_received["variable_to_be_processed"]
+#     upper_percentile = para_received["upper_limit"]
+#     lower_percentile = para_received["lower_limit"]
+#     processing_method = para_received["processing_method"]
+#
+#     # Select the column to process
+#     col = df.loc[:, column_name]
+#
+#     # Calculate the upper and lower limits
+#     upper_limit = np.percentile(col, 100 - upper_percentile)
+#     lower_limit = np.percentile(col, lower_percentile)
+#
+#     # Select the method
+#     if method == "tail_shrinkage":
+#         col_without_outliers = col.clip(lower_limit, upper_limit)
+#         df[column_name] = col_without_outliers
+#
+#     elif method == "tail_truncation":
+#         if processing_method == "delete_value":
+#             col_without_outliers = col[(col >= lower_limit) & (col <= upper_limit)]
+#             df.iloc[:, column_name] = col_without_outliers
+#
+#         elif processing_method == "delete_row":
+#             df_without_outliers = df[(col >= lower_limit) & (col <= upper_limit)]
+#             df = df.drop(df.index.difference(df_without_outliers.index))
+#
+#     return df
 
 
 def sample_balancing(df, para_received):
