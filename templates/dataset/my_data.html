@@ -11,43 +11,42 @@
     </script>
     {% endfor %}
 
-    <div class="container mt-3">
+    <div class="container-xxl mt-3">
         <div class="row d-flex">
             <div class="col-4">
                 <!--file upload area-->
-                <form action="" method="POST"
+                <form class="row" action="{{ url_for('file_preview.upload_dataset') }}" method="post"
                       enctype="multipart/form-data">
-                    <input type="file" name="file"/>
-                    <input type="submit"/>
+                    <div class="form-group col-7">
+                        <input class="form-control" type="file" name="file" id="file">
+                    </div>
+                        <button type="submit" class="btn btn-sm btn-primary col-auto">Upload</button>
                 </form>
                 <!--file list-->
-                <ul class="list-group list-group-light">
-
-                {% for item in list %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <div class="dropend px-3 border-0">
-                        <button class="btn btn-secondary" style="width: 300px"
-                                onclick="go({{ '\'' + item['file_path'] + '\''}})">
-                            {{ item['file_name'] }}
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-tertiary dropdown-toggle dropdown-toggle-split"
-                            data-mdb-toggle="dropdown"
-                            aria-expanded="false"
-                        >
-                            <span class="visually-hidden">Toggle Dropright</span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item"
-                                   href="{{ url_for('file_preview.delete_dataset', file_path=item['file_path']) }}">Delete
-                            </a></li>
-                        </ul>
-                    </div>
-                </li>
-                {% endfor %}
-                </ul>
-
+                <style>
+                    .list-group-scrollable {
+                        max-height: 450px; /* max height of list group */
+                        overflow-y: auto; /* scroll bar for overflow */
+                        max-width: 400px;
+                    }
+                </style>
+                
+                <ol class="list-group list-group-scrollable">
+                    {% for item in list %}
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto" style="max-width: 300px">
+                            <button class="btn btn-link align-items-start" style="max-width: 300px"
+                                    onclick="go({{ '\'' + item['file_path'] + '\''}})">
+                                {{ item['file_name'] }}
+                            </button>
+                        </div>
+                        <a role="button" class="btn btn-danger btn-sm btn-rounded" aria-disabled=false
+                           href="{{ url_for('file_preview.delete_dataset', file_path=item['file_path']) }}">
+                            Delete
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ol>
                 <p>
                     <a href='{{ url_for('file_preview.view_document', file_path='public/CW_Data.csv') }}'>
                         <b>Document viewer</b>
@@ -73,9 +72,10 @@
 <!--                        frameborder="0"-->
 <!--                ></iframe>-->
                 <iframe
+                    class="align-middle"
                     id="data_view"
                     src="https://view.officeapps.live.com/op/embed.aspx?src=https://lcda-vgnazlwvxa-nw.a.run.app/file/embedded/public/CW_Data.csv"
-                    width="800px"
+                    width="100%"
                     height="603px"
                     frameborder="0"
                 ></iframe>
