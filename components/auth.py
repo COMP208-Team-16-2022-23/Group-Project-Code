@@ -92,19 +92,6 @@ def login():
 
     return render_template('auth/login.html')
 
-    #     # if len(email) < 1 or len(password) < 1:
-    #     #     return render_template('login.html', error="Email and password are required")
-    #
-    #     # todo verify via database
-    #
-    #     # verification passed
-    #     session['username'] = username
-    #     return redirect("/")
-    #
-    #     # return render_template('login.html', error="Email or password incorrect")
-    #
-    # return render_template("login.html")
-
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():

@@ -62,16 +62,14 @@ def index():
         return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
 
     return render_template('data_processing/index.html', file_list=file_list,
-                           processing_project_list=processing_project_list)
+                           processing_project_list=processing_project_list,
+                           button_status="disabled" if g.user is None else "")
 
 
 @bp.route("/project/<processing_project_id>", methods=['GET', 'POST'])
+@login_required
 def project(processing_project_id):
     # todo: restrict access to the project page if the user is not the owner of the project
-
-    if not g.user:
-        flash('Please log in first')
-        return redirect(url_for('auth.login'))
 
     # get blob from processing project id
     processing_project = ProcessingProject.query.filter_by(id=processing_project_id).first()
