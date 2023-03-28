@@ -14,7 +14,6 @@ storage_client = storage.Client.from_service_account_json(config.GOOGLE_APPLICAT
 
 def upload_blob(file, blob_name, bucket_name=config.BUCKET_NAME, public=False, prefix=''):
     """Uploads a file to the bucket."""
-    # todo limit size of files
     try:
         # md5_hash = hashlib.md5(filepath.read_bytes())  # nosec
         # blob.md5_hash = base64.b64encode(md5_hash.digest()).decode()

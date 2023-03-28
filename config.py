@@ -25,7 +25,8 @@ GOOGLE_APPLICATION_CREDENTIALS = 'lcda-platform-b100d9a8d523.json'
 BUCKET_NAME = 'lcda'
 
 # File limitations
-MAX_CONTENT_LENGTH = 3145728  # 3MB
+MAX_CONTENT_LENGTH = 3 * 1024 * 1024 # 3MB
+ALLOWED_EXTENSIONS = ['.csv', '.xlsx', '.xls']
 
 # Configuration variables for the temp files
 TEMP_PATH = 'temp_files'
