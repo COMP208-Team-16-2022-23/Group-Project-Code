@@ -1,0 +1,65 @@
+[
+  {
+    "section_name": "Descriptive statistics",
+    "code_name": "descriptive_statistics",
+    "algorithms": [
+      {
+        "name": "Normality test",
+        "description": "A normality test is any statistical test for determining whether a data sample comes from a normal distribution.",
+        "link": "https://en.wikipedia.org/wiki/Normality_test",
+        "parameters": [
+          {
+            "name": "method",
+            "type": "string",
+            "description": "The method to use for the normality test. Supported methods are “shapiro” for the Shapiro-Wilk test, “anderson” for the Anderson-Darling test, “kstest” for the Kolmogorov-Smirnov test, and “normaltest” for the D’Agostino’s K^2 test.",
+            "default": "shapiro"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "section_name": "ML Classification",
+    "code_name": "ml_classification",
+    "algorithms": [
+      {
+        "name": "K-Nearest Neighbors",
+        "description": "K-Nearest Neighbors is a simple algorithm that stores all available cases and classifies new cases based on a similarity measure (e.g., distance functions).",
+        "link": "https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm",
+        "parameters": [
+          {
+            "name": "n_neighbors",
+            "type": "integer",
+            "description": "Number of neighbors to use by default for kneighbors queries.",
+            "default": 5
+          }
+        ]
+      },
+      {
+        "name": "Decision Tree",
+        "description": "A decision tree is a flowchart-like structure in which each internal node represents a test on an attribute, each branch represents the outcome of the test, and each leaf node represents a class label (decision taken after computing all attributes).",
+        "link": "https://en.wikipedia.org/wiki/Decision_tree_learning",
+        "parameters": [
+          {
+            "name": "criterion",
+            "type": "string",
+            "description": "The function to measure the quality of a split. Supported criteria are “gini” for the Gini impurity and “entropy” for the information gain.",
+            "default": "gini"
+          },
+          {
+            "name": "splitter",
+            "type": "string",
+            "description": "The strategy used to choose the split at each node. Supported strategies are “best” to choose the best split and “random” to choose the best random split.",
+            "default": "best"
+          },
+          {
+            "name": "max_depth",
+            "type": "integer",
+            "description": "The maximum depth of the tree. If None, then nodes are expanded until all leaves are pure or until all leaves contain less than min_samples_split samples.",
+            "default": null
+          }
+        ]
+      }
+    ]
+  }
+]

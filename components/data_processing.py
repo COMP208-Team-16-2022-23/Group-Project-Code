@@ -44,12 +44,7 @@ def index():
                 return redirect(url_for('data_processing.project', processing_project_id=processing_project.id))
 
         # add new processing project to database
-
-        # determine whether log in
-        if not g.user:
-            user_id = User.query.filter(User.username == 'public').first().id
-        else:
-            user_id = g.user.id
+        user_id = g.user.id
 
         processing_project = ProcessingProject(user_id=user_id, original_file_path=selected_file_path)
         db_session.add(processing_project)
@@ -57,7 +52,7 @@ def index():
 
         # get the latest id of the new processing project
         processing_project_id = ProcessingProject.query.filter_by(user_id=user_id,
-                                                                  original_file_path=selected_file_path, ).first().id
+                                                                  original_file_path=selected_file_path).first().id
 
         return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
 
@@ -74,6 +69,11 @@ def project(processing_project_id):
     # get blob from processing project id
     processing_project = ProcessingProject.query.filter_by(id=processing_project_id).first()
     if processing_project is None:
+        flash(f'Error: Processing project {processing_project_id} does not exist')
+        return redirect(url_for('data_processing.index'))
+
+    if processing_project.user_id != g.user.id:
+        flash('Error: You do not have access to this project')
         return redirect(url_for('data_processing.index'))
 
     # get column names from the file
@@ -93,9 +93,12 @@ def project(processing_project_id):
         column_selected = request.form.getlist('column_selected')
         algorithm_config = request.form.to_dict()
         algorithm_config["column_selected"] = column_selected
-        print(algorithm_config)
 
-        processed_file_path = data_proc.process(processing_project.current_file_path, algorithm_config)
+        try:
+            processed_file_path = data_proc.process(processing_project.current_file_path, algorithm_config)
+        except Exception as e:
+            flash('Error: ' + str(e))
+            return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
 
         # update the database
         processing_project.current_file_path = processed_file_path

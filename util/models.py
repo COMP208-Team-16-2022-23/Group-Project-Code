@@ -52,3 +52,55 @@ class ProcessingProject(Base):
     def __repr__(self):
         return {'id': self.id, 'user_id': self.user_id, 'original_file_path': self.original_file_path,
                 'current_file_path': self.current_file_path, 'modified_date': self.modified_date}
+
+
+class AnalysisProject(Base):
+    """
+    This class is used to store the information of the analysis project.
+
+    Attributes:
+        id: the id of the analysis project
+        user_id: the id of the user who created the analysis project
+        original_file_path: the path of the original file
+        modified_date: the date when the file is modified
+    """
+
+    __tablename__ = 'analysis_projects'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, nullable=False)
+    original_file_path = Column(String(500), nullable=False)
+    modified_date = Column(DateTime, default=datetime.utcnow)
+
+    def __init__(self, user_id=None, original_file_path=None):
+        self.user_id = user_id
+        self.original_file_path = original_file_path
+
+    def __repr__(self):
+        return {'id': self.id, 'user_id': self.user_id, 'file_path': self.original_file_path,
+                'modified_date': self.modified_date}
+
+
+class AnalysisResult(Base):
+    """
+    This class is used to store the information of the analysis result.
+
+    Attributes:
+        id: the id of the analysis result
+        project_id: the id of the analysis project
+        result_file_path: the path of the result file
+        modified_date: the date when the file is modified
+    """
+
+    __tablename__ = 'analysis_results'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    project_id = Column(Integer, nullable=False)
+    result_file_path = Column(String(500), nullable=False)
+    modified_date = Column(DateTime, default=datetime.utcnow)
+
+    def __init__(self, project_id=None, file_path=None):
+        self.project_id = project_id
+        self.result_file_path = file_path
+
+    def __repr__(self):
+        return {'id': self.id, 'project_id': self.project_id, 'file_path': self.result_file_path,
+                'modified_date': self.modified_date}

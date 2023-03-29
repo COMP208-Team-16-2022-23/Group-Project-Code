@@ -1,5 +1,5 @@
 import io
-
+from flask import g
 import pandas as pd
 import numpy as np
 from imblearn.under_sampling import RandomUnderSampler
@@ -7,6 +7,7 @@ from imblearn.over_sampling import RandomOverSampler
 from imblearn.combine import SMOTEENN
 
 from util import storage_control
+from util import file_util
 
 
 # pd_reader = pd.read_csv("../misc/temp/CountyGDP_ECON215.csv")
@@ -19,8 +20,9 @@ def process(file_path, parameters):
     :return: the processed file path
     """
 
-    # read file as pandas dataframe
-    df = pd.read_csv(storage_control.download_to_memory(file_path))
+    # read file as pandas dataframe, file include column names
+    df = pd.read_csv(storage_control.download_to_memory(file_path),
+                     header=0)  # header=0 means the first row is column names
 
     # get processing method
     processing_method = parameters['function_name']
@@ -33,11 +35,9 @@ def process(file_path, parameters):
     else:
         pass
 
-    # make processed dataframe a file-like object
     file = df.to_csv(index=False)
 
-    # save the processed file to the cloud
-    new_file_path = file_path.split('.')[0] + "-" + processing_method + "." + file_path.split('.')[-1]
+    new_file_path = file_util.add_suffix(file_path=file_path, suffix=processing_method, username=g.user.username)
     processed_file_path = storage_control.upload_blob(file=file, blob_name=new_file_path)
 
     return processed_file_path

@@ -16,6 +16,7 @@ def csv_to_xlsx(filename, temp_path) -> BytesIO:
     target_xlsx.seek(0)
     return target_xlsx
 
+
 def xlsx_to_csv(filename, temp_path) -> BytesIO:
     # temporary data
     target_csv = BytesIO()
@@ -45,3 +46,27 @@ def xlsx_to_csv_upload(file):
     return csv
 
 
+def add_suffix(file_path, suffix, username):
+    """
+    Add suffix to the filename.
+
+    Args:
+        file_path (str): Path of the file
+        suffix (str): Suffix to be added
+        username (str): Username of the user
+
+    Returns:
+        str: Filename with suffix
+    """
+
+    # file path: username/some_folder/file_name.csv
+    # remove "username/"
+    file_path = file_path.split('/', 1)[-1]  # ('/', 1) means split once
+
+    # Split the filename into name and extension
+    name, ext = os.path.splitext(file_path)
+
+    # Add suffix to the filename
+    file_path = username + "/" + name + "-" + suffix + ext
+
+    return file_path

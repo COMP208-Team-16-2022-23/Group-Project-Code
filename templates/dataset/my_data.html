@@ -50,7 +50,7 @@
                 {#                </ol>#}
 
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover align-middle">
+                    <table class="table table-hover align-middle">
                         <thead class="bg-light">
                         <tr>
                             <th>File name</th>
@@ -64,14 +64,15 @@
                                 <td>
                                     <button
                                             type="button"
-                                            class="btn btn-link btn-sm btn-rounded"
+                                            class="btn btn-link btn-sm btn-rounded" data-mdb-ripple-color="dark"
                                             onclick="go({{ '\'' + item['file_path'] + '\'' }})"
                                     >
                                         View
                                     </button>
                                     <a
                                             role="button"
-                                            class="btn btn-danger btn-sm btn-rounded"
+                                            class="btn btn-outline-danger btn-rounded btn-sm"
+                                            data-mdb-ripple-color="dark"
                                             aria-disabled=false
                                             href="{{ url_for('file_preview.delete_dataset', file_path=item['file_path']) }}"
                                     >
