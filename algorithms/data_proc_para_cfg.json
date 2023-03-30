@@ -20,43 +20,28 @@
     ]
   },
   {
-    "name": "Algorithm 2",
-    "function_name": "algorithm2",
-    "parameters": [
-      {
-        "name": "Parameter 1",
-        "type": "checkbox"
-      },
-      {
-        "name": "Parameter 2",
-        "type": "select",
-        "options": [
-          "Option 1",
-          "Option 2",
-          "Option 3"
-        ]
-      }
-    ]
-  },
-  {
     "name": "Mean",
     "function_name": "Mean",
     "parameters": [
       {
         "name": "Parameter 1",
-        "type": "checkbox"
+        "type": "checkbox",
+        "description": "d"
       },
       {
         "name": "Parameter 2",
-        "type": "checkbox"
+        "type": "checkbox",
+        "description": "d"
       },
       {
         "name": "Parameter 3",
-        "type": "checkbox"
+        "type": "checkbox",
+        "description": "d"
       },
       {
         "name": "Parameter 4",
-        "type": "checkbox"
+        "type": "checkbox",
+        "description": "d"
       }
     ]
   },
@@ -115,16 +100,21 @@
     ]
   },
   {
-    "name": "Data Normalisation",
+    "name": "normalisation",
     "function_name": "normalisation",
     "parameters": [
       {
-        "name": "Calculation function",
+        "name": "Method",
         "type": "select",
         "options": [
           "Min-Max",
           "Z-Score"
         ]
+      },
+      {
+        "name": "Output option",
+        "type": "checkbox",
+        "description": "Replace original data"
       }
     ]
   }
