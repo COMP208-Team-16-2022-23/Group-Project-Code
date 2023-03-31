@@ -139,7 +139,7 @@
                                 <a role="button" class="btn btn-outline-danger btn-rounded btn-sm"
                                    data-mdb-ripple-color="dark"
                                    aria-disabled=false
-                                   href="#">
+                                   href="{{ url_for('file_preview.delete_task', component_name='data_processing', file_path=processing_project['current_file_path']) }}">
                                     Delete
                                 </a>
                             </td>

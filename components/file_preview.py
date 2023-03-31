@@ -1,12 +1,13 @@
-from flask import Blueprint, render_template, url_for, redirect, flash, g, request
-from flask import send_file
+from flask import Blueprint, render_template, url_for, redirect, flash, g, request, send_file
 import requests
 from werkzeug.utils import secure_filename
 import os
 import util.storage_control as sc
 import util.file_util as file
+from util.models import ProcessingProject, AnalysisProject
 import config
 from .auth import login_required
+from database import db_session
 
 bp = Blueprint('file_preview', __name__, url_prefix='/file')
 
@@ -44,12 +45,14 @@ def view_document(file_path='public/hello_world.csv'):
     return render_template('dataset/document_viewer.html', title=title, viewer_html=viewer_html)
 
 
-# upload interface
+'''Interfaces'''
+
+
 @bp.route('/upload', methods=['POST'])
 @login_required
 def upload_dataset(redirect_path='my_data.my_data'):
     """
-    Check limitations and upload dataset. Redirect to Login page if necessary.
+    Check limitations and upload dataset. Redirect to Login page if necessary
     :param redirect_path: Page to redirect.
     :return: Redirected page.
     """
@@ -85,6 +88,7 @@ def upload_dataset(redirect_path='my_data.my_data'):
                 upload_file = file.xlsx_to_csv_upload(upload_file)
             except:
                 flash('An error occurred while processing your file')
+                return redirect(url_for(redirect_path))
             filename = root + '.csv'
 
         # upload file
@@ -95,11 +99,14 @@ def upload_dataset(redirect_path='my_data.my_data'):
         return redirect(url_for('auth.login'))
 
 
-# download file
 @bp.route('/download/<path:file_path>')
 def download(file_path='public/hello_world.csv'):
+    """
+    Download files
+    :param file_path: Storage path
+    :return: Download respond
+    """
     # Specify the file path
-
     filename = file_path.split('/')[-1]
     return sc.download_with_response(file_path, filename)
 
@@ -125,11 +132,50 @@ def embedded_view(file_path='public/hello_world.csv'):
 
 @bp.route('/delete/my_data/<path:file_path>')
 @login_required
-def delete_dataset(file_path):
+def delete_dataset(file_path, force=False):
+    # check ownership
     owner = file_path.split('/')[0]
     if owner != g.user.username:
         flash('Deleting This File is NOT ALLOWED!')
         return redirect(url_for('my_data.my_data'))
+
+    # delete file
+
+    # todo add alert or optimize logic
+    try:
+        # delete corresponding processing task
+        delete_task('data_processing', file_path)
+        return redirect(url_for('my_data.my_data'))
+    except Exception as e:
+        print(e)
+
+    # No corresponding task exists
     if not sc.delete_blob(file_path):
         flash('Error Occur When Deleting File')
     return redirect(url_for('my_data.my_data'))
+
+
+@bp.route('/delete/<path:component_name>/<path:file_path>')
+@login_required
+def delete_task(component_name, file_path):
+    # input beyond process range or input error
+    redirect_url = url_for(component_name + '.index')
+    acpt_comp = ['data_processing', 'data_analysis']
+    if component_name not in acpt_comp:
+        return redirect(url_for('my_data.my_data'))
+
+    # check ownership
+    owner = file_path.split('/')[0]
+    if owner != g.user.username:
+        flash('Deleting This File is NOT ALLOWED!')
+        return redirect(redirect_url)
+
+    # Delete
+    if not sc.delete_blob(file_path):
+        flash('Error Occurred When Deleting File')
+    else:
+        # check database and delete relative row
+        if component_name == 'data_processing':
+            db_session.delete(ProcessingProject.query.filter_by(current_file_path=file_path).first())
+            db_session.commit()
+    return redirect(redirect_url)
