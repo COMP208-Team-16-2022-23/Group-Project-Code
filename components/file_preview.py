@@ -133,6 +133,13 @@ def embedded_view(file_path='public/hello_world.csv'):
 @bp.route('/delete/my_data/<path:file_path>')
 @login_required
 def delete_dataset(file_path, force=False):
+    """
+    Delete datasets shown in My Data page
+    :param file_path: Storage path of the file to delete
+    :param force: If True, delete corresponding tasks where the dataset is in use. Otherwise, do nothing. Set to False
+                  by default (Not in service)
+    :return: Response of My Data page after operation
+    """
     # check ownership
     owner = file_path.split('/')[0]
     if owner != g.user.username:
@@ -140,24 +147,33 @@ def delete_dataset(file_path, force=False):
         return redirect(url_for('my_data.my_data'))
 
     # delete file
-
-    # todo add alert or optimize logic
-    try:
-        # delete corresponding processing task
-        delete_task('data_processing', file_path)
-        return redirect(url_for('my_data.my_data'))
-    except Exception as e:
-        print(e)
+    # Exists corresponding tasks
+    if ProcessingProject.query.filter_by(current_file_path=file_path).first():
+        # todo add alert or optimize logic
+        if force:
+            try:
+                # delete corresponding processing task
+                delete_task('data_processing', file_path)
+                return redirect(url_for('my_data.my_data'))
+            except Exception as e:
+                print(e)
 
     # No corresponding task exists
-    if not sc.delete_blob(file_path):
-        flash('Error Occur When Deleting File')
+    else:
+        if not sc.delete_blob(file_path):
+            flash('Error Occurred When Deleting File')
     return redirect(url_for('my_data.my_data'))
 
 
 @bp.route('/delete/<path:component_name>/<path:file_path>')
 @login_required
 def delete_task(component_name, file_path):
+    """
+    Delete tasks shown on Processing or Analysis page
+    :param component_name: Source position which calls this method
+    :param file_path: Storage path of the file to delete
+    :return: Response of the source position after operation
+    """
     # input beyond process range or input error
     redirect_url = url_for(component_name + '.index')
     acpt_comp = ['data_processing', 'data_analysis']
