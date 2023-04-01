@@ -15,4 +15,5 @@ scipy
 seaborn
 SQLAlchemy
 Werkzeug
+xhtml2pdf
 xlrd
