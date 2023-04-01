@@ -87,5 +87,26 @@ def project(analysis_project_id):
     with open(file_path, 'r') as f:
         data_analysis_algorithms_config = json.load(f)
 
+    if request.method == 'POST':
+        # get selected function name
+        function_name = request.form['function_name']
+
+        # find varaible names of the selected function in the json file
+        variable_name = ''
+        for section in data_analysis_algorithms_config:
+            for algorithm in section['algorithms']:
+                if algorithm['code_name'] == function_name:
+                    for variable in algorithm['variables']:
+                        if variable['type'] == 'multi_select':
+                            variable_name = variable['name']
+
+        column_selected = request.form.getlist(variable_name)
+        algorithm_config = request.form.to_dict()
+        algorithm_config[variable_name] = column_selected
+
+        print(algorithm_config)
+
+        # TODO: call the function and get the result
+
     return render_template('data_analysis/project.html', project_id=analysis_project_id, file_name=file_name,
                            column_names=column_names, data_analysis_algorithms=data_analysis_algorithms_config)
