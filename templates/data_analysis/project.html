@@ -3,18 +3,6 @@
 {% block title %}Data Analysis{% endblock %}
 
 {% block content %}
-
-    <style>
-        .btn {
-            text-transform: unset !important;
-        }
-
-        .info {
-            display: none;
-        }
-    </style>
-
-
     <nav aria-label="breadcrumb mb-1">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url_for("index") }}">Home</a></li>
@@ -78,17 +66,15 @@
                                     data-mdb-parent="#algorithms_accordion"
                             >
                                 <div class="accordion-body">
-                                    <div class="d-grid gap-2">
-                                        <div class="d-grid gap-2">
-                                            {% for algorithm in section["algorithms"] %}
-                                                <button type="button"
-                                                        class="btn btn-link btn-sm text-start text-dark algorithm_select_btn"
-                                                        data-mdb-ripple-color="dark">
-                                                    {{ algorithm["name"] }}
-                                                </button>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
+                                    <table class="table table-hover table-borderless table-sm m-0">
+                                        <tbody>
+                                        {% for algorithm in section["algorithms"] %}
+                                            <tr>
+                                                <td>{{ algorithm["name"] }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -98,136 +84,11 @@
                 <div class="vr position-absolute my-0 h-100 d-none d-md-block top-0 end-0"></div>
             </div>
 
-            <div class="col-lg-7 col-md-6 container-fluid">
-                {% for section in data_analysis_algorithms %}
-                    {% for algorithm in section["algorithms"] %}
-                        <div id="info_{{ algorithm['code_name'] }}" class="info">
-                            <h5 class="mb-3 h5">{{ algorithm["name"] }}</h5>
-                            <hr>
-                            <h6 class="mb-3 h6">Description</h6>
-                            <p>{{ algorithm["description"] }}</p>
-                            <p><a href="{{ algorithm["link"] }}" target="_blank">More info</a></p>
-
-
-                            <form method="post">
-                                <input type="hidden" id="function_name" name="function_name"
-                                       value="{{ algorithm['code_name'] }}"/>
-
-                                {% for variable in algorithm["variables"] %}
-                                    <p class="fw-bold mt-3">{{ variable["description"] }}</p>
-                                    {% if variable["type"] == "multi_select" %}
-                                        <select class="selectpicker" multiple data-live-search="true"
-                                                name="{{ variable['name'] }}">
-                                            {% for column_name in column_names %}
-                                                <option value="{{ column_name }}">{{ column_name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    {% elif variable["type"] == "single_select" %}
-                                        <select class="form-select" name="{{ variable['name'] }}">
-                                            {% for column_name in column_names %}
-                                                <option value="{{ column_name }}">{{ column_name }}</option>
-                                            {% endfor %}
-                                        </select>
-                                    {% endif %}
-
-
-                                {% endfor %}
-
-
-                                {#                                <p class="fw-bold">Select the variables to be processed</p>#}
-                                {##}
-                                {#                                <select class="selectpicker" multiple data-live-search="true" name="column_selected">#}
-                                {#                                    {% for column_name in column_names %}#}
-                                {#                                        <option value="{{ column_name }}">{{ column_name }}</option>#}
-                                {#                                    {% endfor %}#}
-                                {#                                </select>#}
-
-                                {% for parameter in algorithm["parameters"] %}
-                                    <p class="fw-bold mt-3">{{ parameter['name'] }}</p>
-
-                                    {% if parameter['type'] == 'text' %}
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" id="{{ parameter['code_name'] }}"
-                                                   placeholder="{{ parameter['code_name'] }}"
-                                                   name="{{ parameter['code_name'] }}"/>
-                                        </div>
-                                    {% elif parameter['type'] == 'number' %}
-                                        <div class="form-group">
-                                            <input type="number" class="form-control" id="{{ parameter['code_name'] }}"
-                                                   placeholder="{{ parameter['code_name'] }}" name="{{ parameter['code_name'] }}"
-                                                   step="0.01">
-                                        </div>
-                                    {% elif parameter['type'] == 'checkbox' %}
-                                        <div class="form-check"><input class="form-check-input" type="checkbox"
-                                                                       id="{{ parameter['code_name'] }}"
-                                                                       name="{{ parameter['code_name'] }}"><label
-                                                class="form-check-label"
-                                                for="{{ parameter['code_name'] }}">{{ parameter['description'] }}</label>
-                                        </div>
-                                    {% elif parameter['type'] == 'select' %}
-                                        <div class="form-group">
-                                            <select class="form-select" id="{{ parameter['code_name'] }}"
-                                                    name="{{ parameter['code_name'] }}">
-                                                {% for option in parameter['options'] %}
-                                                    <option value="{{ option }}">{{ option }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                    {% elif parameter['type'] == 'radio' %}
-                                        {% for option in parameter['options'] %}
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio"
-                                                       id="{{ option }}" name="{{ parameter['code_name'] }}">
-                                                <label class="form-check-label" for="{{ option }}">
-                                                    {{ option }}
-                                                </label>
-                                            </div>
-                                        {% endfor %}
-                                    {% endif %}
-                                {% endfor %}
-
-                                <div class="d-grid gap-2 d-md-flex justify-content-md-end my-3">
-                                    <button type="submit" class="btn btn-primary">SUBMIT</button>
-                                </div>
-                            </form>
-                        </div>
-
-
-
-                    {% endfor %}
-                {% endfor %}
-
-
+            <div class="col-lg-7 col-md-6">
+                <div class="text">Report canvas</div>
             </div>
 
         </div>
     </div>
-
-    <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            // Get references to the buttons and information elements
-            var buttons = document.getElementsByClassName('algorithm_select_btn');
-            var infos = document.querySelectorAll('div[id^="info"]'); // get all divs with id starting with "info"
-
-            // Add click event listeners to the selected buttons
-            Array.from(buttons).forEach(function (button, index) {
-                button.addEventListener("click", function () {
-                    // Hide all information elements except for the one corresponding to this button
-                    infos.forEach(function (info) {
-                        info.style.display = "none";
-                    });
-
-                    // make all button class to btn btn-link btn-sm text-start text-dark algorithm_select_btn
-                    Array.from(buttons).forEach(function (button, index) {
-                        button.className = "btn btn-link btn-sm text-start text-dark algorithm_select_btn";
-                    });
-
-                    // change current the button class to btn btn-secondary btn-sm text-start algorithm_select_btn
-                    button.className = "btn btn-secondary btn-sm text-start algorithm_select_btn";
-                    infos[index].style.display = "block";
-                });
-            });
-        });
-    </script>
 
 {% endblock %}
