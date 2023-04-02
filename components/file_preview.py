@@ -12,7 +12,7 @@ from database import db_session
 bp = Blueprint('file_preview', __name__, url_prefix='/file')
 
 
-## embedded viewer demo
+# embedded viewer demo
 @bp.route("/", methods=['GET'])
 def view_document_demo():
     # Replace the URL with the URL of your Office document
@@ -25,7 +25,7 @@ def view_document_demo():
     return render_template('dataset/document_viewer.html', title=title, viewer_html=viewer_html)
 
 
-## embedded viewer
+# embedded viewer
 @bp.route('/preview/<path:file_path>', methods=['GET'])
 def view_document(file_path='public/hello_world.csv'):
     # Replace the URL with the URL of your Office document
@@ -153,7 +153,8 @@ def delete_dataset(file_path, force=False):
         if force:
             try:
                 # delete corresponding processing task
-                delete_task('data_processing', file_path)
+                project = ProcessingProject.query.filter_by(current_file_path=file_path).first()
+                delete_task('data_processing', project.id)
                 return redirect(url_for('my_data.my_data'))
             except Exception as e:
                 print(e)
@@ -165,14 +166,13 @@ def delete_dataset(file_path, force=False):
     return redirect(url_for('my_data.my_data'))
 
 
-@bp.route('/delete/<path:component_name>/<path:file_path>')
+@bp.route('/delete/<path:component_name>/<path:id>')
 @login_required
-def delete_task(component_name, file_path):
+def delete_task(component_name, id):
     """
     Delete tasks shown on Processing or Analysis page
-    todo use id as identifier instead may be better
     :param component_name: Source position which calls this method
-    :param file_path: Storage path of the file to delete
+    :param id: Storage path of the file to delete
     :return: Response of the source position after operation
     """
     # input beyond process range or input error
@@ -181,22 +181,33 @@ def delete_task(component_name, file_path):
     if component_name not in acpt_comp:
         return redirect(url_for('my_data.my_data'))
 
-    # check ownership
-    owner = file_path.split('/')[0]
-    if owner != g.user.username:
-        flash('Deleting This File is NOT ALLOWED!')
-        return redirect(redirect_url)
+    if component_name == 'data_processing':
+        # check ownership
+        project = ProcessingProject.query.filter_by(id=id).first()
+        owner = project.current_file_path.split('/')[0]
+        if owner != g.user.username:
+            flash('Deleting This File is NOT ALLOWED!')
+            return redirect(redirect_url)
 
-    # Delete
-    if not sc.delete_blob(file_path):
-        flash('Error Occurred When Deleting File')
-    else:
-        # check database and delete relative row
-        if component_name == 'data_processing':
-            db_session.delete(ProcessingProject.query.filter_by(current_file_path=file_path).first())
-            db_session.commit()
-        elif component_name == 'data_analysis':
-            pass
-            # db_session.delete(AnalysisProject.query.filter_by(original_file_path=file_path).first())
-            # db_session.commit()
+        # Delete file
+        if not sc.delete_blob(project.current_file_path):
+            flash('Error Occurred When Deleting File')
+        #  Delete database record
+        db_session.delete(project)
+        db_session.commit()
+    elif component_name == 'data_analysis':
+        # check ownership
+        project = AnalysisProject.query.filter_by(id=id).first()
+        owner = project.result_file_path.split('/')[0]
+        if owner != g.user.username:
+            flash('Deleting This File is NOT ALLOWED!')
+            return redirect(redirect_url)
+
+        # Delete file
+        if not sc.delete_blob(project.result_file_path):
+            flash('Error Occurred When Deleting File')
+
+        #  Delete database record
+        db_session.delete(project)
+        db_session.commit()
     return redirect(redirect_url)
