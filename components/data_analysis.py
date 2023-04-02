@@ -90,8 +90,13 @@ def project(analysis_project_id):
         data_analysis_algorithms_config = json.load(f)
 
     # get the result file path from database
-    analysis_result = AnalysisResult.query.filter_by(project_id=analysis_project_id).all()
-    # TODO: make result list show in the page
+    results = []
+    analysis_results = AnalysisResult.query.filter_by(project_id=analysis_project_id).all()
+    for analysis_result in analysis_results:
+        # read the result file in .json format
+        results.append(json.load(storage_control.download_to_memory(analysis_result.result_file_path)))
+        # for local test
+        # print(results[-1])
 
     if request.method == 'POST':
         # get selected function name
@@ -110,7 +115,8 @@ def project(analysis_project_id):
         algorithm_config = request.form.to_dict()
         algorithm_config[variable_name] = column_selected
 
-        print(algorithm_config)
+        # for local test
+        # print(algorithm_config)
 
         # # for local test
         # result_file_path = data_anal.analysis(file_path=analysis_project.original_file_path,
@@ -132,4 +138,5 @@ def project(analysis_project_id):
         return redirect(url_for('data_analysis.project', analysis_project_id=analysis_project_id))
 
     return render_template('data_analysis/project.html', project_id=analysis_project_id, file_name=file_name,
-                           column_names=column_names, data_analysis_algorithms=data_analysis_algorithms_config)
+                           column_names=column_names, data_analysis_algorithms=data_analysis_algorithms_config,
+                           results=results)

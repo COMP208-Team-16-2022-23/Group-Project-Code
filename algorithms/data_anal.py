@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from util import storage_control
 from util import file_util
 from flask import g
+import json
 
 
 def analysis(file_path, parameters):
@@ -40,16 +41,15 @@ def analysis(file_path, parameters):
                 for variable in algorithm['variables']:
                     result_name += f'-{parameters[variable["name"]]}'
 
-    result_dict = {"result_name": result_name}
+    result_dict = {"name": result_name}
 
     match processing_method:
         case "knn_classification":
-            result_dict["result"] = knn_classification(df, parameters)
+            result_dict["content"] = knn_classification(df, parameters)
         case _:
             pass
 
     # convert the dictionary to json file
-    import json
     result_json = json.dumps(result_dict)
     new_file_path = file_util.add_suffix(file_path=file_path, suffix=result_name, username=g.user.username,
                                          folder_name='analysis_result', ext='.json')
@@ -92,17 +92,33 @@ def get_evaluation_metrics(y_train, y_train_pred, y_test, y_test_pred):
     return accuracy_train, accuracy_test, recall_train, recall_test, precision_train, precision_test, f1_train, f1_test
 
 
-def make_result_dict(evaluation_table, confusion_matrix_table, accuracy):
-    # make all the values in evaluation_table and confusion_matrix_table to one dictionary
-    evaluation_table = {"accuracy_train": evaluation_table[0], "accuracy_test": evaluation_table[1],
-                        "recall_train": evaluation_table[2], "recall_test": evaluation_table[3],
-                        "precision_train": evaluation_table[4], "precision_test": evaluation_table[5],
-                        "f1_train": evaluation_table[6], "f1_test": evaluation_table[7]}
-    confusion_matrix_table = {"confusion_matrix_table": confusion_matrix_table.to_json(orient='split')}
-    accuracy = {"accuracy": accuracy}
+def make_result_section(section_name, content_type, content):
+    result_section_dict = {
+        "section_name": section_name,
+        "type": content_type,
+        "content": content
+    }
 
-    # combine all the dictionaries into one dictionary
-    result_dict = {**evaluation_table, **confusion_matrix_table, **accuracy}
+    return result_section_dict
+
+
+def make_result_dict(evaluation_table=None, confusion_matrix_table=None, accuracy=None):
+    result_dict = {}
+    # make all the values in evaluation_table and confusion_matrix_table to one dictionary
+    if evaluation_table:
+        result_dict["evaluation_table"] = {"accuracy_train": evaluation_table[0], "accuracy_test": evaluation_table[1],
+                                           "recall_train": evaluation_table[2], "recall_test": evaluation_table[3],
+                                           "precision_train": evaluation_table[4],
+                                           "precision_test": evaluation_table[5],
+                                           "f1_train": evaluation_table[6], "f1_test": evaluation_table[7]}
+
+    if confusion_matrix_table:
+        result_dict["confusion_matrix"] = confusion_matrix_table.to_json(orient='split')
+
+    if accuracy:
+        result_dict["accuracy"] = accuracy
+
+    # add more if needed
 
     return result_dict
 
@@ -128,8 +144,8 @@ def cross_validation(x, y, model, k):
 
         # Append results to result table and confusion matrix table
         evaluation_table.append(
-            [accuracy_train, accuracy_test, recall_train, recall_test, precision_train, precision_test,
-             f1_train, f1_test])
+            [accuracy_train, recall_train, precision_train, f1_train, accuracy_test, recall_test, precision_test,
+             f1_test])
         confusion_matrix_table.append(cnf_matrix)
 
         accuracy.append(model.score(x_test, y_test))
@@ -143,13 +159,48 @@ def cross_validation(x, y, model, k):
     accuracy = np.mean(accuracy, axis=0)
 
     # make all the values in evaluation_table and confusion_matrix_table to one dictionary
-    result_dict = make_result_dict(evaluation_table, confusion_matrix_table, accuracy)
+    result_content = []
+    result_content.append(make_result_section(section_name="Evaluation Results",
+                                              content_type="table",
+                                              content={
+                                                  "data": [
+                                                      ['%.3f' % (evaluation_table[0]), '%.3f' % (evaluation_table[1]),
+                                                       '%.3f' % (evaluation_table[2]),
+                                                       '%.3f' % (evaluation_table[3])],
+                                                      # '%.3f' % means 3 decimal places
+                                                      ['%.3f' % (evaluation_table[4]), '%.3f' % (evaluation_table[5]),
+                                                       '%.3f' % (evaluation_table[6]),
+                                                       '%.3f' % (evaluation_table[7])]],
+                                                  "columns": ["Accuracy", "Recall", "Precision", "F1"],
+                                                  "index": ["Training Set", "Test Set"]
+                                              }))
 
-    return result_dict
+    confusion_matrix_result = confusion_matrix_table.to_json(orient='split')
+    parsed = json.loads(confusion_matrix_result)
+
+    result_content.append(make_result_section(section_name="Confusion Matrix",
+                                              content_type="table",
+                                              content=parsed))
+
+    result_content.append(make_result_section(section_name="Accuracy",
+                                              content_type="text",
+                                              content=accuracy))
+
+    return result_content
 
 
 def knn_classification(df, parameters):
-    result_dict = {}
+    result_content = []
+
+    result_content.append(make_result_section(section_name="Analysis steps",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "Establish a K-Nearest Neighbor (KNN) classifier model through the training set data.",
+                                                  "Apply the established K-Nearest Neighbor (KNN) classifier model to the training and test data to obtain the classification evaluation results of the model.",
+                                                  "If the data shuffling function is selected for K-Nearest Neighbors (KNN), the result of each calculation is different. If you save this training model, you can directly upload the data and substitute it into this training model for calculation and classification.",
+                                                  "Note: The K-Nearest Neighbor (KNN) classifier model cannot obtain a definite equation like the traditional model, and the model is usually evaluated by testing the classification effect of the data."
+                                              ]))
+
     neigh = KNeighborsClassifier(n_neighbors=int(parameters["n_neighbors"]), weights=parameters["weights"],
                                  algorithm=parameters["algorithm"], leaf_size=int(parameters["leaf_size"]),
                                  p=int(parameters["p"]))
@@ -179,14 +230,34 @@ def knn_classification(df, parameters):
         accuracy = neigh.score(x_test, y_test)
 
         # make all the values in result_table and confusion_matrix_table to one dictionary
-        evaluation_table = [accuracy_train, accuracy_test, recall_train, recall_test, precision_train, precision_test,
-                            f1_train, f1_test]
-        result_dict = make_result_dict(evaluation_table, cnf_matrix, accuracy)
+        evaluation_table = [accuracy_train, recall_train, precision_train, f1_train, accuracy_test, recall_test,
+                            precision_test, f1_test]
+        result_content.append(make_result_section(section_name="Evaluation Results",
+                                                  content_type="table",
+                                                  content={
+                                                      "data": [['%.3f' % (evaluation_table[0]),
+                                                                '%.3f' % (evaluation_table[1]),
+                                                                '%.3f' % (evaluation_table[2]),
+                                                                '%.3f' % (evaluation_table[3])],
+                                                               # '%.3f' % means 3 decimal places
+                                                               ['%.3f' % (evaluation_table[4]),
+                                                                '%.3f' % (evaluation_table[5]),
+                                                                '%.3f' % (evaluation_table[6]),
+                                                                '%.3f' % (evaluation_table[7])]],
+                                                      "columns": ["Accuracy", "Recall", "Precision", "F1"],
+                                                      "index": ["Training Set", "Test Set"]
+                                                  }))
+        result_content.append(make_result_section(section_name="Confusion Matrix",
+                                                  content_type="table",
+                                                  content=cnf_matrix.to_json(orient='split')))
+        result_content.append(make_result_section(section_name="Accuracy",
+                                                  content_type="text",
+                                                  content=accuracy))
     else:
-        result_dict = cross_validation(x_train, y_train, neigh,
-                                       int(parameters["cross_validation"].split("-", 1)[0]))  # k-fold
+        result_content += cross_validation(x_train, y_train, neigh,
+                                           int(parameters["cross_validation"].split("-", 1)[0]))  # k-fold
 
-    return result_dict
+    return result_content
 
 
 def chebyshev_distances(x, y):
