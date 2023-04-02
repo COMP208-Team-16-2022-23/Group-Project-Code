@@ -5,6 +5,7 @@ from io import BytesIO
 from google.cloud import storage
 from flask import send_file
 import pandas as pd
+from xhtml2pdf import pisa
 import config
 
 
@@ -78,3 +79,9 @@ def add_suffix(file_path, suffix, username, folder_name="", ext=""):
         file_path = username + "/" + name + "-" + suffix + ext
 
     return file_path
+
+
+def convert_to_pdf(html_file):
+    bytes_io = BytesIO()
+    pisa.CreatePDF(html_file, dest=bytes_io)
+    return bytes_io

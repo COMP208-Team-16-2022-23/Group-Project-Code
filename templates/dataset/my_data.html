@@ -24,31 +24,6 @@
                     <button type="submit" class="btn btn-sm btn-primary col-6 col-lg-4 my-3">Upload</button>
                 </form>
                 <!--file list-->
-                {#                <style>#}
-                {#                    .list-group-scrollable {#}
-                {#                        max-height: 450px; /* max height of list group */#}
-                {#                        overflow-y: auto; /* scroll bar for overflow */#}
-                {#                        max-width: 400px;#}
-                {#                    }#}
-                {#                </style>#}
-                {##}
-                {#                <ol class="list-group list-group-scrollable">#}
-                {#                {% for item in list %}#}
-                {#                    <li class="list-group-item d-flex justify-content-between align-items-start">#}
-                {#                        <div class="ms-2 me-auto" style="max-width: 300px">#}
-                {#                            <button class="btn btn-link align-items-start" style="max-width: 300px"#}
-                {#                                    onclick="go({{ '\'' + item['file_path'] + '\'' }})">#}
-                {#                                {{ item['file_name'] }}#}
-                {#                            </button>#}
-                {#                        </div>#}
-                {#                        <a role="button" class="btn btn-danger btn-sm btn-rounded" aria-disabled=false#}
-                {#                           href="{{ url_for('file_preview.delete_dataset', file_path=item['file_path']) }}">#}
-                {#                            Delete#}
-                {#                        </a>#}
-                {#                    </li>#}
-                {#                {% endfor %}#}
-                {#                </ol>#}
-
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="bg-light">
@@ -80,18 +55,6 @@
                                     </a>
                                 </td>
                             </tr>
-                            {#                        <li class="list-group-item d-flex justify-content-between align-items-start">#}
-                            {#                            <div class="ms-2 me-auto" style="max-width: 300px">#}
-                            {#                                <button class="btn btn-link align-items-start" style="max-width: 300px"#}
-                            {#                                        onclick="go({{ '\'' + item['file_path'] + '\'' }})">#}
-                            {#                                    {{ item['file_name'] }}#}
-                            {#                                </button>#}
-                            {#                            </div>#}
-                            {#                            <a role="button" class="btn btn-danger btn-sm btn-rounded" aria-disabled=false#}
-                            {#                               href="{{ url_for('file_preview.delete_dataset', file_path=item['file_path']) }}">#}
-                            {#                                Delete#}
-                            {#                            </a>#}
-                            {#                        </li>#}
                         {% endfor %}
                         </tbody>
                     </table>

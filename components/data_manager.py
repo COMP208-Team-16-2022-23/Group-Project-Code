@@ -26,5 +26,4 @@ def my_data():
         private_files = list_blobs(bucket_name, private_path)
     dict_files = public_files + private_files
 
-
     return render_template('dataset/my_data.html', list=dict_files)

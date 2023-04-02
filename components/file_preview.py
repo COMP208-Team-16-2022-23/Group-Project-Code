@@ -170,6 +170,7 @@ def delete_dataset(file_path, force=False):
 def delete_task(component_name, file_path):
     """
     Delete tasks shown on Processing or Analysis page
+    todo use id as identifier instead may be better
     :param component_name: Source position which calls this method
     :param file_path: Storage path of the file to delete
     :return: Response of the source position after operation
@@ -194,4 +195,8 @@ def delete_task(component_name, file_path):
         if component_name == 'data_processing':
             db_session.delete(ProcessingProject.query.filter_by(current_file_path=file_path).first())
             db_session.commit()
+        elif component_name == 'data_analysis':
+            pass
+            # db_session.delete(AnalysisProject.query.filter_by(original_file_path=file_path).first())
+            # db_session.commit()
     return redirect(redirect_url)
