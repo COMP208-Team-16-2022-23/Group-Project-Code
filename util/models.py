@@ -97,9 +97,9 @@ class AnalysisResult(Base):
     result_file_path = Column(String(500), nullable=False)
     modified_date = Column(DateTime, default=datetime.utcnow)
 
-    def __init__(self, project_id=None, file_path=None):
+    def __init__(self, project_id=None, result_file_path=None):
         self.project_id = project_id
-        self.result_file_path = file_path
+        self.result_file_path = result_file_path
 
     def __repr__(self):
         return {'id': self.id, 'project_id': self.project_id, 'file_path': self.result_file_path,

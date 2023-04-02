@@ -46,7 +46,7 @@ def xlsx_to_csv_upload(file):
     return csv
 
 
-def add_suffix(file_path, suffix, username):
+def add_suffix(file_path, suffix, username, folder_name="", ext=""):
     """
     Add suffix to the filename.
 
@@ -54,6 +54,8 @@ def add_suffix(file_path, suffix, username):
         file_path (str): Path of the file
         suffix (str): Suffix to be added
         username (str): Username of the user
+        folder_name (str): Name of the folder
+        ext (str): Extension of the file
 
     Returns:
         str: Filename with suffix
@@ -64,9 +66,15 @@ def add_suffix(file_path, suffix, username):
     file_path = file_path.split('/', 1)[-1]  # ('/', 1) means split once
 
     # Split the filename into name and extension
-    name, ext = os.path.splitext(file_path)
+    if not ext:
+        name, ext = os.path.splitext(file_path)
+    else:
+        name, _ = os.path.splitext(file_path)
 
     # Add suffix to the filename
-    file_path = username + "/" + name + "-" + suffix + ext
+    if folder_name:
+        file_path = username + "/" + folder_name + "/" + name + "-" + suffix + ext
+    else:
+        file_path = username + "/" + name + "-" + suffix + ext
 
     return file_path

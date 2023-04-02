@@ -28,14 +28,15 @@ def process(file_path, parameters):
     processing_method = parameters['function_name']
 
     # call corresponding function
-    if processing_method == 'outlier_handling':
-        df = outlier_handling(df, parameters)
-    elif processing_method == 'tail shrinkage and truncation processing':
-        df = tail_shrinkage_or_truncation_processing(df, parameters)
-    elif processing_method == 'normalisation':
-        df = normalization(df, parameters)
-    else:
-        pass
+    match processing_method:
+        case 'outlier_handling':
+            df = outlier_handling(df, parameters)
+        case 'tail_shrinkage_or_truncation_processing':
+            df = tail_shrinkage_or_truncation_processing(df, parameters)
+        case 'normalisation':
+            df = normalization(df, parameters)
+        case _:  # default
+            pass
 
     file = df.to_csv(index=False)
 

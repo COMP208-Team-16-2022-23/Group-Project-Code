@@ -49,6 +49,7 @@
                 <hr>
                 <h6 class="mb-3 h6">Analysis results</h6>
 
+
                 <div class="vr position-absolute my-0 h-100 d-none d-md-block top-0 end-0"></div>
             </div>
 
@@ -81,8 +82,7 @@
                                     <div class="d-grid gap-2">
                                         {% for algorithm in section["algorithms"] %}
                                             <button type="button"
-                                                    class="btn btn-link btn-sm text-start text-dark algorithm_select_btn"
-                                                    data-mdb-ripple-color="dark">
+                                                    class="btn btn-link btn-sm text-start text-dark algorithm_select_btn">
                                                 {{ algorithm["name"] }}
                                             </button>
                                         {% endfor %}
@@ -142,6 +142,7 @@
 
                                 {% for parameter in algorithm["parameters"] %}
                                     <p class="fw-bold mt-3">{{ parameter['name'] }}</p>
+                                    <p>{{ parameter["description"] }}</p>
 
                                     {% if parameter['type'] == 'text' %}
                                         <div class="form-group">
@@ -154,14 +155,20 @@
                                             <input type="number" class="form-control" id="{{ parameter['code_name'] }}"
                                                    placeholder="{{ parameter['code_name'] }}"
                                                    name="{{ parameter['code_name'] }}"
-                                                   step="0.01">
+                                                   value="{{ parameter['default'] }}"
+                                                   step="0.01"/>
                                         </div>
                                     {% elif parameter['type'] == 'checkbox' %}
-                                        <div class="form-check"><input class="form-check-input" type="checkbox"
-                                                                       id="{{ parameter['code_name'] }}"
-                                                                       name="{{ parameter['code_name'] }}"><label
-                                                class="form-check-label"
-                                                for="{{ parameter['code_name'] }}">{{ parameter['description'] }}</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                   type="checkbox"
+                                                   id="{{ parameter['code_name'] }}"
+                                                   name="{{ parameter['code_name'] }}"
+                                                    {{ parameter["default"] }}
+                                                   value="True"/>
+                                            <label class="form-check-label" for="{{ parameter['code_name'] }}">
+                                                {{ parameter['name'] }}
+                                            </label>
                                         </div>
                                     {% elif parameter['type'] == 'select' %}
                                         <div class="form-group">
@@ -176,7 +183,7 @@
                                         {% for option in parameter['options'] %}
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio"
-                                                       id="{{ option }}" name="{{ parameter['code_name'] }}">
+                                                       id="{{ option }}" name="{{ parameter['code_name'] }}"/>
                                                 <label class="form-check-label" for="{{ option }}">
                                                     {{ option }}
                                                 </label>

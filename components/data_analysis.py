@@ -7,8 +7,10 @@ from flask import Blueprint, request, flash, redirect, url_for, render_template,
 from util import storage_control
 
 from components.auth import login_required
-from util.models import AnalysisProject, User
+from util.models import AnalysisProject, User, AnalysisResult
 from database import db_session
+
+from algorithms import data_anal
 
 bp = Blueprint('data_analysis', __name__, url_prefix='/data_analysis')
 
@@ -87,6 +89,10 @@ def project(analysis_project_id):
     with open(file_path, 'r') as f:
         data_analysis_algorithms_config = json.load(f)
 
+    # get the result file path from database
+    analysis_result = AnalysisResult.query.filter_by(project_id=analysis_project_id).all()
+    # TODO: make result list show in the page
+
     if request.method == 'POST':
         # get selected function name
         function_name = request.form['function_name']
@@ -106,7 +112,24 @@ def project(analysis_project_id):
 
         print(algorithm_config)
 
-        # TODO: call the function and get the result
+        # # for local test
+        # result_file_path = data_anal.analysis(file_path=analysis_project.original_file_path,
+        #                                       parameters=algorithm_config)
+
+        # for shipping to server
+        try:
+            result_file_path = data_anal.analysis(file_path=analysis_project.original_file_path,
+                                                  parameters=algorithm_config)
+        except Exception as e:
+            flash(f'Error: {e}')
+            return redirect(url_for('data_analysis.project', analysis_project_id=analysis_project_id))
+
+        # # update the result database
+        analysis_result = AnalysisResult(project_id=analysis_project_id, result_file_path=result_file_path)
+        db_session.add(analysis_result)
+        db_session.commit()
+
+        return redirect(url_for('data_analysis.project', analysis_project_id=analysis_project_id))
 
     return render_template('data_analysis/project.html', project_id=analysis_project_id, file_name=file_name,
                            column_names=column_names, data_analysis_algorithms=data_analysis_algorithms_config)
