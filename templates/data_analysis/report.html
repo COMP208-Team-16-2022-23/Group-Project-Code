@@ -1,0 +1,48 @@
+    {% for result in results %}
+    <div id="info_{{ result['name'] }}" class="info">
+        <h5 class="mb-3 h5">{{ result["name"] }}</h5>
+        <hr>
+        {% for section in result["content"] %}
+        <p class="fw-bold mt-3">{{ section["section_name"] }}</p>
+        {% if section["type"] == "ordered_list" %}
+        <ol>
+            {% for item in section["content"] %}
+            <li>{{ item }}</li>
+            {% endfor %}
+        </ol>
+        {% elif section["type"] == "unordered_list" %}
+        <ul>
+            {% for item in section["content"] %}
+            <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+        {% elif section["type"] == "table" %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    {% for header in section["content"]["columns"] %}
+                    <th scope="col">{{ header }}</th>
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for index in section["content"]["index"] %}
+                <tr>
+                    <td>{{ index }}</td>
+                    {% for item in section["content"]["data"][loop.index0] %}
+                    <td>{{ item }}</td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% elif section["type"] == "text" %}
+        <p>{{ section["content"] }}</p>
+        {% endif %}
+        {% endfor %}
+    </div>
+    
+    {% endfor %}
