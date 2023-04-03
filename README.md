@@ -73,6 +73,7 @@ If the package is not available in conda, you can use pip to install it.
 * Vue: [English](https://vuejs.org/guide/introduction.html) | [简体中文](https://cn.vuejs.org/guide/introduction.html)
 * Bootstrap: [English](https://getbootstrap.com/docs/5.3/getting-started/introduction/) | [简体中文](https://v5.bootcss.com/docs/getting-started/introduction/)
 * MDBootstrap: [English](https://mdbootstrap.com/)
+* Jinja2: [English](https://jinja.palletsprojects.com/en/3.0.x/) | [简体中文](https://docs.jinkan.org/docs/jinja2/)
 
 **Unofficial documents**
 

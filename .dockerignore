@@ -1,5 +1,5 @@
 Dockerfile
-README.md
+*.md
 *.pyc
 *.pyo
 *.pyd
@@ -10,5 +10,6 @@ instance
 .idea
 .git
 .gitignore
+.github
 .DS_Store
 temp_files
