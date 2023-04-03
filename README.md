@@ -8,7 +8,9 @@ Project Source Code
 
 This is the code repo of COMP208 Team 16. 
 
-[Online Demo](https://lcda-vgnazlwvxa-nw.a.run.app/).
+[Online Demo](https://lcda-vgnazlwvxa-nw.a.run.app/)
+
+[Change Log](CHANGELOG.md)
 
 ### Requirements
 
@@ -17,6 +19,13 @@ This is the code repo of COMP208 Team 16.
 <strong>Think twice before git PUSH. 三思而后行</strong>(Chinese) It may affect other contributors and the web server.
 
 Please ensure that your push does not interfere with the normal function of the original. Please carry out tests first.
+
+#### Commit Message
+
+This project uses **conventional commits** to automatically generate [changelog](CHANGELOG.md). Please follow the [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) specification when submitting.
+
+Or you can use [commitlint](https://commitlint.io/#/) to assist you in writing commit messages.
+
 
 #### `requirements.txt` file
 
