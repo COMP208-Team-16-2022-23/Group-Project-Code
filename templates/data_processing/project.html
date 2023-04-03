@@ -72,16 +72,17 @@
                         <h5 class="modal-title" id="exampleModalLabel">{{ algorithm["name"] }}</h5>
                         <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form method="post">
-                        <div class="modal-body">
 
+                    <div class="modal-body">
+                        <form method="post" id="form_{{ algorithm['function_name'] }}">
                             <input type="hidden" id="function_name" name="function_name"
                                    value="{{ algorithm['function_name'] }}"/>
 
                             {# select column to be processed #}
                             <p class="fw-bold">Select the variables to be processed</p>
 
-                            <select class="selectpicker" multiple data-live-search="true" name="column_selected" required>
+                            <select class="selectpicker" multiple data-live-search="true" name="column_selected"
+                                    required>
                                 {% for column_name in column_names %}
                                     <option value="{{ column_name }}">{{ column_name }}</option>
                                 {% endfor %}
@@ -129,13 +130,15 @@
                                     {% endfor %}
                                 {% endif %}
                             {% endfor %}
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" form="form_{{ algorithm['function_name'] }}">
+                            Start processing
+                        </button>
+                    </div>
 
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Start processing</button>
-                        </div>
-                    </form>
                 </div>
             </div>
         </div>
