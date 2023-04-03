@@ -10,7 +10,7 @@ This is the code repo of COMP208 Team 16.
 
 [Online Demo](https://lcda-vgnazlwvxa-nw.a.run.app/)
 
-[Change Log](CHANGELOG.md)
+[//]: # ([Change Log]&#40;CHANGELOG.md&#41;)
 
 ### Requirements
 
@@ -22,9 +22,10 @@ Please ensure that your push does not interfere with the normal function of the 
 
 #### Commit Message
 
-This project uses **conventional commits** to automatically generate [changelog](CHANGELOG.md). Please follow the [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) specification when submitting.
+[//]: # (This project uses **conventional commits** to automatically generate [changelog]&#40;CHANGELOG.md&#41;. )
+Please follow the [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) specification when committing.
 
-Or you can use [commitlint](https://commitlint.io/#/) to assist you in writing commit messages.
+You can use [commitlint](https://commitlint.io/#/) to assist you in writing commit messages.
 
 
 #### `requirements.txt` file
