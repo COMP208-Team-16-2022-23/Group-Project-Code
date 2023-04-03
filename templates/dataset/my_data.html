@@ -11,8 +11,8 @@
         </script>
     {% endfor %}
 
-    <div class="container-fluid py-3">
-        <div class="row">
+    <div class="container-fluid py-3 flex-grow-1 d-flex flex-column">
+        <div class="row flex-grow-1">
             <div class="col-md-6">
                 <!--file upload area-->
                 <form class="row justify-content-evenly pb-3" action="{{ url_for('file_preview.upload_dataset') }}"
@@ -77,7 +77,7 @@
                     </a>
                 </p>
             </div>
-            <div class="col-md-6" style="min-height: 600px">
+            <div class="col-md-6" style="min-height: 500px">
                 <!--                <iframe-->
                 <!--                        src="https://drive.google.com/viewer?embedded=true&hl=en-US&url=https://lcda-vgnazlwvxa-nw.a.run.app/file/download/public/CW_Data.csv"-->
                 <!--                        width="800px"-->
@@ -85,11 +85,9 @@
                 <!--                        frameborder="0"-->
                 <!--                ></iframe>-->
                 <iframe
-                        class="align-middle"
+                        class="align-middle h-100 w-100"
                         id="data_view"
                         src="https://view.officeapps.live.com/op/embed.aspx?src=https://lcda-vgnazlwvxa-nw.a.run.app/file/embedded/public/CW_Data.csv&wdHideSheetTabs=True"
-                        width="100%"
-                        height="100%"
                 ></iframe>
             </div>
         </div>

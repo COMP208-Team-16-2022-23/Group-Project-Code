@@ -7,8 +7,6 @@
     <title>{% block title %}{% endblock %} - LCDA</title>
     <!-- Web icon -->
     <link rel="icon" href="/static/img/LCDA.ico" type="image/x-icon"/>
-    <!-- Footer -->
-    <link rel="stylesheet" href="/static/css/footer.css">
     <!-- Font Awesome -->
     <link
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
@@ -37,7 +35,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
 </head>
-<body>
+<body class="min-vh-100 d-flex flex-column m-0">
 <!-- Start your project here-->
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -130,7 +128,10 @@
     </div>
 </nav>
 
-{% block content %}{% endblock %}
+<div class="flex-grow-1 d-flex flex-column">
+    {% block content %}{% endblock %}
+</div>
+
 
 <!-- Footer -->
 <footer class="text-center text-lg-start bg-light text-muted">
