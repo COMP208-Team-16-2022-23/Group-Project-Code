@@ -175,12 +175,9 @@ def cross_validation(x, y, model, k):
                                                   "index": ["Training Set", "Test Set"]
                                               }))
 
-    confusion_matrix_result = confusion_matrix_table.to_json(orient='split')
-    parsed = json.loads(confusion_matrix_result)
-
     result_content.append(make_result_section(section_name="Confusion Matrix",
                                               content_type="table",
-                                              content=parsed))
+                                              content=confusion_matrix_table.to_dict(orient='split')))
 
     result_content.append(make_result_section(section_name="Accuracy",
                                               content_type="text",
@@ -249,7 +246,7 @@ def knn_classification(df, parameters):
                                                   }))
         result_content.append(make_result_section(section_name="Confusion Matrix",
                                                   content_type="table",
-                                                  content=json.loads(cnf_matrix.to_json(orient='split'))))
+                                                  content=cnf_matrix.to_dict(orient='split')))
         result_content.append(make_result_section(section_name="Accuracy",
                                                   content_type="text",
                                                   content=accuracy))

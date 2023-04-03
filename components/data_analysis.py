@@ -130,11 +130,15 @@ def project(analysis_project_id):
             flash(f'Error: {e}')
             return redirect(url_for('data_analysis.project', analysis_project_id=analysis_project_id))
 
-        # # update the result database
-        analysis_result = AnalysisResult(project_id=analysis_project_id, result_file_path=result_file_path)
-        db_session.add(analysis_result)
-        db_session.commit()
-
+        # update the result database
+        # first check whether the result is already in the database, if so, redirect to the processing project page
+        # if not, add the result to the database
+        analysis_result = AnalysisResult.query.filter_by(project_id=analysis_project_id,
+                                                         result_file_path=result_file_path).first()
+        if analysis_result is None:
+            analysis_result = AnalysisResult(project_id=analysis_project_id, result_file_path=result_file_path)
+            db_session.add(analysis_result)
+            db_session.commit()
         return redirect(url_for('data_analysis.project', analysis_project_id=analysis_project_id))
 
     return render_template('data_analysis/project.html', project_id=analysis_project_id, file_name=file_name,
