@@ -64,7 +64,7 @@
                         <div class="card-body p-md-5">
 
                             {% for message in get_flashed_messages() %}
-                                <div class="alert alert-primary d-flex align-items-center alert-dismissible fade show"
+                                <div class="alert alert-primary d-flex align-items-center fade show"
                                      role="alert">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                                          class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 18 18"
@@ -74,8 +74,6 @@
                                     <div>
                                         {{ message }}
                                     </div>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
                                 </div>
                             {% endfor %}
 
