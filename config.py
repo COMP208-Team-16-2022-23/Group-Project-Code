@@ -35,6 +35,9 @@ TEMP_PATH = 'temp_files'
 PRODUCT_NAME = 'LCDA'
 
 # openAI api key
-OPENAI_API_KEY = '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'
+OPENAI_API_KEY = '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' # invalid key
 OPENAI_ENGINE = 'gpt-3.5-turbo'
 OPENAI_MAX_TOKENS = 900
+
+# Strings
+LOGIN_REQUIRED = 'Please log in first'
