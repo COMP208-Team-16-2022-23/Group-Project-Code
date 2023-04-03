@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, url_for, redirect, flash, g, reque
 import requests
 from werkzeug.utils import secure_filename
 import os
+import json
 import util.storage_control as sc
 import util.file_util as file
 from util.models import ProcessingProject, AnalysisProject, AnalysisResult
@@ -128,6 +129,14 @@ def embedded_view(file_path='public/hello_world.csv'):
         return send_file(temp_xlsx, as_attachment=True, download_name=f'{file_name}.xlsx')
     else:
         return download(file_path)
+
+
+@bp.route('/view_report/<report_id>')
+def fullscreen_view(report_id):
+    # todo credential
+    result = AnalysisResult.query.filter_by(id=report_id).first()
+    content = [json.load(sc.download_to_memory(result.result_file_path))]
+    return render_template('data_analysis/report.html', results=content, independent='true')
 
 
 @bp.route('/delete/my_data/<path:file_path>')

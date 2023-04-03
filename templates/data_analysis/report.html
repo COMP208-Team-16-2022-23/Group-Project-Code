@@ -1,4 +1,44 @@
-    {% for result in results %}
+{% if independent == 'true' %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+        <title>{% block title %}{% endblock %} - LCDA</title>
+        <!-- Web icon -->
+        <link rel="icon" href="/static/img/LCDA.ico" type="image/x-icon"/>
+        <!-- Font Awesome -->
+        <link
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+                rel="stylesheet"
+        />
+        <!-- Google Fonts -->
+        <link
+                {#            href="../static/css/Roboto.fonts.css"#}
+                href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+                rel="stylesheet"
+        />
+        <!-- MDB -->
+        <link
+                href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css"
+                rel="stylesheet"
+        />
+    
+        <link
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+                rel="stylesheet"
+        />
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+    </head>
+    <body>
+{% endif %}
+{% for result in results %}
     <div id="info_{{ result['name'] }}" class="info">
         <h5 class="mb-3 h5">{{ result["name"] }}</h5>
         <hr>
@@ -45,4 +85,8 @@
         {% endfor %}
     </div>
     
-    {% endfor %}
+{% endfor %}
+    
+{% if independent=='true' %}
+    </body>
+{% endif %}
