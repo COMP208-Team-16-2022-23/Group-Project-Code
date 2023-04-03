@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 import os
 import util.storage_control as sc
 import util.file_util as file
-from util.models import ProcessingProject, AnalysisProject
+from util.models import ProcessingProject, AnalysisProject, AnalysisResult
 import config
 from .auth import login_required
 from database import db_session
@@ -166,7 +166,7 @@ def delete_dataset(file_path, force=False):
     return redirect(url_for('my_data.my_data'))
 
 
-@bp.route('/delete/<path:component_name>/<path:id>')
+@bp.route('/delete/<component_name>/<id>')
 @login_required
 def delete_task(component_name, id):
     """
@@ -192,22 +192,36 @@ def delete_task(component_name, id):
         # Delete file
         if not sc.delete_blob(project.current_file_path):
             flash('Error Occurred When Deleting File')
-        #  Delete database record
-        db_session.delete(project)
-        db_session.commit()
+        else:
+            #  Delete database record
+            db_session.delete(project)
+            db_session.commit()
+
     elif component_name == 'data_analysis':
-        # check ownership
+        # query project
         project = AnalysisProject.query.filter_by(id=id).first()
-        owner = project.result_file_path.split('/')[0]
-        if owner != g.user.username:
-            flash('Deleting This File is NOT ALLOWED!')
-            return redirect(redirect_url)
+        project_id = [project.id]
 
-        # Delete file
-        if not sc.delete_blob(project.result_file_path):
-            flash('Error Occurred When Deleting File')
+        # find results
+        results = AnalysisResult.query.filter_by(project_id=project_id).all()
+        paths = [res.result_file_path for res in results]
+        #     check ownership
+        for path in paths:
+            owner = path.split('/')[0]
+            if owner != g.user.username:
+                flash('Deleting This File is NOT ALLOWED!')
+                return redirect(redirect_url)
 
-        #  Delete database record
-        db_session.delete(project)
-        db_session.commit()
+            # Delete file
+            if not sc.delete_blob(path):
+                flash(f'Error Occurred When Deleting File {os.path.basename(path)}')
+                return redirect(redirect_url)
+            else:
+                # Delete database record
+                # db_session.query(AnalysisResult).filter(AnalysisResult.project_id.in_(project_id)).delete(
+                #     synchronize_session=False)
+                db_session.query(AnalysisResult).filter(AnalysisResult.result_file_path == path).delete()
+                db_session.commit()
+            db_session.delete(project)
+            db_session.commit()
     return redirect(redirect_url)
