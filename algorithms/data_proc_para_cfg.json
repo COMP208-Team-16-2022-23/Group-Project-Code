@@ -46,7 +46,7 @@
     ]
   },
   {
-    "name": "tail shrinkage and truncation processing",
+    "name": "Tail shrinkage and truncation processing",
     "function_name": "tail_shrinkage_or_truncation_processing",
     "parameters": [
       {
@@ -76,7 +76,7 @@
     ]
   },
   {
-    "name": "sample_balancing",
+    "name": "Sample balancing",
     "function_name": "sample_balancing",
     "parameters": [
       {
@@ -100,7 +100,7 @@
     ]
   },
   {
-    "name": "normalisation",
+    "name": "Normalisation",
     "function_name": "normalisation",
     "parameters": [
       {

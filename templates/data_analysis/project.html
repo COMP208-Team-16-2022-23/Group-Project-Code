@@ -23,7 +23,7 @@
         </ol>
     </nav>
 
-    <div class="container-fluid">
+    <div class="container-fluid flex-grow-1 d-flex flex-column">
         {% for message in get_flashed_messages() %}
             <div class="alert alert-primary d-flex align-items-center alert-dismissible fade show m-3"
                  role="alert">
@@ -40,7 +40,7 @@
             </div>
         {% endfor %}
 
-        <div class="row">
+        <div class="row flex-grow-1">
 
             <div class="col-lg-2 col-md-12 position-relative text-truncate pb-3">
 
