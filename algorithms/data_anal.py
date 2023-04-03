@@ -30,7 +30,7 @@ def analysis(file_path, parameters):
 
     # read json file as dictionary
     import json
-    with open('algorithms/data_anal_para_cfg.json', 'r') as f:
+    with open('algorithms/data_anal_para_cfg.json', 'r', encoding='utf-8') as f:
         data_analysis_algorithms_config = json.load(f)
 
     # get the variable name of the selected function
@@ -249,7 +249,7 @@ def knn_classification(df, parameters):
                                                   }))
         result_content.append(make_result_section(section_name="Confusion Matrix",
                                                   content_type="table",
-                                                  content=cnf_matrix.to_json(orient='split')))
+                                                  content=json.loads(cnf_matrix.to_json(orient='split'))))
         result_content.append(make_result_section(section_name="Accuracy",
                                                   content_type="text",
                                                   content=accuracy))
