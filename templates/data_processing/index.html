@@ -136,9 +136,9 @@
                                    href="{{ url_for('data_processing.project', processing_project_id=processing_project['id']) }}">
                                     Edit
                                 </a>
-                                <a role="button" class="btn btn-outline-danger btn-rounded btn-sm"
+                                <a role="button" class="btn btn-outline-danger btn-rounded btn-sm {{ button_status }}"
                                    data-mdb-ripple-color="dark"
-                                   aria-disabled=false
+                                   aria-disabled={% if  button_status %}true{% else %}false{% endif %}
                                    href="{{ url_for('file_preview.delete_task', component_name='data_processing', id=processing_project['id']) }}">
                                     Delete
                                 </a>

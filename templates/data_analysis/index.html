@@ -137,10 +137,10 @@
                                href="{{ url_for('data_analysis.project', analysis_project_id=analysis_project['id']) }}">
                                 Edit
                             </a>
-                            <a role="button" class="btn btn-outline-danger btn-rounded btn-sm"
+                            <a role="button" class="btn btn-outline-danger btn-rounded btn-sm {{ button_status }}"
                                data-mdb-ripple-color="dark"
-                               aria-disabled=false
-                               href="#">
+                               aria-disabled={% if  button_status %}true{% else %}false{% endif %}
+                               href="{{ url_for('file_preview.delete_task', component_name='data_analysis', id=analysis_project['id']) }}">
                                 Delete
                             </a>
                         </td>
