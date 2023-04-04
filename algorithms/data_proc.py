@@ -35,6 +35,8 @@ def process(file_path, parameters):
             df = tail_shrinkage_or_truncation_processing(df, parameters)
         case 'normalisation':
             df = normalization(df, parameters)
+        case 'sample_balancing':
+            df = sample_balancing(df, parameters)
         case _:  # default
             pass
 
@@ -114,7 +116,7 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
     col = df[column_name]
 
     # Calculate the upper and lower limits
-    upper_limit = np.percentile(col, 100 - upper_percentile)
+    upper_limit = np.percentile(col, upper_percentile)
     lower_limit = np.percentile(col, lower_percentile)
 
     # Select the method
@@ -132,6 +134,48 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
             df.drop(df.index.difference(df_without_outliers.index).tolist())
 
     return df
+
+
+def sample_balancing(df, parameters):
+    """
+    Use sample balancing method to balance the classes
+    :param df: the pandas dataframe to be processed
+    :param parameters: a dictionary of parameters
+    :return: the processed dataframe
+    column_name is the column to be processed
+    balancing_method is the method to be used, there are three methods: undersample, oversample and combined
+    """
+    # Get the target column name and balancing method from parameters
+    column_name = parameters['column_selected']
+    balancing_method = parameters['balancing_method']
+
+    # Separate the target column and features from the dataframe
+    y = df[column_name]
+    x = df.drop(column_name, axis=1)
+
+    if balancing_method == 'undersample':
+        # Create an instance of RandomUnderSampler and balance the classes
+        sampler = RandomUnderSampler()
+        x_resampled, y_resampled = sampler.fit_resample(x, y)
+
+    elif balancing_method == 'oversample':
+        # Create an instance of RandomOverSampler and balance the classes
+        sampler = RandomOverSampler()
+        x_resampled, y_resampled = sampler.fit_resample(x, y)
+
+    elif balancing_method == 'combined':
+        # Create an instance of SMOTEENN and balance the classes
+        sampler = SMOTEENN(ratio='auto')
+        x_resampled, y_resampled = sampler.fit_resample(x, y)
+
+    else:
+        # If balancing_method is invalid, return the original dataframe
+        return df
+
+    # Combine the resampled data and return as a new dataframe
+    resampled_df = pd.concat([x_resampled, y_resampled], axis=1)
+
+    return resampled_df
 
 
 # def process(df, para_received):
@@ -215,71 +259,6 @@ def value_replace_3std(df, identification_method):
             df.replace(customize_value, value=3 * df[i].std(), inplace=True)
 
     return df
-
-
-# def tail_shrinkage_or_truncation_processing(df, para_received):
-#     method = para_received["method_selection"]
-#     column_name = para_received["variable_to_be_processed"]
-#     upper_percentile = para_received["upper_limit"]
-#     lower_percentile = para_received["lower_limit"]
-#     processing_method = para_received["processing_method"]
-#
-#     # Select the column to process
-#     col = df.loc[:, column_name]
-#
-#     # Calculate the upper and lower limits
-#     upper_limit = np.percentile(col, 100 - upper_percentile)
-#     lower_limit = np.percentile(col, lower_percentile)
-#
-#     # Select the method
-#     if method == "tail_shrinkage":
-#         col_without_outliers = col.clip(lower_limit, upper_limit)
-#         df[column_name] = col_without_outliers
-#
-#     elif method == "tail_truncation":
-#         if processing_method == "delete_value":
-#             col_without_outliers = col[(col >= lower_limit) & (col <= upper_limit)]
-#             df.iloc[:, column_name] = col_without_outliers
-#
-#         elif processing_method == "delete_row":
-#             df_without_outliers = df[(col >= lower_limit) & (col <= upper_limit)]
-#             df = df.drop(df.index.difference(df_without_outliers.index))
-#
-#     return df
-
-
-def sample_balancing(df, para_received):
-    # Get the target column name and balancing method from parameters
-    target_col = para_received['target_col']
-    balancing_method = para_received['balancing_method']
-
-    # Separate the target column and features from the dataframe
-    y = df[target_col]
-    x = df.drop(target_col, axis=1)
-
-    if balancing_method == 'undersample':
-        # Create an instance of RandomUnderSampler and balance the classes
-        sampler = RandomUnderSampler()
-        x_resampled, y_resampled = sampler.fit_resample(x, y)
-
-    elif balancing_method == 'oversample':
-        # Create an instance of RandomOverSampler and balance the classes
-        sampler = RandomOverSampler()
-        x_resampled, y_resampled = sampler.fit_resample(x, y)
-
-    elif balancing_method == 'combined':
-        # Create an instance of SMOTEENN and balance the classes
-        sampler = SMOTEENN(ratio='auto')
-        x_resampled, y_resampled = sampler.fit_resample(x, y)
-
-    else:
-        # If balancing_method is invalid, return the original dataframe
-        return df
-
-    # Combine the resampled data and return as a new dataframe
-    resampled_df = pd.concat([x_resampled, y_resampled], axis=1)
-
-    return resampled_df
 
 
 def normalization(df, parameters):
