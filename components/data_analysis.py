@@ -4,6 +4,8 @@
 """Handle data analysis process and visualization"""
 import pandas as pd
 from flask import Blueprint, request, flash, redirect, url_for, render_template, g
+
+import config
 from util import storage_control
 
 from components.auth import login_required
@@ -19,10 +21,10 @@ bp = Blueprint('data_analysis', __name__, url_prefix='/data_analysis')
 def index():
     # TODO: Similar interface as data_processing
     prefix = 'public'
-    file_list = storage_control.list_blobs(prefix=prefix)
+    file_list = storage_control.list_blobs(prefix=prefix, ext_filter=config.ALLOWED_EXTENSIONS)
     if g.user:
         prefix = g.user.username
-        file_list += storage_control.list_blobs(prefix=prefix)
+        file_list += storage_control.list_blobs(prefix=prefix, ext_filter=config.ALLOWED_EXTENSIONS)
 
     # get user's processing project list from database
     if g.user:
@@ -86,7 +88,7 @@ def project(analysis_project_id):
     import json
     parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     file_path = os.path.join(parent_dir, 'algorithms', 'data_anal_para_cfg.json')
-    with open(file_path, 'r') as f:
+    with open(file_path, 'r', encoding='utf-8') as f:
         data_analysis_algorithms_config = json.load(f)
 
     # get the result file path from database

@@ -20,10 +20,10 @@ bp = Blueprint('my_data', __name__, url_prefix='/my_data')
 def my_data():
     private_files = []
     bucket_name = config.BUCKET_NAME
-    public_files = list_blobs(bucket_name, 'public')
+    public_files = list_blobs(bucket_name, 'public', ext_filter=config.ALLOWED_EXTENSIONS)
     if g.user:
         private_path = g.user.username
-        private_files = list_blobs(bucket_name, private_path)
+        private_files = list_blobs(bucket_name, private_path, ext_filter=config.ALLOWED_EXTENSIONS)
     dict_files = public_files + private_files
 
     return render_template('dataset/my_data.html', list=dict_files)

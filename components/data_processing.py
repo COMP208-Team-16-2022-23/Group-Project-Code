@@ -3,6 +3,7 @@ import datetime
 import pandas
 from flask import Blueprint, request, render_template, session, redirect, g, url_for, flash
 
+import config
 from util.storage_control import list_blobs, download_to_memory, upload_blob
 from algorithms import data_proc
 
@@ -18,10 +19,10 @@ bp = Blueprint('data_processing', __name__, url_prefix='/data_processing')
 @bp.route("/", methods=['GET', 'POST'])
 def index():
     prefix = 'public'
-    file_list = list_blobs(prefix=prefix)
+    file_list = list_blobs(prefix=prefix, ext_filter=config.ALLOWED_EXTENSIONS)
     if g.user:
         prefix = g.user.username
-        file_list += list_blobs(prefix=prefix)
+        file_list += list_blobs(prefix=prefix, ext_filter=config.ALLOWED_EXTENSIONS)
 
     # get user's processing project list from database
     if g.user:

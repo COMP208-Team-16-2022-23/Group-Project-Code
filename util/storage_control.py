@@ -2,7 +2,7 @@
 # @Time: 2023/3/9 14:48
 # @File: file_manager.PY
 import io
-from io import BytesIO
+import os
 
 from flask import send_file
 from google.cloud import storage
@@ -24,7 +24,7 @@ def upload_blob(file, blob_name, bucket_name=config.BUCKET_NAME, public=False, p
             if isinstance(file, str):
                 file = io.StringIO(file)
             elif isinstance(file, bytes):
-                file = BytesIO(file)
+                file = io.BytesIO(file)
         blob.upload_from_file(file)
         if public:
             blob.make_public()
@@ -44,10 +44,10 @@ def delete_blob(blob_name, bucket_name=config.BUCKET_NAME):
         return False
 
 
-def download_to_memory(src_path, bucket_name=config.BUCKET_NAME) -> BytesIO:
+def download_to_memory(src_path, bucket_name=config.BUCKET_NAME) -> io.BytesIO:
     """Downloads a blob from the bucket and store in memory"""
     # todo verification
-    file_data = BytesIO()
+    file_data = io.BytesIO()
     try:
         bucket = storage_client.get_bucket(bucket_name)
         blob = bucket.blob(src_path)
@@ -75,17 +75,23 @@ def download_with_response(src_path, dest_path='', bucket_name=config.BUCKET_NAM
     return send_file(file_data, as_attachment=True, download_name=filename)
 
 
-def list_blobs(bucket_name=config.BUCKET_NAME, prefix=''):
+def list_blobs(bucket_name=config.BUCKET_NAME, prefix='', ext_filter: list = None):
     """
     Lists all the blobs in the bucket.
     :param bucket_name: name of the bucket
     :param prefix: prefix of the blob name
+    :param ext_filter: a list containing file extensions. Files with extension names beyond the list will not be
+    returned
     :return: list of blobs
     """
     try:
         processed_blob_list = []
         blob_list = storage_client.list_blobs(bucket_name, prefix=prefix)
-        for blob in blob_list:
+        if ext_filter:
+            filtered_blob_list = [blob for blob in blob_list if os.path.splitext(blob.name)[1] in ext_filter]
+        else:
+            filtered_blob_list = blob_list
+        for blob in filtered_blob_list:
             processed_blob_list.append(
                 {'file_path': blob.name,
                  'file_name': blob.name.split('/')[-1],
@@ -97,15 +103,17 @@ def list_blobs(bucket_name=config.BUCKET_NAME, prefix=''):
         return False
 
 
-def list_blobs_names(bucket_name=config.BUCKET_NAME, prefix=''):
+def list_blobs_names(bucket_name=config.BUCKET_NAME, prefix='', ext_filter: list = None):
     """
-    Lists all the blobs name in the bucket.
+    Lists all the blobs name in the bucket
     :param bucket_name: name of the bucket
     :param prefix: prefix of the blob name
+    :param ext_filter: a list containing file extensions. Files with extension names beyond the list will not be
+    returned
     :return: list of blobs name
     """
     try:
-        blobs = list_blobs(bucket_name=bucket_name, prefix=prefix)
+        blobs = list_blobs(bucket_name=bucket_name, prefix=prefix, ext_filter=ext_filter)
         blobs_name_list = [blob['base_name'] for blob in blobs]
         return blobs_name_list
     except Exception as e:
