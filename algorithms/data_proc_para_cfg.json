@@ -50,7 +50,7 @@
     "function_name": "tail_shrinkage_or_truncation_processing",
     "parameters": [
       {
-        "name": "method",
+        "name": "method_selection",
         "type": "select",
         "options": [
           "tail_shrinkage",
@@ -58,11 +58,11 @@
         ]
       },
       {
-        "name": "upper_percentile",
+        "name": "upper_limit",
         "type": "number"
       },
       {
-        "name": "lower_percentile",
+        "name": "lower_limit",
         "type": "number"
       },
       {
