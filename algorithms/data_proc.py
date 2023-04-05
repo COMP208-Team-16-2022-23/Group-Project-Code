@@ -109,14 +109,14 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
     method = parameters['method_selection']
     column_name = parameters['column_selected']
     upper_percentile = int(parameters['upper_limit'])
-    lower_percentile = int(parameters['upper_limit'])
+    lower_percentile = int(parameters['lower_limit'])
     processing_method = parameters['processing_method']
 
     # Select the column to process
     col = df[column_name]
 
     # Calculate the upper and lower limits
-    upper_limit = np.percentile(col, 100 - upper_percentile)
+    upper_limit = np.percentile(col, upper_percentile)
     lower_limit = np.percentile(col, lower_percentile)
 
     # Select the method
@@ -131,7 +131,7 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
 
         elif processing_method == "delete_row":
             df_without_outliers = df[(col >= lower_limit) & (col <= upper_limit)]
-            df.drop(df.index.difference(df_without_outliers.index).tolist())
+            df.drop(df.index.difference(df_without_outliers.index).tolist(), inplace=True)
 
     return df
 
