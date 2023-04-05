@@ -96,7 +96,7 @@ def upload_dataset(redirect_path='my_data.my_data'):
         sc.upload_blob(upload_file, filename, prefix=private_path)
         return redirect(url_for(redirect_path))
     else:
-        flash('Please log in first')
+        flash('Please log in first', 'warning-auth')
         return redirect(url_for('auth.login'))
 
 
