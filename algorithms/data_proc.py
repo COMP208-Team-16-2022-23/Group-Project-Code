@@ -27,18 +27,20 @@ def process(file_path, parameters):
     # get processing method
     processing_method = parameters['function_name']
 
-    # call corresponding function
-    match processing_method:
-        case 'outlier_handling':
-            df = outlier_handling(df, parameters)
-        case 'tail_shrinkage_or_truncation_processing':
-            df = tail_shrinkage_or_truncation_processing(df, parameters)
-        case 'normalisation':
-            df = normalization(df, parameters)
-        case 'sample_balancing':
-            df = sample_balancing(df, parameters)
-        case _:  # default
-            pass
+    # Define dictionary mapping method names to functions
+    method_dict = {
+        'outlier_handling': outlier_handling,
+        'tail_shrinkage_or_truncation_processing': tail_shrinkage_or_truncation_processing,
+        'normalisation': normalization,
+        'sample_balancing': sample_balancing
+    }
+
+    # Call the corresponding function
+    if processing_method in method_dict:
+        df = method_dict[processing_method](df, parameters)
+    else:
+        # Default behavior
+        pass
 
     file = df.to_csv(index=False)
 
