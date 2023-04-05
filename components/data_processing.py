@@ -34,7 +34,7 @@ def index():
     # logic for add new processing project
     if request.method == 'POST':
         if not g.user:
-            flash('Please log in first')
+            flash('Please log in first', 'warning-auth')
             return redirect(url_for('auth.login'))
 
         selected_file_path = request.form['file_selection']
