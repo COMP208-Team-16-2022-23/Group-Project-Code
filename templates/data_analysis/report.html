@@ -81,6 +81,8 @@
         </div>
         {% elif section["type"] == "text" %}
         <p>{{ section["content"] }}</p>
+        {% elif section["type"] == "img" %}
+        <img src="data:image/png;base64,{{ section["content"] }}" alt="Red dot" />
         {% endif %}
         {% endfor %}
     </div>
