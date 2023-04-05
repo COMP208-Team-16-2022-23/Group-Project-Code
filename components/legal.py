@@ -18,3 +18,7 @@ def terms():
 @bp.route("/privacy", methods=['GET'])
 def privacy():
     return render_template('legal/privacy.html')
+
+@bp.route("/about", methods=['GET'])
+def about():
+    return render_template('legal/about.html')

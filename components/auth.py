@@ -39,7 +39,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            flash('Please log in first')
+            flash('Please log in first','warning-auth')
             return redirect(url_for('auth.login'))
 
         return view(**kwargs)
@@ -88,7 +88,7 @@ def login():
             db_session.commit()
             return redirect(url_for('my_data.my_data'))
 
-        flash(error)
+        flash(error, 'warning-auth')
 
     return render_template('auth/login.html')
 
@@ -110,7 +110,7 @@ def register():
                 user = User(email=email, username=username, password=generate_password_hash(password, salt_length=128))
                 db_session.add(user)
                 db_session.commit()
-                flash('Your LCDA account has been created successfully.')
+                flash('Your LCDA account has been created successfully.', 'message-auth')
                 # send confirmation email
                 subject = 'Welcome to LCDA'
                 body = f'Hi {username},\n\nWelcome to LCDA. Your account has been created successfully.\n\nThank you,\nLCDA Team'
@@ -142,7 +142,7 @@ def register():
             else:
                 return redirect(url_for("auth.login"))
 
-        flash(error)
+        flash(error, 'warning-auth')
     return render_template('auth/register.html')
 
 
@@ -161,10 +161,10 @@ def forgot_password():
         try:
             user = User.query.filter_by(email=email).first()
         except Exception as e:
-            flash('An error occurred while processing your request. Please try again.')
+            flash('An error occurred while processing your request. Please try again.', 'warning-auth')
             return redirect(url_for('auth.forgot_password'))
         if not user:
-            flash('Email address not found.')
+            flash('Email address not found.', 'warning-auth')
             return redirect(url_for('auth.forgot_password'))
         else:
             # generate an OTP and save it to user's data
@@ -178,13 +178,13 @@ def forgot_password():
             try:
                 mail.send(msg)  # Flask-Mail instance named mail
             except Exception as e:
-                flash('An error occurred while sending the OTP. Please try again.')
+                flash('An error occurred while sending the OTP. Please try again.', 'warning-auth')
                 return redirect(url_for('auth.forgot_password'))
             session['reset_email'] = email  # store the email in session for verification in reset_password() view
             session['otp'] = otp  # store the OTP in session for verification in reset_password() view
             session['otp_expiry'] = datetime.utcnow() + timedelta(
                 minutes=5)  # OTP will expire in 5 minutes # store the OTP expiry in session for verification in reset_password() view
-            flash('An OTP has been sent to your email address.')
+            flash('An OTP has been sent to your email address.', 'message-auth')
             return redirect(url_for('auth.reset_password'))
 
     return render_template('auth/forgot_password.html')
@@ -203,20 +203,20 @@ def reset_password():
         # check if all fields are valid
         # check otp is an 6-digit integer
         if not otp.isdigit() or len(otp) != 6:
-            flash('Invalid OTP.')
+            flash('Invalid OTP.', 'warning-auth')
             return redirect(url_for('auth.reset_password'))
         if not email:
-            flash('Invalid request.')
+            flash('Invalid request.', 'warning-auth')
             return redirect(url_for('auth.forgot_password'))
         user = User.query.filter_by(email=email).first()
         if not user:
-            flash('Invalid request.')
+            flash('Invalid request.', 'warning-auth')
             return redirect(url_for('auth.forgot_password'))
         if not otp_session or otp_session != int(otp) or otp_expiry.timestamp() < datetime.utcnow().timestamp():
-            flash('Invalid OTP.')
+            flash('Invalid OTP.', 'warning-auth')
             return redirect(url_for('auth.reset_password'))
         elif password != password_confirm:
-            flash('The two passwords you entered are not the same.')
+            flash('The two passwords you entered are not the same.', 'warning-auth')
             return redirect(url_for('auth.reset_password'))
         else:
             # reset the password and clear the OTP
@@ -225,9 +225,9 @@ def reset_password():
             user.last_password_change_time = datetime.utcnow()
             try:
                 db_session.commit()
-                flash('Your password has been reset successfully. Please log in with your new password.')
+                flash('Your password has been reset successfully. Please log in with your new password.', 'message-auth')
             except Exception as e:
-                flash('An error occurred while resetting your password.')
+                flash('An error occurred while resetting your password.', 'warning-auth')
                 return redirect(url_for('auth.reset_password'))
             else:
                 # send success email to user
@@ -240,7 +240,7 @@ def reset_password():
                     mail.send(msg)  # Flask-Mail instance named mail
                 except Exception as e:
                     pass
-            # flash('Your password has been reset successfully. Please log in with your new password.')
+            # flash('Your password has been reset successfully. Please log in with your new password.', 'message-auth')
             # clear the session
             session.clear()
             session.pop('reset_email', None)

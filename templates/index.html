@@ -8,31 +8,35 @@
 {% block content %}
 
     <div class="container mt-3">
-        <h1 class="mb-3">Test webpage for 2022/23-COMP208-Team16</h1>
+        <h1 class="mb-3">Low-Code Data Analysis Platform</h1>
+        <p>Test website for <a href="{{ url_for('legal.about') }}"><b>2022/23-COMP208-Team16</b></a></p>
 
 
         <div class="note note-primary mb-3">
             <strong>Kind tips:</strong> Thank you for visiting our website! Please note that our website is currently
-            undergoing development, and some content may be subject to change. We apologize for any inconvenience this
-            may cause. Additionally, to ensure the best user experience, we may periodically delete user data. We
-            recommend that you regularly back up any important information to avoid any potential data loss. Thank you
-            for your understanding and support as we continue to improve our website.
+            undergoing development, and some content may be subject to change.
+            Additionally, to ensure the best user experience, we may periodically delete user data.
+            We recommend that you regularly back up any important information to avoid any potential data loss.
+            We apologize for any inconvenience.
+            Thank you for your understanding and support as we continue to improve our website.
         </div>
 
         {% if g.user %}
             <p>Good <span id="timeNow"></span>, {{ g.user.username }}!</p>
         {% else %}
-            <p>Nice to see you!</p>
+            <p>Nice to meet you!</p>
         {% endif %}
 
         <p>
-            Welcome to LCDA, the Low-Code Data Analysis Platform. LCDA is a new approach to data analysis that aims to
-            simplify the process of data analysis by reducing the amount of coding required. With LCDA, users can
-            analyze large datasets quickly and easily without having to write complex code. The platform provides a
-            user-friendly interface that enables users to drag and drop data into their analyses and visualize results.
+            Welcome to LCDA.
+            LCDA is a new approach to data analysis that aims to simplify the process of data analysis by reducing the amount of coding required.
+            With LCDA, users can analyze large datasets quickly and easily without having to write complex code.
+            The platform provides a user-friendly interface that enables users to drag and drop data into their analyses and visualize results.
             Whether you are a data scientist, business analyst, or simply looking to gain insights from your data, LCDA
             can help you achieve your goals faster and more efficiently than ever before.
         </p>
+
+<!--        <p>Know more about our team? <br><a href="{{ url_for('legal.about') }}"><b>About us</b></a></p>-->
 
         <!-- set the link to sign up page-->
         <p>Don't have an account? <br><a href='/auth/register'><b>Sign up here</b></a></p>

@@ -25,11 +25,13 @@
                 </form>
                 <!--file list-->
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle">
+                    <table class="table align-middle">
                         <thead class="bg-light">
                         <tr>
                             <th>File name</th>
-                            <th>Actions</th>
+                            <th>
+                                <div class="text-center">Actions</div>
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -37,22 +39,34 @@
                             <tr>
                                 <td>{{ item['file_name'] }}</td>
                                 <td>
-                                    <button
-                                            type="button"
-                                            class="btn btn-link btn-sm btn-rounded" data-mdb-ripple-color="dark"
-                                            onclick="go({{ '\'' + item['file_path'] + '\'' }})"
-                                    >
-                                        View
-                                    </button>
-                                    <a
-                                            role="button"
-                                            class="btn btn-outline-danger btn-rounded btn-sm"
-                                            data-mdb-ripple-color="dark"
-                                            aria-disabled=false
-                                            href="{{ url_for('file_preview.delete_dataset', file_path=item['file_path']) }}"
-                                    >
-                                        Delete
-                                    </a>
+                                    <div class="d-grid gap-2 d-md-block text-center">
+                                        <button
+                                                type="button"
+                                                class="btn btn-link btn-sm btn-rounded" data-mdb-ripple-color="dark"
+                                                onclick="go({{ '\'' + item['file_path'] + '\'' }})"
+                                        >
+                                            View
+                                        </button>
+                                        <!--  Download                                  -->
+                                        <a
+                                                role="button"
+                                                class="btn btn-link btn-sm btn-rounded"
+                                                data-mdb-ripple-color="dark"
+                                                aria-disabled=false
+                                                href="{{ url_for('file_preview.download', file_path=item['file_path']) }}"
+                                        >
+                                            <i class="bi bi-cloud-download"></i> Download
+                                        </a>
+                                        <a
+                                                role="button"
+                                                class="btn btn-link btn-sm btn-rounded text-danger"
+                                                data-mdb-ripple-color="dark"
+                                                aria-disabled=false
+                                                href="{{ url_for('file_preview.delete_dataset', file_path=item['file_path']) }}"
+                                        >
+                                            Delete
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -60,30 +74,25 @@
                     </table>
                 </div>
 
-                <p>
-                    <a href='{{ url_for('file_preview.view_document', file_path='public/CW_Data.csv') }}'>
-                        <b>Document viewer</b>
-                    </a>
-                </p>
-                <!--Advanced document viewer-->
-                <p>
-                    <a href='{{ url_for('file_preview.embedded_view', file_path='public/CW_Data.csv') }}'>
-                        <b>Download a demo CSV file in xlsx</b>
-                    </a>
-                </p>
-                <p>
-                    <a href='{{ url_for('file_preview.download', file_path='public/CW_Data.csv') }}'>
-                        <b>Download a demo CSV file </b>
-                    </a>
-                </p>
+                <!-- For test propose only. Uncomment them when testing-->
+                <!--                <p>-->
+                <!--                    <a href='{{ url_for('file_preview.view_document', file_path='public/CW_Data.csv') }}'>-->
+                <!--                        <b>Document viewer</b>-->
+                <!--                    </a>-->
+                <!--                </p>-->
+                <!--                &lt;!&ndash;Advanced document viewer&ndash;&gt;-->
+                <!--                <p>-->
+                <!--                    <a href='{{ url_for('file_preview.embedded_view', file_path='public/CW_Data.csv') }}'>-->
+                <!--                        <b>Download a demo CSV file in xlsx</b>-->
+                <!--                    </a>-->
+                <!--                </p>-->
+                <!--                <p>-->
+                <!--                    <a href='{{ url_for('file_preview.download', file_path='public/CW_Data.csv') }}'>-->
+                <!--                        <b>Download a demo CSV file </b>-->
+                <!--                    </a>-->
+                <!--                </p>-->
             </div>
             <div class="col-md-6" style="min-height: 500px">
-                <!--                <iframe-->
-                <!--                        src="https://drive.google.com/viewer?embedded=true&hl=en-US&url=https://lcda-vgnazlwvxa-nw.a.run.app/file/download/public/CW_Data.csv"-->
-                <!--                        width="800px"-->
-                <!--                        height="603px"-->
-                <!--                        frameborder="0"-->
-                <!--                ></iframe>-->
                 <iframe
                         class="align-middle h-100 w-100"
                         id="data_view"
