@@ -45,11 +45,17 @@ def analysis(file_path, parameters):
 
     result_dict = {"name": result_name}
 
-    match processing_method:
-        case "knn_classification":
-            result_dict["content"] = knn_classification(df, parameters)
-        case _:
-            pass
+    # Define dictionary mapping method names to functions
+    method_dict = {
+        'knn_classification': knn_classification,
+    }
+
+    # Call the corresponding function
+    if processing_method in method_dict:
+        result_dict['content'] = method_dict[processing_method](df, parameters)
+    else:
+        # Default behavior
+        pass
 
     # convert the dictionary to json file
     result_json = json.dumps(result_dict)

@@ -27,18 +27,20 @@ def process(file_path, parameters):
     # get processing method
     processing_method = parameters['function_name']
 
-    # call corresponding function
-    match processing_method:
-        case 'outlier_handling':
-            df = outlier_handling(df, parameters)
-        case 'tail_shrinkage_or_truncation_processing':
-            df = tail_shrinkage_or_truncation_processing(df, parameters)
-        case 'normalisation':
-            df = normalization(df, parameters)
-        case 'sample_balancing':
-            df = sample_balancing(df, parameters)
-        case _:  # default
-            pass
+    # Define dictionary mapping method names to functions
+    method_dict = {
+        'outlier_handling': outlier_handling,
+        'tail_shrinkage_or_truncation_processing': tail_shrinkage_or_truncation_processing,
+        'normalisation': normalization,
+        'sample_balancing': sample_balancing
+    }
+
+    # Call the corresponding function
+    if processing_method in method_dict:
+        df = method_dict[processing_method](df, parameters)
+    else:
+        # Default behavior
+        pass
 
     file = df.to_csv(index=False)
 
@@ -109,14 +111,14 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
     method = parameters['method_selection']
     column_name = parameters['column_selected']
     upper_percentile = int(parameters['upper_limit'])
-    lower_percentile = int(parameters['upper_limit'])
+    lower_percentile = int(parameters['lower_limit'])
     processing_method = parameters['processing_method']
 
     # Select the column to process
     col = df[column_name]
 
     # Calculate the upper and lower limits
-    upper_limit = np.percentile(col, 100 - upper_percentile)
+    upper_limit = np.percentile(col, upper_percentile)
     lower_limit = np.percentile(col, lower_percentile)
 
     # Select the method
@@ -131,7 +133,7 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
 
         elif processing_method == "delete_row":
             df_without_outliers = df[(col >= lower_limit) & (col <= upper_limit)]
-            df.drop(df.index.difference(df_without_outliers.index).tolist())
+            df.drop(df.index.difference(df_without_outliers.index).tolist(), inplace=True)
 
     return df
 
