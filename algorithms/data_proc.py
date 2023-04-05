@@ -116,7 +116,7 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
     col = df[column_name]
 
     # Calculate the upper and lower limits
-    upper_limit = np.percentile(col, upper_percentile)
+    upper_limit = np.percentile(col, 100 - upper_percentile)
     lower_limit = np.percentile(col, lower_percentile)
 
     # Select the method
