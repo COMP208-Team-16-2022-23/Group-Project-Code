@@ -102,12 +102,14 @@
     <div class="container-fluid">
         {% if processing_project_list %}
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table align-middle mb-0">
                     <thead class="bg-light">
                     <tr>
                         <th>File Name</th>
                         <th>Date Modified</th>
-                        <th>Actions</th>
+                        <th>
+                            <div class="text-center">Actions</div>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -129,19 +131,21 @@
                                 </p>
                             </td>
                             <td>
-
-                                <a role="button" class="btn btn-link btn-sm btn-rounded {{ button_status }}"
-                                   data-mdb-ripple-color="dark"
-                                   aria-disabled={% if  button_status %}true{% else %}false{% endif %}
-                                   href="{{ url_for('data_processing.project', processing_project_id=processing_project['id']) }}">
-                                    Edit
-                                </a>
-                                <a role="button" class="btn btn-outline-danger btn-rounded btn-sm {{ button_status }}"
-                                   data-mdb-ripple-color="dark"
-                                   aria-disabled={% if  button_status %}true{% else %}false{% endif %}
-                                   href="{{ url_for('file_preview.delete_task', component_name='data_processing', id=processing_project['id']) }}">
-                                    Delete
-                                </a>
+                                <div class="d-grid gap-2 d-md-block text-center">
+                                    <a role="button" class="btn btn-link btn-sm btn-rounded {{ button_status }}"
+                                       data-mdb-ripple-color="dark"
+                                       aria-disabled={% if  button_status %}true{% else %}false{% endif %}
+                                       href="{{ url_for('data_processing.project', processing_project_id=processing_project['id']) }}">
+                                        Edit
+                                    </a>
+                                    <a role="button"
+                                       class="btn btn-link btn-rounded btn-sm text-danger {{ button_status }}"
+                                       data-mdb-ripple-color="dark"
+                                       aria-disabled={% if  button_status %}true{% else %}false{% endif %}
+                                       href="{{ url_for('file_preview.delete_task', component_name='data_processing', id=processing_project['id']) }}">
+                                        Delete
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     {% endfor %}

@@ -70,9 +70,9 @@
                 <li class="nav-item">
                     <a class="nav-link active" href="{{ url_for('data_analysis.index') }}">Data Analysis</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Node Editor</a>
-                </li>
+{#                <li class="nav-item">#}
+{#                    <a class="nav-link active" href="#">Node Editor</a>#}
+{#                </li>#}
             </ul>
 
 
@@ -105,9 +105,9 @@
                                 aria-labelledby="navbarDropdownMenuAvatar"
                         >
 
-                            <li>
-                                <a class="dropdown-item" href="#">Settings</a>
-                            </li>
+{#                            <li>#}
+{#                                <a class="dropdown-item" href="#">Settings</a>#}
+{#                            </li>#}
                             <li>
                                 <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a>
                             </li>
@@ -137,7 +137,7 @@
 <footer class="text-center text-lg-start bg-light text-muted">
     <!-- Copyright -->
     <div class="text-center p-2" style="background-color: rgba(0, 0, 0, 0.02);">
-        <a class="text-reset" href="{{ url_for('legal.about') }}">&copy; 2023 LCDA Team</a> |
+        &copy; 2023<a href="{{ url_for('legal.about') }}"> LCDA Team</a> |
         <a href="{{ url_for('legal.terms') }}">Terms &amp; Conditions</a> |
         <a href="{{ url_for('legal.privacy') }}">Privacy</a>
     </div>

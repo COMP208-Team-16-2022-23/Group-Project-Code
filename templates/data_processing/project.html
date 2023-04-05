@@ -16,7 +16,7 @@
         </ol>
     </nav>
 
-    <div class="container-fluid">
+    <div class="container-xxl flex-grow-1 d-flex flex-column">
 
         {% for message in get_flashed_messages() %}
             <div class="alert alert-primary d-flex align-items-center alert-dismissible fade show"
@@ -34,11 +34,11 @@
             </div>
         {% endfor %}
 
-        <div class="row justify-content-evenly">
+        <div class="row justify-content-evenly flex-grow-1">
             <div class="col-md-4">
                 <h2>Processing methods</h2>
 
-                <div class="d-grid gap-2 d-md-block">
+                <div class="d-grid gap-2">
                     {% for algorithm in data_processing_algorithms %}
 
                         <button type="button" class="btn btn-outline-primary mb-2" data-mdb-toggle="modal"
@@ -54,7 +54,7 @@
             </div>
             <div class="col-md-8" style="min-height: 500px">
                 <iframe
-                        class="align-middle h-100 w-100"
+                        class="align-middle h-100 w-100 pb-3"
                         src="https://view.officeapps.live.com/op/embed.aspx?src=https://lcda-vgnazlwvxa-nw.a.run.app/file/embedded/{{ file_path }}&wdHideSheetTabs=True"
                 ></iframe>
             </div>
