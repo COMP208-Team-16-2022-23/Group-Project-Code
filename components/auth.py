@@ -203,20 +203,20 @@ def reset_password():
         # check if all fields are valid
         # check otp is an 6-digit integer
         if not otp.isdigit() or len(otp) != 6:
-            flash('Invalid OTP.', 'warning-auth')
+            flash('Invalid OTP', 'warning-auth')
             return redirect(url_for('auth.reset_password'))
         if not email:
-            flash('Invalid request.', 'warning-auth')
+            flash('Invalid request', 'warning-auth')
             return redirect(url_for('auth.forgot_password'))
         user = User.query.filter_by(email=email).first()
         if not user:
-            flash('Invalid request.', 'warning-auth')
+            flash('Invalid request', 'warning-auth')
             return redirect(url_for('auth.forgot_password'))
         if not otp_session or otp_session != int(otp) or otp_expiry.timestamp() < datetime.utcnow().timestamp():
-            flash('Invalid OTP.', 'warning-auth')
+            flash('Invalid OTP', 'warning-auth')
             return redirect(url_for('auth.reset_password'))
         elif password != password_confirm:
-            flash('The two passwords you entered are not the same.', 'warning-auth')
+            flash('The two passwords you entered are not the same', 'warning-auth')
             return redirect(url_for('auth.reset_password'))
         else:
             # reset the password and clear the OTP
@@ -232,7 +232,7 @@ def reset_password():
             else:
                 # send success email to user
                 msg = Message('Your LCDA password was reset', recipients=[email])
-                msg.body = f"Hello {user.username},\n\nThis email is to confirm that your LCDA password was changed at {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')}.\n\n"
+                msg.body = f"Hello {user.username},\n\nThis email is to confirm that your LCDA password was changed at {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC.\n\n"
                 msg.body += "If you have not recently changed your password or believe you have been sent this message in error, please contact the LCDA team immediately.\n\n"
                 msg.body += "Thank you for using LCDA,\nLCDA Team"
                 from app import mail
@@ -244,6 +244,7 @@ def reset_password():
             # clear the session
             session.clear()
             session.pop('reset_email', None)
+            flash('Your password has been reset successfully.', 'message-auth')
             return redirect(url_for('auth.login'))
 
     return render_template('auth/reset_password.html')

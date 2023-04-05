@@ -100,19 +100,35 @@ def get_evaluation_metrics(y_train, y_train_pred, y_test, y_test_pred):
     return accuracy_train, accuracy_test, recall_train, recall_test, precision_train, precision_test, f1_train, f1_test
 
 
-def make_cnf_matrix_pic(cnf_matrix, labels):
+def make_heatmap_pic(cnf_matrix, labels=None):
+    """
+    Make the picture of heatmap
+    :param cnf_matrix: Confusion matrix
+    :param labels: Specified labels shown in heatmap. Values of classification labels by default
+    :return: A string represents heatmap picture in form of base64
+    """
+    # Confusion matrix and label process
     confusion_matrix_norm = cnf_matrix.astype('float') / cnf_matrix.sum(axis=1)[:, np.newaxis]
+    if not labels:
+        labels = list(cnf_matrix.columns.values)
 
     # plot heatmap
+    f = plt.figure()
     sns.heatmap(confusion_matrix_norm, cmap="YlGnBu", annot=True, fmt=".2f", xticklabels=labels, yticklabels=labels)
     plt.xlabel("Predicted Label")
     plt.ylabel("Actual Label")
-    plt.title("Confusion Matrix")
+    plt.title("Heatmap")
 
+    # Encode into a string in the form of base64
     pic_io = io.BytesIO()
     plt.savefig(pic_io, format='png')
     pic_io.seek(0)
     base64_pic = base64.b64encode(pic_io.read()).decode()
+
+    # Clear plt buffer
+    f.clear()
+    plt.close()
+
     return base64_pic
 
 
@@ -247,7 +263,7 @@ def knn_classification(df, parameters):
         # Compute confusion matrix
         cnf_matrix = pd.DataFrame(confusion_matrix(y_test, y_test_pred))
 
-        pic = make_cnf_matrix_pic(cnf_matrix, ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'])
+        pic = make_heatmap_pic(cnf_matrix)
 
         # get the accuracy
         accuracy = neigh.score(x_test, y_test)
