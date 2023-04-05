@@ -12,6 +12,8 @@ from util import storage_control
 from util import file_util
 from flask import g
 import json
+import io
+import base64
 
 
 def analysis(file_path, parameters):
@@ -90,6 +92,22 @@ def get_evaluation_metrics(y_train, y_train_pred, y_test, y_test_pred):
     f1_test = f1_score(y_test, y_test_pred, average='macro')
 
     return accuracy_train, accuracy_test, recall_train, recall_test, precision_train, precision_test, f1_train, f1_test
+
+
+def make_cnf_matrix_pic(cnf_matrix, labels):
+    confusion_matrix_norm = cnf_matrix.astype('float') / cnf_matrix.sum(axis=1)[:, np.newaxis]
+
+    # plot heatmap
+    sns.heatmap(confusion_matrix_norm, cmap="YlGnBu", annot=True, fmt=".2f", xticklabels=labels, yticklabels=labels)
+    plt.xlabel("Predicted Label")
+    plt.ylabel("Actual Label")
+    plt.title("Confusion Matrix")
+
+    pic_io = io.BytesIO()
+    plt.savefig(pic_io, format='png')
+    pic_io.seek(0)
+    base64_pic = base64.b64encode(pic_io.read()).decode()
+    return base64_pic
 
 
 def make_result_section(section_name, content_type, content):
@@ -223,6 +241,8 @@ def knn_classification(df, parameters):
         # Compute confusion matrix
         cnf_matrix = pd.DataFrame(confusion_matrix(y_test, y_test_pred))
 
+        pic = make_cnf_matrix_pic(cnf_matrix, ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'])
+
         # get the accuracy
         accuracy = neigh.score(x_test, y_test)
 
@@ -244,9 +264,10 @@ def knn_classification(df, parameters):
                                                       "columns": ["Accuracy", "Recall", "Precision", "F1"],
                                                       "index": ["Training Set", "Test Set"]
                                                   }))
-        result_content.append(make_result_section(section_name="Confusion Matrix",
-                                                  content_type="table",
-                                                  content=cnf_matrix.to_dict(orient='split')))
+        # result_content.append(make_result_section(section_name="Confusion Matrix",
+        #                                           content_type="table",
+        #                                           content=cnf_matrix.to_dict(orient='split')))
+        result_content.append(make_result_section(section_name="Heatmap", content_type="img", content=pic))
         result_content.append(make_result_section(section_name="Accuracy",
                                                   content_type="text",
                                                   content=accuracy))
