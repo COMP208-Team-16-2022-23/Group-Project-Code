@@ -30,7 +30,7 @@ def process(file_path, parameters):
         'tail_shrinkage_or_truncation_processing': tail_shrinkage_or_truncation_processing,
         'normalisation': normalization,
         'sample_balancing': sample_balancing,
-        'data transform': fft_transform
+        'data transform': data_transform
     }
 
     # Call the corresponding function
@@ -261,23 +261,34 @@ def sample_balancing(df, parameters):
     return resampled_df
 
 
-def fft_transform(df, parameters):
+def data_transform(df, parameters):
     """
-    Use FFT to transform the data
+    Use FFT or IFFT to transform the data
     :param df: the pandas dataframe to be processed
     :param parameters: a dictionary of parameters
     :return: the processed dataframe
     column_name is the column to be processed
     """
 
-    for col_name in parameters['column_selected']:
+    transform_method = parameters['transform_method']
 
-        fft_values = np.fft.fft(df[col_name])
-        fft_abs = np.abs(fft_values)
-        fft_phase = np.angle(fft_values)
+    if transform_method == 'FFT':
+        for col_name in parameters['column_selected']:
+            fft_values = np.fft.fft(df[col_name])
+            fft_abs = np.abs(fft_values)
+            fft_phase = np.angle(fft_values)
 
-        df[col_name + '_fft_abs'] = fft_abs
-        df[col_name + '_fft_phase'] = fft_phase
+            df[col_name + '_fft_abs'] = fft_abs
+            df[col_name + '_fft_phase'] = fft_phase
+
+    elif transform_method == 'IFFT':
+        for col_name in parameters['column_selected']:
+            ifft_values = np.fft.ifft(df[col_name])
+            ifft_abs = np.abs(ifft_values)
+            ifft_phase = np.angle(ifft_values)
+
+            df[col_name + '_ifft_abs'] = ifft_abs
+            df[col_name + '_ifft_phase'] = ifft_phase
 
     return df
 
