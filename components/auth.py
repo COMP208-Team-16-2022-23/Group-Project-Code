@@ -39,7 +39,7 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            flash('Please log in first','warning-auth')
+            flash('Please log in first.','warning-auth')
             return redirect(url_for('auth.login'))
 
         return view(**kwargs)
@@ -79,7 +79,7 @@ def login():
         user = User.query.filter(User.username == username).first()
 
         if user is None or not check_password_hash(user.password, password):
-            error = 'Incorrect username or password.'
+            error = 'Incorrect username or password'
 
         if error is None:
             session.clear()
@@ -164,7 +164,7 @@ def forgot_password():
             flash('An error occurred while processing your request. Please try again.', 'warning-auth')
             return redirect(url_for('auth.forgot_password'))
         if not user:
-            flash('Email address not found.', 'warning-auth')
+            flash('Email address not found', 'warning-auth')
             return redirect(url_for('auth.forgot_password'))
         else:
             # generate an OTP and save it to user's data
@@ -216,7 +216,7 @@ def reset_password():
             flash('Invalid OTP', 'warning-auth')
             return redirect(url_for('auth.reset_password'))
         elif password != password_confirm:
-            flash('The two passwords you entered are not the same', 'warning-auth')
+            flash('The two passwords you entered are not the same.', 'warning-auth')
             return redirect(url_for('auth.reset_password'))
         else:
             # reset the password and clear the OTP

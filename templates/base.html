@@ -73,9 +73,12 @@
         <!-- Collapsible wrapper -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Navbar brand -->
-            <a class="navbar-brand mb-0 h1" href="{{ url_for('index') }}">LCDA</a>
+            <a class="navbar-brand mb-0 h1" href="{{ url_for('index') }}" style="font-family: Georgia, serif; color: #183F60;">
+                <img src="{{ url_for('static', filename='img/LCDA.png') }}" alt="LCDA Logo" height="25">
+                LCDA
+            </a>
 
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-auto mb-0 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link active" href="{{ url_for('my_data.my_data') }}">My Data</a>
                 </li>
