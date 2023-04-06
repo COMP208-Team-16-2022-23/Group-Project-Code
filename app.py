@@ -15,8 +15,16 @@ import config
 
 app = Flask(__name__)
 
-# load the instance config
-app.config.from_pyfile('config.py')
+# no config.py file, load the config from environment variables
+if os.path.exists('config.py'):
+    app.config.from_pyfile('config.py')
+else:
+    import json
+    # Get configuration from system variables
+    config_str = os.environ.get('CONFIG')
+    config_dict = json.loads(config_str)
+    # Load the configuration into the Flask application
+    app.config.update(config_dict)
 
 # initialize the mail extension
 mail = Mail(app)

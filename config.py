@@ -1,7 +1,7 @@
-# from datetime import timedelta
-#
-# SECRET_KEY = 'COMP208_Team16'
-# PERMANENT_SESSION_LIFETIME = timedelta(minutes=45)
+from datetime import timedelta
+
+SECRET_KEY = 'COMP208_Team16'
+PERMANENT_SESSION_LIFETIME = timedelta(minutes=45)
 
 # Configuration for the database
 HOSTNAME = 'comp208-team16.ctw17gkeyu80.eu-west-2.rds.amazonaws.com'
