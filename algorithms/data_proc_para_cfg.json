@@ -14,8 +14,13 @@
         ]
       },
       {
-        "name": "Parameter 2",
-        "type": "number"
+        "name": "Processing method",
+        "type": "select",
+        "options": [
+          "set to null",
+          "set to mean",
+          "set to median"
+        ]
       }
     ]
   },

@@ -10,9 +10,6 @@ from util import storage_control
 from util import file_util
 
 
-# pd_reader = pd.read_csv("../misc/temp/CountyGDP_ECON215.csv")
-# print(pd_reader)
-
 def process(file_path, parameters):
     """
     :param file_path: the path of the file to be processed
@@ -60,17 +57,19 @@ def outlier_handling(df, parameters):
     # print(parameters)
     # get detection method
     detection_method = parameters['Detection method']
+    processing_method = parameters['Processing method']
+
 
     # better to use a switch case here, but need python 3.10
     # call corresponding function
     if detection_method == '3-sigma':
         for column_name in parameters['column_selected']:
-            df = three_sigma(df, column_name=column_name)
+            df = three_sigma(df, processing_method,column_name=column_name)
 
     return df
 
 
-def three_sigma(df, column_name, parameters=None):
+def three_sigma(df, processing_method, column_name, parameters=None):
     """
     Use 3-sigma method to detect outliers
     :param df: the pandas dataframe to be processed
@@ -84,16 +83,43 @@ def three_sigma(df, column_name, parameters=None):
     # get mean and standard deviation
     mean = column.mean()
     std = column.std()
+    median = column.median()
 
     # get lower and upper bound
     lower_bound = mean - 3 * std
     upper_bound = mean + 3 * std
 
     # replace outliers with NaN
-    df[column_name] = df[column_name].apply(lambda x: np.nan if x < lower_bound or x > upper_bound else x)
+    if processing_method == 'set to null':
+        df[column_name] = df[column_name].apply(lambda x: np.nan if x < lower_bound or x > upper_bound else x)
+    elif processing_method == 'set to mean':
+        df[column_name] = df[column_name].apply(lambda x: mean if x < lower_bound or x > upper_bound else x)
+    elif processing_method == 'set to median':
+        df[column_name] = df[column_name].apply(lambda x: median if x < lower_bound or x > upper_bound else x)
 
     return df
 
+def Z_score(df, parameters):
+    """
+    formula: (X-Mean)/ Std
+    :param df: Input Dataframe
+    :param parameters: Dict containing Method, column_selected and optionally Output option
+    :return: normalised Dataframe with parameters above
+    """
+
+    method = parameters['Method']
+    # Standardize each column
+    for col in parameters['column_selected']:
+        col_mean = df[col].mean()
+        col_std = df[col].std()
+        new_column = (df[col] - col_mean) / col_std
+        if 'Output option' in parameters.keys() and parameters['Output option'] == 'on':
+            df[col] = new_column
+        else:
+            # Merge the standardized numerical columns with the non-numerical columns
+            df = df.join(new_column, rsuffix='_' + method)
+
+    return df
 
 def tail_shrinkage_or_truncation_processing(df, parameters):
     """
@@ -296,27 +322,7 @@ def Min_Max(df, parameters):
     return df
 
 
-def Z_score(df, parameters):
-    """
-    formula: (X-Mean)/ Std
-    :param df: Input Dataframe
-    :param parameters: Dict containing Method, column_selected and optionally Output option
-    :return: normalised Dataframe with parameters above
-    """
 
-    method = parameters['Method']
-    # Standardize each column
-    for col in parameters['column_selected']:
-        col_mean = df[col].mean()
-        col_std = df[col].std()
-        new_column = (df[col] - col_mean) / col_std
-        if 'Output option' in parameters.keys() and parameters['Output option'] == 'on':
-            df[col] = new_column
-        else:
-            # Merge the standardized numerical columns with the non-numerical columns
-            df = df.join(new_column, rsuffix='_' + method)
-
-    return df
 
 
 paraset = {'identification_method': ['y', 'y', 'y', ''], 'fill_type': 'normal', }
