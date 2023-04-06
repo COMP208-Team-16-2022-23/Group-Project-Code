@@ -253,3 +253,4 @@ cython_debug/
 *.pptx
 
 temp_files/
+secret.py

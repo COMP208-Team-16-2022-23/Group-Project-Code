@@ -1,14 +1,36 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+import os
+import json
 
-import config
+try:
+    # Get configuration from system variables
+    config_str = os.environ.get('CONFIG')
+    if config_str is None:
+        raise ValueError('CONFIG environment variable is not set')
+    try:
+        config_dict = json.loads(config_str)
+    except json.JSONDecodeError as e:
+        raise ValueError('Invalid JSON string: {}'.format(e))
 
-hostname = config.HOSTNAME
-port = config.PORT
-database = config.DATABASE
-username = config.USERNAME
-password = config.PASSWORD
+    if not isinstance(config_dict, dict):
+        raise TypeError('Expected a dictionary object for config_dict')
+    if not all(key in config_dict for key in ['HOSTNAME', 'PORT', 'DATABASE', 'USERNAME', 'PASSWORD']):
+        raise ValueError('Missing one or more configuration keys')
+
+    hostname = config_dict['HOSTNAME']
+    port = config_dict['PORT']
+    database = config_dict['DATABASE']
+    username = config_dict['USERNAME']
+    password = config_dict['PASSWORD']
+except:
+    import secret
+    hostname = secret.HOSTNAME
+    port = secret.PORT
+    database = secret.DATABASE
+    username = secret.USERNAME
+    password = secret.PASSWORD
 
 # build the connection string
 connection_string = f'mysql+pymysql://{username}:{password}@{hostname}:{port}/{database}'

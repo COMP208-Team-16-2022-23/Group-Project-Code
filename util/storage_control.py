@@ -3,13 +3,19 @@
 # @File: file_manager.PY
 import io
 import os
+import json
+import config
 
 from flask import send_file
 from google.cloud import storage
 
-import config
-
-storage_client = storage.Client.from_service_account_json(config.GOOGLE_APPLICATION_CREDENTIALS)
+try:
+    config_str = os.environ.get('BUCKET_KEY')
+    config_dict = json.loads(config_str)
+    storage_client = storage.Client.from_service_account_info(info=config_dict)
+except:
+    import secret
+    storage_client = storage.Client.from_service_account_info(secret.GOOGLE_APPLICATION_CREDENTIALS)
 
 
 def upload_blob(file, blob_name, bucket_name=config.BUCKET_NAME, public=False, prefix=''):
