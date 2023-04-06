@@ -35,8 +35,13 @@
 
         <div class="card card border border-secondary shadow-0 my-3">
             <div class="card-body">
-                <h5 class="text-center mb-4">LCDA</h5>
-                <h1 class="text-center mb-4">Sign in</h1>
+                <h5 class="text-center mb-4"
+                    style="font-family: Georgia, serif; color: #183F60; display: flex; align-items: center; justify-content: center;">
+                    <img src="{{ url_for('static', filename='img/LCDA.png') }}" alt="LCDA Logo" height="22">
+                    LCDA
+                </h5>
+
+                <h3 class="text-center mb-4">Sign in</h3>
                 <form method="post">
                     <!-- Username input -->
                     <div class="form-outline mb-4">
