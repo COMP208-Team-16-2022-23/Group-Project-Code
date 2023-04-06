@@ -21,7 +21,7 @@ MAIL_DEFAULT_SENDER = 'LCDA Team'
 MAIL_MAX_EMAILS = None
 
 # Configuration variables for Google Cloud Storage
-GOOGLE_APPLICATION_CREDENTIALS = 'lcda-platform-b100d9a8d523.json'
+GOOGLE_APPLICATION_CREDENTIALS = 'lcda-platform.json'
 BUCKET_NAME = 'lcda'
 
 # File limitations
