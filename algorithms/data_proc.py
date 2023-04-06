@@ -29,7 +29,8 @@ def process(file_path, parameters):
         'outlier_handling': outlier_handling,
         'tail_shrinkage_or_truncation_processing': tail_shrinkage_or_truncation_processing,
         'normalisation': normalization,
-        'sample_balancing': sample_balancing
+        'sample_balancing': sample_balancing,
+        'data transform': fft_transform
     }
 
     # Call the corresponding function
@@ -172,7 +173,7 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
     column_name is the column to be processed(I don't know how to get the column name by this way)
     upper_percentile is the upper limit of the percentile, lower_percentile is the lower limit of the percentile
     processing_method is used when method is tail_truncation, there are two methods: delete_value and replace_value
-    test failed
+    only the method delete row test failed
     """
 
     method = parameters['method_selection']
@@ -197,20 +198,22 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
     # Select the method
     if method == "tail_shrinkage":
         col_without_outliers = col_without_outliers.clip(lower_limit, upper_limit)
+        df[column_name] = col_without_outliers
 
     elif method == "tail_truncation":
         if processing_method == "delete_value":
             col_without_outliers[col > upper_limit] = np.nan
             col_without_outliers[col < lower_limit] = np.nan
+            df[column_name] = col_without_outliers
 
         elif processing_method == "delete_row":
-            df = df.loc[(col_without_outliers <= upper_limit) & (col_without_outliers >= lower_limit)]
+            col_without_outliers[col > upper_limit] = np.nan
+            col_without_outliers[col < lower_limit] = np.nan
+            df[column_name] = col_without_outliers
+            df = df.dropna(subset=['col'], how='any')
 
         else:
             raise ValueError("Invalid processing method selection")
-
-    # Update the DataFrame with the processed column
-    df[column_name] = col_without_outliers
 
     return df
 
@@ -223,6 +226,7 @@ def sample_balancing(df, parameters):
     :return: the processed dataframe
     column_name is the column to be processed
     balancing_method is the method to be used, there are three methods: undersample, oversample and combined
+    test failed
     """
     # Get the target column name and balancing method from parameters
     column_name = parameters['column_selected']
@@ -255,6 +259,27 @@ def sample_balancing(df, parameters):
     resampled_df = pd.concat([x_resampled, y_resampled], axis=1)
 
     return resampled_df
+
+
+def fft_transform(df, parameters):
+    """
+    Use FFT to transform the data
+    :param df: the pandas dataframe to be processed
+    :param parameters: a dictionary of parameters
+    :return: the processed dataframe
+    column_name is the column to be processed
+    """
+
+    for col_name in parameters['column_selected']:
+
+        fft_values = np.fft.fft(df[col_name])
+        fft_abs = np.abs(fft_values)
+        fft_phase = np.angle(fft_values)
+
+        df[col_name + '_fft_abs'] = fft_abs
+        df[col_name + '_fft_phase'] = fft_phase
+
+    return df
 
 
 # def process(df, para_received):

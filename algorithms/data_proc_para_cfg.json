@@ -81,6 +81,11 @@
     ]
   },
   {
+    "name": "data transform",
+    "function_name": "fft_transform",
+    "description": "Fast Fourier Transform"
+  },
+  {
     "name": "Sample balancing",
     "function_name": "sample_balancing",
     "parameters": [
