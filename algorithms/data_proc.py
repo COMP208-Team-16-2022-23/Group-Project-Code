@@ -59,15 +59,14 @@ def outlier_handling(df, parameters):
     detection_method = parameters['Detection method']
     processing_method = parameters['Processing method']
 
-
     # better to use a switch case here, but need python 3.10
     # call corresponding function
     if detection_method == '3-sigma':
         for column_name in parameters['column_selected']:
-            df = three_sigma(df, processing_method,column_name=column_name)
+            df = three_sigma(df, processing_method, column_name=column_name)
     elif detection_method == 'IQR':
         for column_name in parameters['column_selected']:
-            df = IQR(df, processing_method,column_name=column_name)
+            df = IQR(df, processing_method, column_name=column_name)
 
     return df
 
@@ -102,6 +101,7 @@ def three_sigma(df, processing_method, column_name, parameters=None):
         df[column_name] = df[column_name].apply(lambda x: median if x < lower_bound or x > upper_bound else x)
 
     return df
+
 
 def IQR(df, processing_method, column_name, parameters=None):
     """
@@ -138,6 +138,7 @@ def IQR(df, processing_method, column_name, parameters=None):
 
     return df
 
+
 def Z_score(df, parameters):
     """
     formula: (X-Mean)/ Std
@@ -160,6 +161,7 @@ def Z_score(df, parameters):
 
     return df
 
+
 def tail_shrinkage_or_truncation_processing(df, parameters):
     """
     Use tail shrinkage or truncation method to Exclude extreme values
@@ -175,9 +177,12 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
 
     method = parameters['method_selection']
     column_name = parameters['column_selected']
-    upper_percentile = int(parameters['upper_limit'])
-    lower_percentile = int(parameters['lower_limit'])
+    upper_percentile = int(parameters.get('upper_limit'))
+    lower_percentile = int(parameters.get('lower_limit'))
     processing_method = parameters['processing_method']
+
+    if not method or not column_name:
+        raise ValueError('Invalid parameters')
 
     # Select the column to process
     col = df[column_name]
@@ -186,19 +191,26 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
     upper_limit = np.percentile(col, upper_percentile)
     lower_limit = np.percentile(col, lower_percentile)
 
+    # Exclude the extreme values based on the method
+    col_without_outliers = col.copy()
+
     # Select the method
     if method == "tail_shrinkage":
-        col_without_outliers = col.clip(lower_limit, upper_limit)
-        df[column_name] = col_without_outliers
+        col_without_outliers = col_without_outliers.clip(lower_limit, upper_limit)
 
     elif method == "tail_truncation":
         if processing_method == "delete_value":
-            col_without_outliers = col[(col >= lower_limit) & (col <= upper_limit)]
-            df[column_name] = col_without_outliers
+            col_without_outliers[col > upper_limit] = np.nan
+            col_without_outliers[col < lower_limit] = np.nan
 
         elif processing_method == "delete_row":
-            df_without_outliers = df[(col >= lower_limit) & (col <= upper_limit)]
-            df.drop(df.index.difference(df_without_outliers.index).tolist(), inplace=True)
+            df = df.loc[(col_without_outliers <= upper_limit) & (col_without_outliers >= lower_limit)]
+
+        else:
+            raise ValueError("Invalid processing method selection")
+
+    # Update the DataFrame with the processed column
+    df[column_name] = col_without_outliers
 
     return df
 
@@ -329,7 +341,6 @@ def value_replace_3std(df, identification_method):
 
 
 def normalization(df, parameters):
-
     method = parameters['Method']
 
     # call corresponding function
@@ -359,9 +370,6 @@ def Min_Max(df, parameters):
         else:
             df = df.join(new_column, rsuffix='_' + method)
     return df
-
-
-
 
 
 paraset = {'identification_method': ['y', 'y', 'y', ''], 'fill_type': 'normal', }
