@@ -65,6 +65,9 @@ def outlier_handling(df, parameters):
     if detection_method == '3-sigma':
         for column_name in parameters['column_selected']:
             df = three_sigma(df, processing_method,column_name=column_name)
+    elif detection_method == 'IQR':
+        for column_name in parameters['column_selected']:
+            df = IQR(df, processing_method,column_name=column_name)
 
     return df
 
@@ -73,6 +76,7 @@ def three_sigma(df, processing_method, column_name, parameters=None):
     """
     Use 3-sigma method to detect outliers
     :param df: the pandas dataframe to be processed
+    :processing_method: how to repalce outliers
     :param parameters: a dictionary of parameters
     :return: the processed dataframe
     """
@@ -89,7 +93,42 @@ def three_sigma(df, processing_method, column_name, parameters=None):
     lower_bound = mean - 3 * std
     upper_bound = mean + 3 * std
 
-    # replace outliers with NaN
+    # replace outliers according to processing_method
+    if processing_method == 'set to null':
+        df[column_name] = df[column_name].apply(lambda x: np.nan if x < lower_bound or x > upper_bound else x)
+    elif processing_method == 'set to mean':
+        df[column_name] = df[column_name].apply(lambda x: mean if x < lower_bound or x > upper_bound else x)
+    elif processing_method == 'set to median':
+        df[column_name] = df[column_name].apply(lambda x: median if x < lower_bound or x > upper_bound else x)
+
+    return df
+
+def IQR(df, processing_method, column_name, parameters=None):
+    """
+        Use IQR method to detect outliers
+        :param df: the pandas dataframe to be processed
+        :param parameters: a dictionary of parameters
+        :processing_method: how to repalce outliers
+        :return: the processed dataframe
+        """
+
+    # get column by name
+    column = df[column_name]
+
+    mean = column.mean()
+    median = column.median()
+
+    # get lower and upper bound
+    Q1 = df[column_name].quantile(0.25)
+    Q3 = df[column_name].quantile(0.75)
+
+    # 计算IQR (四分位数范围)
+    IQR = Q3 - Q1
+
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+
+    # replace outliers according to processing_method
     if processing_method == 'set to null':
         df[column_name] = df[column_name].apply(lambda x: np.nan if x < lower_bound or x > upper_bound else x)
     elif processing_method == 'set to mean':
