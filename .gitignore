@@ -253,3 +253,5 @@ cython_debug/
 *.pptx
 
 temp_files/
+
+config/
