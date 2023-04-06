@@ -9,14 +9,22 @@ from components import legal
 from components import data_analysis
 from components import file_preview
 from components import chatgpt
+import json
 import config
 
 # from components import node_editer
 
 app = Flask(__name__)
 
-# load the instance config
-app.config.from_pyfile('config.py')
+try:
+    # Get configuration from system variables
+    config_str = os.environ.get('CONFIG')
+    config_dict = json.loads(config_str)
+    app.config.update(config_dict)
+except:
+    # load the instance config
+    import secret
+    app.config.from_pyfile('secret.py')
 
 # initialize the mail extension
 mail = Mail(app)
