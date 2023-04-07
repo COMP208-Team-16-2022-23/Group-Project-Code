@@ -91,13 +91,21 @@
                                 <p class="fw-bold mt-3">{{ variable["description"] }}</p>
                                 {% if variable["type"] == "multi_select" %}
                                     <select class="selectpicker" multiple data-live-search="true"
-                                            name="{{ variable['name'] }}" required>
+                                            name="{{ variable['name'] }}"
+                                            {% if variable['required'] %}
+                                            required
+                                            {% endif %}
+                                    >
                                         {% for column_name in column_names %}
                                             <option value="{{ column_name }}">{{ column_name }}</option>
                                         {% endfor %}
                                     </select>
                                 {% elif variable["type"] == "single_select" %}
-                                    <select class="form-select" name="{{ variable['name'] }}" required>
+                                    <select class="form-select" name="{{ variable['name'] }}"
+                                            {% if variable['required'] %}
+                                            required
+                                            {% endif %}
+                                    >
                                         {% for column_name in column_names %}
                                             <option value="{{ column_name }}">{{ column_name }}</option>
                                         {% endfor %}
