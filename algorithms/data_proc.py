@@ -5,15 +5,18 @@ import numpy as np
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import RandomOverSampler
 from imblearn.combine import SMOTEENN
+from sklearn.decomposition import PCA
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 from util import storage_control
 from util import file_util
 
 
-def process(file_path, parameters):
+def process(file_path, parameters, new_file_path=None):
     """
     :param file_path: the path of the file to be processed
     :param parameters: a dictionary of parameters
+    :param new_file_path: new file path
     :return: the processed file path
     """
 
@@ -27,11 +30,11 @@ def process(file_path, parameters):
     # Define dictionary mapping method names to functions
     method_dict = {
         'outlier_handling': outlier_handling,
-        'missing_value_handling': missing_value_handling,
         'tail_shrinkage_or_truncation_processing': tail_shrinkage_or_truncation_processing,
         'normalisation': normalization,
         'sample_balancing': sample_balancing,
-        'data transform': data_transform
+        'data_transform': data_transform,
+        'dimension_reduction': dimension_reduction
     }
 
     # Call the corresponding function
@@ -43,7 +46,8 @@ def process(file_path, parameters):
 
     file = df.to_csv(index=False)
 
-    new_file_path = file_util.add_suffix(file_path=file_path, suffix=processing_method, username=g.user.username)
+    if not new_file_path:
+        new_file_path = file_util.add_suffix(file_path=file_path, suffix=processing_method, username=g.user.username)
     processed_file_path = storage_control.upload_blob(file=file, blob_name=new_file_path)
 
     return processed_file_path
@@ -56,6 +60,7 @@ def outlier_handling(df, parameters):
     :return: the processed dataframe
     """
 
+    # print(parameters)
     # get detection method
     detection_method = parameters['Detection method']
     processing_method = parameters['Processing method']
@@ -71,110 +76,6 @@ def outlier_handling(df, parameters):
     elif detection_method == 'MAD':
         for column_name in parameters['column_selected']:
             df = MAD(df, processing_method, column_name=column_name)
-
-
-    return df
-
-def missing_value_handling(df, parameters):
-    """
-        :param df: the pandas dataframe to be processed
-        :param parameters: a dictionary of parameters
-        :return: the processed dataframe
-        """
-
-    # get identification_method and filling_method
-    identification_method = parameters['identification_method']
-    filling_method = parameters['filling_method']
-
-    if identification_method == 'empty':
-        for column_name in parameters['column_selected']:
-            df = value_replace_empty(df, filling_method, column_name=column_name)
-    elif identification_method == 'space':
-        for column_name in parameters['column_selected']:
-            df = value_replace_space(df, filling_method, column_name=column_name)
-    elif identification_method == "'None'":
-        for column_name in parameters['column_selected']:
-            df = value_replace_None(df, filling_method, column_name=column_name)
-    elif identification_method == "non-numeric value":
-        for column_name in parameters['column_selected']:
-            df = value_replace_NoNumeric(df, filling_method, column_name=column_name)
-
-    return df
-
-
-def value_replace_empty(df, filling_method, column_name):
-
-    df.replace('', np.nan, inplace=True)
-    column = df[column_name].fillna(0).astype(int)  # Replace NaN with 0, and convert to integer
-
-    mean = column.mean()
-    median = column.median()
-    mode = column.mode()
-
-
-    if filling_method == 'mean':
-        df[column_name] = df[column_name].apply(lambda x: mean if pd.isna(x) else x)
-    elif filling_method == 'median':
-        df[column_name] = df[column_name].apply(lambda x: median if pd.isna(x) else x)
-    elif filling_method == 'mode':
-        df[column_name] = df[column_name].apply(lambda x: mode if pd.isna(x) else x)
-
-    return df
-
-
-def value_replace_space(df, filling_method, column_name):
-
-    df[column_name] = df[column_name].replace(' ', value=pd.np.nan, regex=True)
-    column = df[column_name].fillna(0).astype(int)  # Replace NaN with 0, and convert to integer
-
-    mean = column.mean()
-    median = column.median()
-    mode = column.mode()
-
-    if filling_method == 'mean':
-        df[column_name] = df[column_name].apply(lambda x: mean if pd.isna(x) else x)
-    elif filling_method == 'median':
-        df[column_name] = df[column_name].apply(lambda x: median if pd.isna(x) else x)
-    elif filling_method == 'mode':
-        df[column_name] = df[column_name].apply(lambda x: mode if pd.isna(x) else x)
-
-    return df
-
-
-def value_replace_None(df, filling_method, column_name):
-
-    df.replace("None", np.nan, inplace=True)
-    column = df[column_name].fillna(0).astype(int)  # Replace NaN with 0, and convert to integer
-
-    mean = column.mean()
-    median = column.median()
-    mode = column.mode()
-
-    if filling_method == 'mean':
-        df[column_name] = df[column_name].apply(lambda x: mean if pd.isna(x) else x)
-    elif filling_method == 'median':
-        df[column_name] = df[column_name].apply(lambda x: median if pd.isna(x) else x)
-    elif filling_method == 'mode':
-        df[column_name] = df[column_name].apply(lambda x: mode if pd.isna(x) else x)
-
-    return df
-
-
-def value_replace_NoNumeric(df, filling_method, column_name):
-
-    df[column_name] = df[column_name].apply(pd.to_numeric, errors='coerce')
-    #column = df[column_name].fillna(0).astype(int)
-
-    mean = df[column_name].mean()
-    median = df[column_name].median()
-    mode = df[column_name].mode()
-
-    if filling_method == 'mean':
-        df[column_name] = df[column_name].apply(lambda x: mean if pd.isna(x) else x)
-    elif filling_method == 'median':
-        df[column_name] = df[column_name].apply(lambda x: median if pd.isna(x) else x)
-    elif filling_method == 'mode':
-        df[column_name] = df[column_name].apply(lambda x: mode if pd.isna(x) else x)
 
     return df
 
@@ -262,7 +163,7 @@ def MAD(df, processing_method, column_name, parameters=None):
     mean = column.mean()
     median = column.median()
 
-    #get mad and threshold value
+    # get mad and threshold value
     mad = np.abs(df[column_name] - median).median()
     threshold = 3 * mad
 
@@ -276,6 +177,28 @@ def MAD(df, processing_method, column_name, parameters=None):
     return df
 
 
+def Z_score(df, parameters):
+    """
+    formula: (X-Mean)/ Std
+    :param df: Input Dataframe
+    :param parameters: Dict containing Method, column_selected and optionally Output option
+    :return: normalised Dataframe with parameters above
+    """
+
+    method = parameters['Method']
+    # Standardize each column
+    for col in parameters['column_selected']:
+        col_mean = df[col].mean()
+        col_std = df[col].std()
+        new_column = (df[col] - col_mean) / col_std
+        if 'Output option' in parameters.keys() and parameters['Output option'] == 'on':
+            df[col] = new_column
+        else:
+            # Merge the standardized numerical columns with the non-numerical columns
+            df = df.join(new_column, rsuffix='_' + method)
+
+    return df
+
 
 def tail_shrinkage_or_truncation_processing(df, parameters):
     """
@@ -287,7 +210,6 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
     column_name is the column to be processed(I don't know how to get the column name by this way)
     upper_percentile is the upper limit of the percentile, lower_percentile is the lower limit of the percentile
     processing_method is used when method is tail_truncation, there are two methods: delete_value and replace_value
-    only the method delete row test failed
     """
 
     method = parameters['method_selection']
@@ -324,7 +246,7 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
             col_without_outliers[col > upper_limit] = np.nan
             col_without_outliers[col < lower_limit] = np.nan
             df[column_name] = col_without_outliers
-            df = df.dropna(subset=['col'], how='any')
+            df = df.dropna(subset=column_name, how='any')
 
         else:
             raise ValueError("Invalid processing method selection")
@@ -407,6 +329,37 @@ def data_transform(df, parameters):
     return df
 
 
+def dimension_reduction(df, parameters):
+    """
+    Use PCA or LDA to perform dimensionality reduction on the data
+    :param df: the pandas dataframe to be processed
+    :param parameters: a dictionary of parameters
+    :return: the processed dataframe
+    column_selected is the column to be processed
+    n_components is the number of target dimensions
+    """
+    method = parameters['method']
+    column_selected = parameters['column_selected']
+    n_components = int(parameters.get('n_components'))
+
+    if method == 'PCA':
+        pca = PCA(n_components=n_components)
+        pca_result = pca.fit_transform(df[column_selected])
+        pca_columns = [f'PCA_{i}' for i in range(1, n_components + 1)]
+        df_pca = pd.DataFrame(data=pca_result, columns=pca_columns)
+        df = pd.concat([df, df_pca], axis=1)
+
+    elif method == 'LDA':
+        target_column = parameters.get('target_column')
+        lda = LinearDiscriminantAnalysis(n_components=n_components)
+        lda_result = lda.fit_transform(df[column_selected], df[target_column])
+        lda_columns = [f'LDA_{i}' for i in range(1, n_components + 1)]
+        df_lda = pd.DataFrame(data=lda_result, columns=lda_columns)
+        df = pd.concat([df, df_lda], axis=1)
+
+    return df
+
+
 # def process(df, para_received):
 #     # identification_method should be an array
 #     # and in format: ["empty value", "space", "None", "customize"]
@@ -426,6 +379,69 @@ def data_transform(df, parameters):
 #     }.get(filling_method, None)
 
 
+def value_replace_mean(df, identification_method):
+    i = 0
+    while i <= df.shape[1]:
+        if identification_method[0] == "on":
+            df[i].replace("", value=df[i].mean(), inplace=True)
+        if identification_method[1] == "on":
+            df.replace(" ", value=df[i].mean(), inplace=True)
+        if identification_method[2] == "on":
+            df.replace("None", value=df[i].mean(), inplace=True)
+        if identification_method[3] != "":
+            customize_value = identification_method[3]
+            df.replace(customize_value, value=df[i].mean(), inplace=True)
+
+    return df
+
+
+def value_replace_median(df, identification_method):
+    i = 0
+    while i <= df.shape[1]:
+        if identification_method[0] == "on":
+            df[i].replace("", value=df[i].median(), inplace=True)
+        if identification_method[1] == "on":
+            df.replace(" ", value=df[i].median(), inplace=True)
+        if identification_method[2] == "on":
+            df.replace("None", value=df[i].median(), inplace=True)
+        if identification_method[3] != "":
+            customize_value = identification_method[3]
+            df.replace(customize_value, value=df[i].median(), inplace=True)
+
+    return df
+
+
+def value_replace_mode(df, identification_method):
+    i = 0
+    while i <= df.shape[1]:
+        if identification_method[0] == "y":
+            df[i].replace("", value=(df.mode())[i][0], inplace=True)
+        if identification_method[1] == "y":
+            df.replace(" ", value=(df.mode())[i][0], inplace=True)
+        if identification_method[2] == "y":
+            df.replace("None", value=(df.mode())[i][0], inplace=True)
+        if identification_method[3] != "":
+            customize_value = identification_method[3]
+            df.replace(customize_value, value=(df.mode())[i][0], inplace=True)
+    return df
+
+
+# convert messing value as three standard derivation
+def value_replace_3std(df, identification_method):
+    i = 0
+    while i <= df.shape[1]:
+        if identification_method[0] == "y":
+            df[i].replace("", value=3 * df[i].std(), inplace=True)
+        if identification_method[1] == "y":
+            df.replace(" ", value=3 * df[i].std(), inplace=True)
+        if identification_method[2] == "y":
+            df.replace("None", value=3 * df[i].std(), inplace=True)
+        if identification_method[3] != "":
+            customize_value = identification_method[3]
+            df.replace(customize_value, value=3 * df[i].std(), inplace=True)
+
+    return df
+
 
 def normalization(df, parameters):
     method = parameters['Method']
@@ -438,30 +454,6 @@ def normalization(df, parameters):
 
     # Uncompleted method called
     return df
-
-
-def Z_score(df, parameters):
-    """
-    formula: (X-Mean)/ Std
-    :param df: Input Dataframe
-    :param parameters: Dict containing Method, column_selected and optionally Output option
-    :return: normalised Dataframe with parameters above
-    """
-
-    method = parameters['Method']
-    # Standardize each column
-    for col in parameters['column_selected']:
-        col_mean = df[col].mean()
-        col_std = df[col].std()
-        new_column = (df[col] - col_mean) / col_std
-        if 'Output option' in parameters.keys() and parameters['Output option'] == 'on':
-            df[col] = new_column
-        else:
-            # Merge the standardized numerical columns with the non-numerical columns
-            df = df.join(new_column, rsuffix='_' + method)
-
-    return df
-
 
 
 def Min_Max(df, parameters):

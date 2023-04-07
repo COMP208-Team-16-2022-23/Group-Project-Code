@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Data Analysis{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/baklavajs/dist/index.css">
+
+    <div style="width:100vw;height:100vh">
+        <div id="editor"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/baklavajs/dist/index.js"></script>
+    <script src="/static/js/DataSourceNode.js"></script>
+    <script src="/static/js/DataProcessingNode.js"></script>
+
+    <script>
+
+        const plugin = BaklavaJS.createBaklava(document.getElementById("editor"));
+        const editor = plugin.editor;
+    
+        editor.registerNodeType("Data", DataSourceNode);
+        editor.registerNodeType("DataProcessing", DataProcessingNode);
+        
+    </script>
+
+{% endblock %}

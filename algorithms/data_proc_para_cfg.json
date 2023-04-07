@@ -121,6 +121,32 @@
     ]
   },
   {
+    "name": "dimension reduction",
+    "function_name": "dimension_reduction",
+    "parameters": [
+      {
+        "name": "method",
+        "type": "select",
+        "options": [
+          "PCA",
+          "LDA"
+        ]
+      },
+      {
+        "name": "n_components",
+        "type": "number"
+      }
+    ],
+    "variables": [
+      {
+        "name": "target_column",
+        "description": "Target column(LDA)",
+        "type": "multi_select",
+        "required": false
+      }
+    ]
+  },
+  {
     "name": "Sample balancing",
     "function_name": "sample_balancing",
     "parameters": [
