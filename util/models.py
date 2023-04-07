@@ -22,7 +22,7 @@ class User(Base):
         self.password_reminder = password_reminder
 
     def __repr__(self):
-        return {'id': self.id, 'email': self.email, 'username': self.username, 'password': self.password, }
+        return {'id': self.id, 'email': self.email, 'username': self.username, 'password': self.password}
 
 
 class ProcessingProject(Base):
@@ -104,3 +104,65 @@ class AnalysisResult(Base):
     def __repr__(self):
         return {'id': self.id, 'project_id': self.project_id, 'file_path': self.result_file_path,
                 'modified_date': self.modified_date}
+
+
+class Post(Base):
+    """
+    This class is used to store the information of the post.
+
+    Attributes:
+        id: the id of the post
+        author_id: the id of the user who created the post
+        title: the title of the post
+        body: the body of the post
+        created: the date when the post is created
+        modified: the date when the post is modified
+    """
+
+    __tablename__ = 'posts'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    author_id = Column(Integer, nullable=False)
+    title = Column(String(120), nullable=False)
+    body = Column(String(500), nullable=False)
+    created = Column(DateTime, default=datetime.utcnow)
+    modified = Column(DateTime, default=datetime.utcnow)
+
+    def __init__(self, author_id=None, title=None, body=None):
+        self.author_id = author_id
+        self.title = title
+        self.body = body
+
+    def __repr__(self):
+        return {'id': self.id, 'author_id': self.author_id, 'title': self.title, 'body': self.body,
+                'created': self.created, 'modified': self.modified}
+
+
+class Comment(Base):
+    """
+    This class is used to store the information of the comment.
+
+    Attributes:
+        id: the id of the comment
+        author_id: the id of the user who created the comment
+        post_id: the id of the post
+        body: the body of the comment
+        created: the date when the comment is created
+        modified: the date when the comment is modified
+    """
+
+    __tablename__ = 'comments'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    author_id = Column(Integer, nullable=False)
+    post_id = Column(Integer, nullable=False)
+    body = Column(String(500), nullable=False)
+    created = Column(DateTime, default=datetime.utcnow)
+    modified = Column(DateTime, default=datetime.utcnow)
+
+    def __init__(self, author_id=None, post_id=None, body=None):
+        self.author_id = author_id
+        self.post_id = post_id
+        self.body = body
+
+    def __repr__(self):
+        return {'id': self.id, 'author_id': self.author_id, 'post_id': self.post_id, 'body': self.body,
+                'created': self.created, 'modified': self.modified}
