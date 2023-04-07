@@ -27,11 +27,6 @@ from flask_mail import Message
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-import config
-
-##  product name
-product_name = config.PRODUCT_NAME
-
 
 def login_required(view):
     """View decorator that redirects anonymous users to the login page."""

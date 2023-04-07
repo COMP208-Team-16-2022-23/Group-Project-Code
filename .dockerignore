@@ -13,3 +13,4 @@ instance
 .github
 .DS_Store
 temp_files
+secret.py

@@ -9,22 +9,23 @@ from components import legal
 from components import data_analysis
 from components import file_preview
 from components import chatgpt
+from components import forum
+import json
 import config
 
 # from components import node_editer
 
 app = Flask(__name__)
 
-# no config.py file, load the config from environment variables
-if os.path.exists('config.py'):
-    app.config.from_pyfile('config.py')
-else:
-    import json
+try:
     # Get configuration from system variables
     config_str = os.environ.get('CONFIG')
     config_dict = json.loads(config_str)
-    # Load the configuration into the Flask application
     app.config.update(config_dict)
+except:
+    # load the instance config
+    import secret
+    app.config.from_pyfile('secret.py')
 
 # initialize the mail extension
 mail = Mail(app)
@@ -45,6 +46,7 @@ app.register_blueprint(data_analysis.bp)
 app.register_blueprint(file_preview.bp)
 app.register_blueprint(legal.bp)
 app.register_blueprint(chatgpt.bp)
+app.register_blueprint(forum.bp)
 
 
 @app.teardown_appcontext
