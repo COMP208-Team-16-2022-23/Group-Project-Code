@@ -9,7 +9,6 @@
         "options": [
           "3-sigma",
           "IQR",
-          "Z-score",
           "MAD"
         ]
       },
@@ -20,6 +19,32 @@
           "set to null",
           "set to mean",
           "set to median"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Missing value handling",
+    "function_name": "missing_value_handling",
+    "parameters": [
+      {
+        "name": "identification_method",
+        "type": "select",
+        "options": [
+          "empty",
+          "space",
+          "'None'",
+          "non-numeric value"
+        ]
+      },
+      {
+        "name": "filling_method",
+        "type": "select",
+        "description": "Statistics_filling",
+        "options": [
+          "mean",
+          "median",
+          "mode"
         ]
       }
     ]
