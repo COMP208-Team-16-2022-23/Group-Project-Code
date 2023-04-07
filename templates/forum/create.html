@@ -1,15 +1,30 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}New Post{% endblock %}</h1>
+    <h1>{% block title %}New Post{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  <form method="post">
-    <label for="title">Title</label>
-    <input name="title" id="title" value="{{ request.form['title'] }}" required>
-    <label for="body">Body</label>
-    <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
-    <input type="submit" value="Save">
-  </form>
+    <div class="container-fluid p-3 flex-grow-1 d-flex flex-column justify-content-center my-auto"
+         style="max-width: 800px">
+        <h1 class="mb-5">New Post</h1>
+        <form class="needs-validation" method="post" novalidate>
+            <div class="form-outline mb-5">
+                <input type="text" id="title" name="title" class="form-control" value="{{ request.form['title'] }}" required/>
+                <label class="form-label" for="title">Title</label>
+                <div class="invalid-feedback">Please enter post title.</div>
+            </div>
+            <div class="form-outline mb-5">
+
+                <textarea class="form-control" id="new_comment" name="body" rows="8" data-mdb-showcounter="true"
+                          maxlength="500" required>{{ request.form['body'] }}</textarea>
+                <label class="form-label" for="new_comment">Content</label>
+                <div class="form-helper"></div>
+                <div class="invalid-feedback">Please enter post content.</div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <button class="btn btn-primary" type="submit">submit</button>
+            </div>
+        </form>
+    </div>
 {% endblock %}

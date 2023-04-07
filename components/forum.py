@@ -12,7 +12,7 @@ from util.models import Post, Comment, User
 bp = Blueprint('forum', __name__, url_prefix='/forum')
 
 
-@bp.route('/')
+@bp.route('/', methods=('GET', 'POST'))
 def index():
     posts = Post.query.order_by(Post.modified.desc()).all()
     for post in posts:
@@ -20,6 +20,18 @@ def index():
         post.comments = Comment.query.filter_by(post_id=post.id).order_by(Comment.modified.desc()).all()
         for comment in post.comments:
             comment.author = User.query.filter_by(id=comment.author_id).first()
+
+    # get new comment
+    if request.method == 'POST':
+        a = request.form
+        body = request.form['new_comment']
+        post_id = request.form['post_id']
+
+        # Create a new comment
+        comment = Comment(author_id=g.user.id, post_id=int(post_id), body=body)
+        db_session.add(comment)
+        db_session.commit()
+        return redirect(url_for('forum.index'))
 
     return render_template('forum/index.html', posts=posts)
 
@@ -30,19 +42,12 @@ def create():
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
-        error = None
 
-        if not title:
-            error = 'Title is required'
-
-        if error is not None:
-            flash(error)
-        else:
-            # Create a new post
-            post = Post(author_id=g.user.id, title=title, body=body)
-            db_session.add(post)
-            db_session.commit()
-            return redirect(url_for('forum.index'))
+        # Create a new post
+        post = Post(author_id=g.user.id, title=title, body=body)
+        db_session.add(post)
+        db_session.commit()
+        return redirect(url_for('forum.index'))
 
     return render_template('forum/create.html')
 
@@ -67,20 +72,13 @@ def update(id):
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
-        error = None
 
-        if not title:
-            error = 'Title is required'
-
-        if error is not None:
-            flash(error)
-        else:
-            # Update the post
-            post.title = title
-            post.body = body
-            post.modified = datetime.utcnow()
-            db_session.commit()
-            return redirect(url_for('forum.index'))
+        # Update the post
+        post.title = title
+        post.body = body
+        post.modified = datetime.utcnow()
+        db_session.commit()
+        return redirect(url_for('forum.index'))
 
     return render_template('forum/update.html', post=post)
 
@@ -96,5 +94,15 @@ def delete(id):
 
     post = get_post(id)
     db_session.delete(post)
+    db_session.commit()
+    return redirect(url_for('forum.index'))
+
+
+@bp.route('/<int:id>/comment/<int:comment_id>/delete', methods=('GET', 'POST'))
+@login_required
+def delete_comment(id, comment_id):
+    # Delete the comment
+    comment = Comment.query.filter_by(id=comment_id).first()
+    db_session.delete(comment)
     db_session.commit()
     return redirect(url_for('forum.index'))

@@ -11,6 +11,8 @@
                    href="{{ url_for('forum.create') }}" role="button">
                     <i class="fas fa-pencil-alt"></i>
                 </a>
+                <ul class="list-unstyled">
+                </ul>
             </div>
         {% endif %}
 
@@ -19,7 +21,7 @@
                 <h5 class="card-header d-flex flex-row justify-content-start align-items-center">
                     <div class="flex-fill pe-3">{{ post['title'] }}</div>
                     <div class="text-muted"><small>
-                        Author: {{ post['author']["username"] }}, Created:
+                        {{ post['author']["username"] }} | Created:
                         <script>
                             var date = new Date('{{ post['created'] }} UTC');
                             document.write(date.toLocaleString());
@@ -36,10 +38,69 @@
                 <div class="card-body">
 
                     <p class="card-text">{{ post['body'] }}</p>
+
                     {% if g.user['id'] == post['author_id'] %}
-                        <a class="card-link" href="{{ url_for('forum.update', id=post['id']) }}">Edit</a>
+                        <div class="d-flex justify-content-end">
+                            <a role="button" class="btn btn-link btn-sm btn-rounded"
+                               data-mdb-ripple-color="dark" href="{{ url_for('forum.update', id=post['id']) }}">Edit</a>
+                        </div>
                     {% endif %}
                 </div>
+                {% if g.user or post['comments'] %}
+                    <div class="card-footer text-muted">
+                        {% if g.user %}
+                            <form class="needs-validation" method="post" novalidate>
+                                <input type="hidden" name="post_id" value="{{ post['id'] }}">
+                                <div class="form-outline mb-5">
+                                    <textarea class="form-control" id="new_comment" name="new_comment" rows="2"
+                                              data-mdb-showcounter="true"
+                                              maxlength="500" required></textarea>
+                                    <label class="form-label" for="new_comment">Comment</label>
+                                    <div class="form-helper"></div>
+                                    <div class="invalid-feedback">Please enter the comment.</div>
+                                </div>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                    <button class="btn btn-primary" type="submit">submit</button>
+                                </div>
+                            </form>
+                            {% if post['comments'] %}
+                                <hr>
+                            {% endif %}
+                        {% endif %}
+                        {% if post['comments'] %}
+                            <ul class="list-group list-group-light list-group-small">
+                                {% for comment in post['comments'] %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                                        <div class="ms-2 me-auto">
+                                            <div class="fw-bold">{{ comment['author']['username'] }}</div>
+                                            {{ comment['body'] }}
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 mb-1 d-flex justify-content-end">
+                                                <span class="badge badge-primary rounded-pill">
+                                                    <script>
+                                                        var date = new Date('{{ comment['created'] }} UTC');
+                                                        document.write(date.toLocaleString());
+                                                    </script>
+                                                </span>
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-end">
+                                                {% if g.user['id'] == comment['author_id'] %}
+                                                    <a role="button" class="btn btn-link btn-sm btn-rounded"
+                                                       href="{{ url_for('forum.delete_comment', id=post['id'], comment_id=comment['id']) }}"
+                                                       onclick="return confirm('Deleting a comment is a permanent action. Are you absolutely certain that you want to proceed and delete this comment?');">Delete</a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
             </div>
             {% if not loop.last %}
                 <hr>
