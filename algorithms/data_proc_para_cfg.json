@@ -110,13 +110,13 @@
       {
         "name": "n_components",
         "type": "number"
-      },
+      }
+    ],
+    "variables": [
       {
         "name": "target_column",
-        "type": "select",
-        "options": [
-
-        ]
+        "description": "Target column",
+        "type": "multi_select"
       }
     ]
   },
