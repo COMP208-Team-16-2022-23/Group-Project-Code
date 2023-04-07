@@ -115,8 +115,9 @@
     "variables": [
       {
         "name": "target_column",
-        "description": "Target column",
-        "type": "multi_select"
+        "description": "Target column(LDA)",
+        "type": "multi_select",
+        "required": false
       }
     ]
   },
