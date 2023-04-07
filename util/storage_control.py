@@ -6,7 +6,7 @@ import os
 import json
 import config
 
-from flask import send_file
+from flask import send_file, flash
 from google.cloud import storage
 
 try:
@@ -46,7 +46,8 @@ def delete_blob(blob_name, bucket_name=config.BUCKET_NAME):
         blob = storage_client.bucket(bucket_name).blob(blob_name)
         blob.delete()
         return True
-    except:
+    except Exception as e:
+        flash('Error: ' + str(e))
         return False
 
 
