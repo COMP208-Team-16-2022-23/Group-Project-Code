@@ -10,10 +10,11 @@ from util import storage_control
 from util import file_util
 
 
-def process(file_path, parameters):
+def process(file_path, parameters, new_file_path=None):
     """
     :param file_path: the path of the file to be processed
     :param parameters: a dictionary of parameters
+    :param new_file_path: new file path
     :return: the processed file path
     """
 
@@ -42,7 +43,8 @@ def process(file_path, parameters):
 
     file = df.to_csv(index=False)
 
-    new_file_path = file_util.add_suffix(file_path=file_path, suffix=processing_method, username=g.user.username)
+    if not new_file_path:
+        new_file_path = file_util.add_suffix(file_path=file_path, suffix=processing_method, username=g.user.username)
     processed_file_path = storage_control.upload_blob(file=file, blob_name=new_file_path)
 
     return processed_file_path

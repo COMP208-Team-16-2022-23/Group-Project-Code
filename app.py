@@ -8,7 +8,7 @@ from components import data_manager
 from components import legal
 from components import data_analysis
 from components import file_preview
-from components import chatgpt
+from components import chatgpt, node_editor
 import config
 
 # from components import node_editer
@@ -37,6 +37,7 @@ app.register_blueprint(data_analysis.bp)
 app.register_blueprint(file_preview.bp)
 app.register_blueprint(legal.bp)
 app.register_blueprint(chatgpt.bp)
+app.register_blueprint(node_editor.bp)
 
 
 @app.teardown_appcontext
