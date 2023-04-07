@@ -5,6 +5,8 @@ import numpy as np
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import RandomOverSampler
 from imblearn.combine import SMOTEENN
+from sklearn.decomposition import PCA
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 
 from util import storage_control
 from util import file_util
@@ -31,7 +33,8 @@ def process(file_path, parameters, new_file_path=None):
         'tail_shrinkage_or_truncation_processing': tail_shrinkage_or_truncation_processing,
         'normalisation': normalization,
         'sample_balancing': sample_balancing,
-        'data transform': data_transform
+        'data_transform': data_transform,
+        'dimension_reduction': dimension_reduction
     }
 
     # Call the corresponding function
@@ -322,6 +325,37 @@ def data_transform(df, parameters):
 
             df[col_name + '_ifft_abs'] = ifft_abs
             df[col_name + '_ifft_phase'] = ifft_phase
+
+    return df
+
+
+def dimension_reduction(df, parameters):
+    """
+    Use PCA or LDA to perform dimensionality reduction on the data
+    :param df: the pandas dataframe to be processed
+    :param parameters: a dictionary of parameters
+    :return: the processed dataframe
+    column_selected is the column to be processed
+    n_components is the number of target dimensions
+    """
+    method = parameters['method']
+    column_selected = parameters['column_selected']
+    n_components = int(parameters.get('n_components'))
+
+    if method == 'PCA':
+        pca = PCA(n_components=n_components)
+        pca_result = pca.fit_transform(df[column_selected])
+        pca_columns = [f'PCA_{i}' for i in range(1, n_components + 1)]
+        df_pca = pd.DataFrame(data=pca_result, columns=pca_columns)
+        df = pd.concat([df, df_pca], axis=1)
+
+    elif method == 'LDA':
+        target_column = parameters.get('target_column')
+        lda = LinearDiscriminantAnalysis(n_components=n_components)
+        lda_result = lda.fit_transform(df[column_selected], df[target_column])
+        lda_columns = [f'LDA_{i}' for i in range(1, n_components + 1)]
+        df_lda = pd.DataFrame(data=lda_result, columns=lda_columns)
+        df = pd.concat([df, df_lda], axis=1)
 
     return df
 
