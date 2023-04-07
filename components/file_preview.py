@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, url_for, redirect, flash, g, request, send_file
+from flask import Blueprint, render_template, url_for, redirect, flash, g, request, send_file, get_flashed_messages
 import requests
 from werkzeug.utils import secure_filename
 import os
@@ -152,21 +152,38 @@ def delete_dataset(file_path, force=False):
     # check ownership
     owner = file_path.split('/')[0]
     if owner != g.user.username:
-        flash('Deleting This File is NOT ALLOWED!')
+        flash('Warning: Deleting This File is NOT ALLOWED!')
         return redirect(url_for('my_data.my_data'))
 
-    # delete file
+    force = request.args.get('force', type=bool)
+    project = ProcessingProject.query.filter_by(current_file_path=file_path).first()
+    child_project = ProcessingProject.query.filter_by(original_file_path=file_path).first()
+
     # Exists corresponding tasks
-    if ProcessingProject.query.filter_by(current_file_path=file_path).first():
-        # todo add alert or optimize logic
+    if project or child_project:
         if force:
             try:
+
                 # delete corresponding processing task
-                project = ProcessingProject.query.filter_by(current_file_path=file_path).first()
-                delete_task('data_processing', project.id)
+                if project:
+                    if sc.delete_blob(project.current_file_path):
+                        #  Delete database record
+                        db_session.delete(project)
+                        db_session.commit()
+                if child_project:
+                    if sc.delete_blob(child_project.current_file_path) and sc.delete_blob(
+                            child_project.original_file_path):
+                        #  Delete database record
+                        db_session.delete(child_project)
+                        db_session.commit()
+
                 return redirect(url_for('my_data.my_data'))
             except Exception as e:
-                print(e)
+                flash(f'Error: {str(e)}')
+
+        # Attempt to delete datasets with projects
+        else:
+            flash(f'{file_path}', category='warning-delete')
 
     # No corresponding task exists
     else:
@@ -195,7 +212,7 @@ def delete_task(component_name, id):
         project = ProcessingProject.query.filter_by(id=id).first()
         owner = project.current_file_path.split('/')[0]
         if owner != g.user.username:
-            flash('Deleting This File is NOT ALLOWED!')
+            flash('Warning: Deleting This File is NOT ALLOWED!')
             return redirect(redirect_url)
 
         # Delete file
@@ -218,12 +235,12 @@ def delete_task(component_name, id):
         for path in paths:
             owner = path.split('/')[0]
             if owner != g.user.username:
-                flash('Deleting This File is NOT ALLOWED!')
+                flash('Warning: Deleting This File is NOT ALLOWED!')
                 return redirect(redirect_url)
 
             # Delete file
             if not sc.delete_blob(path):
-                flash(f'Error Occurred When Deleting File {os.path.basename(path)}')
+                # flash(f'Error Occurred When Deleting File {os.path.basename(path)}')
                 return redirect(redirect_url)
             else:
                 # Delete database record
