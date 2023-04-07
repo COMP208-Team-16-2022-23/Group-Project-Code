@@ -74,7 +74,6 @@ def outlier_handling(df, parameters):
         for column_name in parameters['column_selected']:
             df = MAD(df, processing_method, column_name=column_name)
 
-
     return df
 
 
@@ -161,7 +160,7 @@ def MAD(df, processing_method, column_name, parameters=None):
     mean = column.mean()
     median = column.median()
 
-    #get mad and threshold value
+    # get mad and threshold value
     mad = np.abs(df[column_name] - median).median()
     threshold = 3 * mad
 
@@ -173,6 +172,7 @@ def MAD(df, processing_method, column_name, parameters=None):
         df[column_name] = df[column_name].apply(lambda x: median if abs(x - median) > threshold else x)
 
     return df
+
 
 def Z_score(df, parameters):
     """
@@ -207,7 +207,6 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
     column_name is the column to be processed(I don't know how to get the column name by this way)
     upper_percentile is the upper limit of the percentile, lower_percentile is the lower limit of the percentile
     processing_method is used when method is tail_truncation, there are two methods: delete_value and replace_value
-    only the method delete row test failed
     """
 
     method = parameters['method_selection']
@@ -244,7 +243,7 @@ def tail_shrinkage_or_truncation_processing(df, parameters):
             col_without_outliers[col > upper_limit] = np.nan
             col_without_outliers[col < lower_limit] = np.nan
             df[column_name] = col_without_outliers
-            df = df.dropna(subset=['col'], how='any')
+            df = df.dropna(subset=column_name, how='any')
 
         else:
             raise ValueError("Invalid processing method selection")
