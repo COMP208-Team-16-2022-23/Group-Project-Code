@@ -110,13 +110,14 @@
       {
         "name": "n_components",
         "type": "number"
-      },
+      }
+    ],
+    "variables": [
       {
         "name": "target_column",
-        "type": "select",
-        "options": [
-
-        ]
+        "description": "Target column(LDA)",
+        "type": "multi_select",
+        "required": false
       }
     ]
   },
