@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block header %}
+    <h1>{% block title %}Forum{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid p-3 flex-grow-1">
+        {% if g.user %}
+            <div class="fixed-action-btn" id="fixed1">
+                <a class="btn text-white btn-lg btn-floating" style="background-color: #3692f4;"
+                   href="{{ url_for('forum.create') }}" role="button">
+                    <i class="fas fa-pencil-alt"></i>
+                </a>
+            </div>
+        {% endif %}
+
+        {% for post in posts %}
+            <div class="card border border-secondary shadow-0">
+                <h5 class="card-header d-flex flex-row justify-content-start align-items-center">
+                    <div class="flex-fill pe-3">{{ post['title'] }}</div>
+                    <div class="text-muted"><small>
+                        Author: {{ post['author']["username"] }}, Created:
+                        <script>
+                            var date = new Date('{{ post['created'] }} UTC');
+                            document.write(date.toLocaleString());
+                        </script>
+                        , Modified:
+                        <script>
+                            var date = new Date('{{ post['modified'] }} UTC');
+                            document.write(date.toLocaleString());
+                        </script>
+                    </small>
+                    </div>
+
+                </h5>
+                <div class="card-body">
+
+                    <p class="card-text">{{ post['body'] }}</p>
+                    {% if g.user['id'] == post['author_id'] %}
+                        <a class="card-link" href="{{ url_for('forum.update', id=post['id']) }}">Edit</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% if not loop.last %}
+                <hr>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}
