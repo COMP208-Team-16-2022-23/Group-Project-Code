@@ -65,19 +65,21 @@
 
                             {% with messages = get_flashed_messages(with_categories=true) %}
                                 {% for category, message in messages %}
-                                <div class="alert {% if category == 'warning-auth' %} alert-danger {% endif %} {% if category == 'message-auth' %} alert-primary {% endif %} d-flex align-items-center fade show mb-0"
-                                     role="alert" style="width: 100%;">
-                                    {% if category == 'warning-auth' %}
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                                             class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 18 18"
-                                             role="img" aria-label="Warning:">
-                                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                                        </svg>
-                                    {% endif %}
-                                    <div>
-                                        {{ message }}
+                                    <div class="alert {% if category == 'warning-auth' %} alert-danger {% endif %} {% if category == 'message-auth' %} alert-primary {% endif %} d-flex align-items-center fade show mb-0"
+                                         role="alert" style="width: 100%;">
+                                        {% if category == 'warning-auth' %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                 fill="currentColor"
+                                                 class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2"
+                                                 viewBox="0 0 18 18"
+                                                 role="img" aria-label="Warning:">
+                                                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                            </svg>
+                                        {% endif %}
+                                        <div>
+                                            {{ message }}
+                                        </div>
                                     </div>
-                                </div>
                                 {% endfor %}
                             {% endwith %}
 
@@ -103,57 +105,85 @@
 
                                     <p class="h1 mb-5 mx-1 mx-md-4 mt-4">Create your LCDA Account</p>
 
-                                    <form class="mx-1 mx-md-4" method="post">
+                                    <form class="mx-1 mx-md-4 needs-validation" method="post" id="register-form"
+                                          novalidate>
 
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fas fa-user fa-lg me-3 fa-fw"></i>
-                                            <div class="form-outline flex-fill mb-0" name="username">
-                                                <input name="username" type="text" id="username" class="form-control"
-                                                       required/>
-                                                <label name="username" class="form-label"
-                                                       for="username">Username</label>
+                                            <div class="flex-fill mb-0" name="username">
+                                                <div class="form-outline ">
+                                                    <input name="username" type="text" id="username"
+                                                           class="form-control"
+                                                           required/>
+                                                    <label name="username" class="form-label"
+                                                           for="username">Username</label>
+                                                    <div class="invalid-feedback">
+                                                        Please enter your username
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
-                                            <div class="form-outline flex-fill mb-0">
-                                                <input name="email" type="email" id="email" class="form-control"
-                                                       required/>
-                                                <label class="form-label" for="email">Email</label>
+                                            <div class="flex-fill mb-0">
+                                                <div class="form-outline ">
+                                                    <input name="email" type="email" id="email" class="form-control"
+                                                           required/>
+                                                    <label class="form-label" for="email">Email</label>
+                                                    <div class="invalid-feedback">
+                                                        Please enter your email
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                                            <div class="form-outline flex-fill mb-0">
-                                                <input name="password" type="password" id="password"
-                                                       class="form-control" required/>
-                                                <label class="form-label" for="password">Password</label>
+                                            <div class="flex-fill mb-0">
+                                                <div class="form-outline">
+                                                    <input name="password" type="password" id="password"
+                                                           class="form-control" required/>
+                                                    <label class="form-label" for="password">Password</label>
+                                                    <div class="invalid-feedback">
+                                                        Please enter your password
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fas fa-key fa-lg me-3 fa-fw"></i>
-                                            <div class="form-outline flex-fill mb-0">
-                                                <input name="password_confirm" type="password" id="password_confirm"
-                                                       class="form-control" required/>
-                                                <label class="form-label" for="password_confirm">Repeat your
-                                                    password</label>
+                                            <div class="flex-fill mb-0">
+                                                <div class="form-outline">
+                                                    <input name="password_confirm" type="password" id="password_confirm"
+                                                           class="form-control" required/>
+                                                    <label class="form-label" for="password_confirm">Repeat your
+                                                        password</label>
+                                                    <div class="invalid-feedback">
+                                                        Please repeat your password
+                                                    </div>
+
+                                                </div>
+                                                <div class="text-danger" id="password-error"></div>
                                             </div>
                                         </div>
 
-                                        <div class="form-check d-flex justify-content-center mb-5">
-                                            <input name="agree_terms" class="form-check-input me-2" type="checkbox"
-                                                   value="true"
-                                                   id="agree_terms"/>
-                                            <script>
-                                                document.getElementById("agree_terms").required = true;
-                                            </script>
-                                            <label class="form-check-label" for="agree_terms">
-                                                I agree <a href="{{ url_for('legal.terms') }}">Terms of service</a> and
-                                                <a href="{{ url_for('legal.privacy') }}">Privacy policy</a>
-                                            </label>
+                                        <div class="form-check mb-5">
+                                            <div class="d-flex justify-content-center">
+                                                <input name="agree_terms" class="form-check-input me-2" type="checkbox"
+                                                       value="true"
+                                                       id="agree_terms" required/>
+                                                <label class="form-check-label" for="agree_terms">
+                                                    I agree <a href="{{ url_for('legal.terms') }}">Terms of service</a>
+                                                    and
+                                                    <a href="{{ url_for('legal.privacy') }}">Privacy policy</a>
+                                                </label>
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Before you can use LCDA, you must read and agree to the terms and
+                                                conditions.
+                                            </div>
                                         </div>
 
                                         <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
@@ -176,4 +206,25 @@
             </div>
         </div>
     </section>
+
+    <script>
+    // check if two passwords match
+        const password = document.getElementById('password');
+        const password_confirm = document.getElementById('password_confirm');
+        const passwordError = document.getElementById('password-error');
+        const form = document.getElementById('register-form');
+
+        function checkPasswordMatch(event) {
+            if (password.value !== password_confirm.value) {
+                passwordError.innerHTML = 'Passwords do not match';
+                form.querySelector('button[type="submit"]').disabled = true;
+            } else {
+                passwordError.innerHTML = '';
+                form.querySelector('button[type="submit"]').disabled = false;
+            }
+        }
+
+        password.addEventListener('input', checkPasswordMatch);
+        password_confirm.addEventListener('input', checkPasswordMatch);
+    </script>
 {% endblock %}
