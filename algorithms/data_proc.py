@@ -371,12 +371,13 @@ def sample_balancing(df, parameters):
     test failed
     """
     # Get the target column name and balancing method from parameters
-    column_name = parameters['column_selected']
+    feature_column = parameters['column_selected']
+    target_column = parameters['target_column']
     balancing_method = parameters['balancing_method']
 
     # Separate the target column and features from the dataframe
-    y = df[column_name]
-    x = df.drop(column_name, axis=1)
+    y = df[target_column]
+    x = df[feature_column]
 
     if balancing_method == 'undersample':
         # Create an instance of RandomUnderSampler and balance the classes

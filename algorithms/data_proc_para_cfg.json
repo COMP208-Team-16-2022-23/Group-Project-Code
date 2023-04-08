@@ -152,12 +152,19 @@
     "parameters": [
       {
         "name": "balancing_method",
-        "type": "radio",
+        "type": "select",
         "options": [
           "undersample",
           "oversample",
           "combined"
         ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "target_column",
+        "description": "Target column",
+        "type": "multi_select"
       }
     ]
   },
