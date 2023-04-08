@@ -26,18 +26,14 @@ def index():
         a = request.form
         body = request.form['new_comment']
         post_id = request.form['post_id']
-
         # Create a new comment
-
         post = {
             "title": None,
             "body": body
         }
-
         post = censor(post)
         body = post["body"]
         error = post["error"]
-
         if error:
             flash(error)
         else:
@@ -164,7 +160,7 @@ def censor(post) -> dict:
                 # do censoring
                 censored_body = profanity.censor(body)
                 if censored_body != body:
-                    censored_body += '\n\n(Some words have been blocked due to the volation of our T&C.)'
+                    censored_body += '\n\n(Some words have been blocked due to the violation of our T&C.)'
                     body = censored_body
             post[key] = body
 
