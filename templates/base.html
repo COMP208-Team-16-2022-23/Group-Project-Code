@@ -20,6 +20,10 @@
     {# make preview image large #}
     <meta name="twitter:image" content="https://lcda-vgnazlwvxa-nw.a.run.app/static/img/preview_image.jpg"/>
 
+    <!--    add css code in static/css/cookie.css-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/cookie.css') }}">
+    <!--    add no_scroll.css-->
+    <link rel="stylesheet"  type="text/css" href="{{ url_for('static', filename='css/no_scroll.css') }}">
 
     <title>{% block title %}{% endblock %} - LCDA</title>
     <!-- Web icon -->
@@ -54,6 +58,12 @@
 </head>
 <body class="min-vh-100 d-flex flex-column m-0">
 <!-- Start your project here-->
+
+<!-- Cookie banner -->
+<div id="cookie-banner">
+  <p>We use cookies to improve your browsing experience. By continuing to use this site, you consent to our use of cookies. <a href="{{ url_for('legal.privacy') }}">Learn more</a></p>
+  <button id="accept-cookies">Accept</button>
+</div>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
@@ -196,6 +206,10 @@
             })
     })()
 </script>
+
+<!--add script at static/js/cookie.js-->
+<script src="{{ url_for('static', filename='js/cookie.js') }}"></script>
+
 </body>
 
 </html>

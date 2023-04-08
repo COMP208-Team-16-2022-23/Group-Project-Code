@@ -1,0 +1,35 @@
+#cookie-banner {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 9999;
+}
+
+#cookie-banner.show {
+    opacity: 1;
+}
+
+#cookie-banner p {
+    margin: 0;
+    padding: 10px;
+}
+
+#cookie-banner a {
+    color: #007bff;
+}
+
+#accept-cookies {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin: 10px;
+}
+
+#accept-cookies:hover {
+    background-color: #0056b3;
+}
