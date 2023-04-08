@@ -5,16 +5,54 @@
 {% endblock %}
 
 {% block content %}
-    <form method="post">
-        <label for="title">Title</label>
-        <input name="title" id="title"
-               value="{{ request.form['title'] or post['title'] }}" required>
-        <label for="body">Body</label>
-        <textarea name="body" id="body">{{ request.form['body'] or post['body'] }}</textarea>
-        <input type="submit" value="Save">
-    </form>
-    <hr>
-    <form action="{{ url_for('forum.delete', id=post['id']) }}" method="post">
-        <input class="danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
-    </form>
+    {% if get_flashed_messages() %}
+        <div class="container-fluid">
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show m-3"
+                     role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                         class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 18 18"
+                         role="img" aria-label="Warning:">
+                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                    </svg>
+                    <div>
+                        {{ message }}
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="container-fluid p-3 flex-grow-1 d-flex flex-column justify-content-center my-auto"
+         style="max-width: 800px">
+        <h1 class="mb-5">Edit "{{ post['title'] }}"</h1>
+        <form class="needs-validation" method="post" novalidate>
+            <div class="form-outline mb-5">
+                <input type="text" id="title" name="title" class="form-control"
+                       value="{{ request.form['title'] or post['title'] }}"
+                       required/>
+                <label class="form-label" for="title">Title</label>
+                <div class="invalid-feedback">Please enter post title.</div>
+            </div>
+            <div class="form-outline mb-5">
+
+                <textarea class="form-control" id="new_comment" name="body" rows="8" data-mdb-showcounter="true"
+                          maxlength="500" required>{{ request.form['body'] or post['body'] }}</textarea>
+                <label class="form-label" for="new_comment">Content</label>
+                <div class="form-helper"></div>
+                <div class="invalid-feedback">Please enter post content.</div>
+            </div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <button class="btn btn-danger" type="submit"
+                        onclick="return confirm('Deleting this post is a permanent action that will also cause all comments on this post to be permanently deleted. Are you sure you want to proceed and delete this post?');"
+                        formaction="{{ url_for('forum.delete', id=post['id']) }}"
+                > Delete
+                </button>
+                <button class="btn btn-primary" type="submit">submit</button>
+            </div>
+        </form>
+
+    </div>
 {% endblock %}

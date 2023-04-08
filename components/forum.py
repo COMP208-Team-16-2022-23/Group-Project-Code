@@ -8,11 +8,11 @@ from werkzeug.exceptions import abort
 from components.auth import login_required
 from database import db_session
 from util.models import Post, Comment, User
-
+import re
 bp = Blueprint('forum', __name__, url_prefix='/forum')
 
 
-@bp.route('/')
+@bp.route('/', methods=('GET', 'POST'))
 def index():
     posts = Post.query.order_by(Post.modified.desc()).all()
     for post in posts:
@@ -20,6 +20,26 @@ def index():
         post.comments = Comment.query.filter_by(post_id=post.id).order_by(Comment.modified.desc()).all()
         for comment in post.comments:
             comment.author = User.query.filter_by(id=comment.author_id).first()
+
+    # get new comment
+    if request.method == 'POST':
+        body = request.form['new_comment']
+        post_id = request.form['post_id']
+        # Create a new comment
+        post = {
+            "title": None,
+            "body": body
+        }
+        post = censor(post)
+        body = post["body"]
+        error = post["error"]
+        if error:
+            flash(error)
+        else:
+            comment = Comment(author_id=g.user.id, post_id=int(post_id), body=body)
+            db_session.add(comment)
+            db_session.commit()
+            return redirect(url_for('forum.index'))
 
     return render_template('forum/index.html', posts=posts)
 
@@ -30,15 +50,19 @@ def create():
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
-        error = None
 
-        if not title:
-            error = 'Title is required'
-
-        if error is not None:
+        # Create a new post
+        post = {
+            "title": title,
+            "body": body
+        }
+        post = censor(post)
+        title = post["title"]
+        body = post["body"]
+        error = post["error"]
+        if error:
             flash(error)
         else:
-            # Create a new post
             post = Post(author_id=g.user.id, title=title, body=body)
             db_session.add(post)
             db_session.commit()
@@ -67,20 +91,26 @@ def update(id):
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
-        error = None
 
-        if not title:
-            error = 'Title is required'
-
-        if error is not None:
+        post = {
+            "title": title,
+            "body": body
+        }
+        post = censor(post)
+        title = post["title"]
+        body = post["body"]
+        error = post["error"]
+        if error:
             flash(error)
-        else:
-            # Update the post
-            post.title = title
-            post.body = body
-            post.modified = datetime.utcnow()
-            db_session.commit()
-            return redirect(url_for('forum.index'))
+            return render_template('forum/update.html', post=get_post(id))
+
+        # Update the post
+        post = get_post(id)
+        post.title = title
+        post.body = body
+        post.modified = datetime.utcnow()
+        db_session.commit()
+        return redirect(url_for('forum.index'))
 
     return render_template('forum/update.html', post=post)
 
@@ -98,3 +128,41 @@ def delete(id):
     db_session.delete(post)
     db_session.commit()
     return redirect(url_for('forum.index'))
+
+
+@bp.route('/<int:id>/comment/<int:comment_id>/delete', methods=('GET', 'POST'))
+@login_required
+def delete_comment(id, comment_id):
+    # Delete the comment
+    comment = Comment.query.filter_by(id=comment_id).first()
+    db_session.delete(comment)
+    db_session.commit()
+    return redirect(url_for('forum.index'))
+
+
+def censor(post) -> dict:
+    # post = {
+    #     "title": title,
+    #     "body": body
+    # }
+
+    error = None
+    for key in post:
+        if post[key] is not None:
+            body = post[key]
+            # Avoid languages other than English
+            pattern = pattern = r'^[\u0020-\u007e]+$'
+            if not re.match(pattern, body):
+                error = 'We encourage communication in English in our forum. Please translate and try again.'
+                body = ''
+            else:
+                from better_profanity import profanity
+                # do censoring
+                censored_body = profanity.censor(body)
+                if censored_body != body:
+                    censored_body += '\n\n(Some words have been blocked due to the violation of our T&C.)'
+                    body = censored_body
+            post[key] = body
+
+    post['error'] = error
+    return post

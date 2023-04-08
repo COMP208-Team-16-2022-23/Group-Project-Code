@@ -34,7 +34,8 @@ def process(file_path, parameters, new_file_path=None):
         'normalisation': normalization,
         'sample_balancing': sample_balancing,
         'data_transform': data_transform,
-        'dimension_reduction': dimension_reduction
+        'dimension_reduction': dimension_reduction,
+        'missing_value_handling': missing_value_handling
     }
 
     # Call the corresponding function
@@ -131,7 +132,6 @@ def IQR(df, processing_method, column_name, parameters=None):
     Q1 = df[column_name].quantile(0.25)
     Q3 = df[column_name].quantile(0.75)
 
-    # 计算IQR (四分位数范围)
     IQR = Q3 - Q1
 
     lower_bound = Q1 - 1.5 * IQR
@@ -173,6 +173,112 @@ def MAD(df, processing_method, column_name, parameters=None):
         df[column_name] = df[column_name].apply(lambda x: mean if abs(x - median) > threshold else x)
     elif processing_method == 'set to median':
         df[column_name] = df[column_name].apply(lambda x: median if abs(x - median) > threshold else x)
+
+    return df
+
+
+def missing_value_handling(df, parameters):
+    """
+        :param df: the pandas dataframe to be processed
+        :param parameters: a dictionary of parameters
+        :return: the processed dataframe
+        """
+
+    # get identification_method and filling_method
+    identification_method = parameters['identification_method']
+    filling_method = parameters['filling_method']
+
+    if identification_method == 'empty':
+        for column_name in parameters['column_selected']:
+            df = value_replace_empty(df, filling_method, column_name=column_name)
+    elif identification_method == 'space':
+        for column_name in parameters['column_selected']:
+            df = value_replace_space(df, filling_method, column_name=column_name)
+    elif identification_method == "'None'":
+        for column_name in parameters['column_selected']:
+            df = value_replace_None(df, filling_method, column_name=column_name)
+    elif identification_method == "No numeric value":
+        for column_name in parameters['column_selected']:
+            df = value_replace_NoNumeric(df, filling_method, column_name=column_name)
+
+
+    return df
+
+
+def value_replace_empty(df, filling_method, column_name):
+
+    df[column_name].replace('', np.nan, inplace=True)
+    column = df[column_name].fillna(0).astype(int)  # repalce NaN to 0
+
+    mean = column.mean()
+    median = column.median()
+    mode = column.mode()
+
+
+    if filling_method == 'mean':
+        df[column_name] = df[column_name].apply(lambda x: mean if pd.isna(x) else x)
+    elif filling_method == 'median':
+        df[column_name] = df[column_name].apply(lambda x: median if pd.isna(x) else x)
+    elif filling_method == 'mode':
+        df[column_name] = df[column_name].apply(lambda x: mode if pd.isna(x) else x)
+
+    return df
+
+
+
+def value_replace_space(df, filling_method, column_name):
+
+    df[column_name] = df[column_name].replace(' ', value=pd.np.nan, regex=True)
+    column = df[column_name].fillna(0).astype(int)  # repalce NaN to 0
+
+    mean = column.mean()
+    median = column.median()
+    mode = column.mode()
+
+    if filling_method == 'mean':
+        df[column_name] = df[column_name].apply(lambda x: mean if pd.isna(x) else x)
+    elif filling_method == 'median':
+        df[column_name] = df[column_name].apply(lambda x: median if pd.isna(x) else x)
+    elif filling_method == 'mode':
+        df[column_name] = df[column_name].apply(lambda x: mode if pd.isna(x) else x)
+
+    return df
+
+
+
+def value_replace_None(df, filling_method, column_name):
+
+    df[column_name].replace("None", np.nan, inplace=True)
+    column = df[column_name].fillna(0).astype(int)  # Replace NaN with 0, and convert to integer
+
+    mean = column.mean()
+    median = column.median()
+    mode = column.mode()
+
+    if filling_method == 'mean':
+        df[column_name] = df[column_name].apply(lambda x: mean if pd.isna(x) else x)
+    elif filling_method == 'median':
+        df[column_name] = df[column_name].apply(lambda x: median if pd.isna(x) else x)
+    elif filling_method == 'mode':
+        df[column_name] = df[column_name].apply(lambda x: mode if pd.isna(x) else x)
+
+    return df
+
+def value_replace_NoNumeric(df, filling_method, column_name):
+
+    df[column_name] = df[column_name].apply(pd.to_numeric, errors='coerce')
+    #column = df[column_name].fillna(0).astype(int)
+
+    mean = df[column_name].mean()
+    median = df[column_name].median()
+    mode = df[column_name].mode()
+
+    if filling_method == 'mean':
+        df[column_name] = df[column_name].apply(lambda x: mean if pd.isna(x) else x)
+    elif filling_method == 'median':
+        df[column_name] = df[column_name].apply(lambda x: median if pd.isna(x) else x)
+    elif filling_method == 'mode':
+        df[column_name] = df[column_name].apply(lambda x: mode if pd.isna(x) else x)
 
     return df
 
@@ -265,12 +371,13 @@ def sample_balancing(df, parameters):
     test failed
     """
     # Get the target column name and balancing method from parameters
-    column_name = parameters['column_selected']
+    feature_column = parameters['column_selected']
+    target_column = parameters['target_column']
     balancing_method = parameters['balancing_method']
 
     # Separate the target column and features from the dataframe
-    y = df[column_name]
-    x = df.drop(column_name, axis=1)
+    y = df[target_column]
+    x = df[feature_column]
 
     if balancing_method == 'undersample':
         # Create an instance of RandomUnderSampler and balance the classes

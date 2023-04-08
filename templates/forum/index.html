@@ -4,13 +4,35 @@
 {% endblock %}
 
 {% block content %}
+
+
     <div class="container-fluid p-3 flex-grow-1">
+        {% if get_flashed_messages() %}
+            {% for message in get_flashed_messages() %}
+                <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show my-3"
+                     role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                         class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 18 18"
+                         role="img" aria-label="Warning:">
+                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                    </svg>
+                    <div>
+                        {{ message }}
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                </div>
+            {% endfor %}
+
+        {% endif %}
         {% if g.user %}
             <div class="fixed-action-btn" id="fixed1">
                 <a class="btn text-white btn-lg btn-floating" style="background-color: #3692f4;"
                    href="{{ url_for('forum.create') }}" role="button">
                     <i class="fas fa-pencil-alt"></i>
                 </a>
+                <ul class="list-unstyled">
+                </ul>
             </div>
         {% endif %}
 
@@ -19,7 +41,7 @@
                 <h5 class="card-header d-flex flex-row justify-content-start align-items-center">
                     <div class="flex-fill pe-3">{{ post['title'] }}</div>
                     <div class="text-muted"><small>
-                        Author: {{ post['author']["username"] }}, Created:
+                        {{ post['author']["username"] }} | Created:
                         <script>
                             var date = new Date('{{ post['created'] }} UTC');
                             document.write(date.toLocaleString());
@@ -36,10 +58,69 @@
                 <div class="card-body">
 
                     <p class="card-text">{{ post['body'] }}</p>
+
                     {% if g.user['id'] == post['author_id'] %}
-                        <a class="card-link" href="{{ url_for('forum.update', id=post['id']) }}">Edit</a>
+                        <div class="d-flex justify-content-end">
+                            <a role="button" class="btn btn-link btn-sm btn-rounded"
+                               data-mdb-ripple-color="dark" href="{{ url_for('forum.update', id=post['id']) }}">Edit</a>
+                        </div>
                     {% endif %}
                 </div>
+                {% if g.user or post['comments'] %}
+                    <div class="card-footer text-muted">
+                        {% if g.user %}
+                            <form class="needs-validation" method="post" novalidate>
+                                <input type="hidden" name="post_id" value="{{ post['id'] }}">
+                                <div class="form-outline mb-5">
+                                    <textarea class="form-control" id="new_comment" name="new_comment" rows="2"
+                                              data-mdb-showcounter="true"
+                                              maxlength="500" required></textarea>
+                                    <label class="form-label" for="new_comment">Comment</label>
+                                    <div class="form-helper"></div>
+                                    <div class="invalid-feedback">Please enter the comment.</div>
+                                </div>
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                    <button class="btn btn-primary" type="submit">submit</button>
+                                </div>
+                            </form>
+                            {% if post['comments'] %}
+                                <hr>
+                            {% endif %}
+                        {% endif %}
+                        {% if post['comments'] %}
+                            <ul class="list-group list-group-light list-group-small">
+                                {% for comment in post['comments'] %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                                        <div class="ms-2 me-auto">
+                                            <div class="fw-bold">{{ comment['author']['username'] }}</div>
+                                            {{ comment['body'] }}
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 mb-1 d-flex justify-content-end">
+                                                <span class="badge badge-primary rounded-pill">
+                                                    <script>
+                                                        var date = new Date('{{ comment['created'] }} UTC');
+                                                        document.write(date.toLocaleString());
+                                                    </script>
+                                                </span>
+                                            </div>
+                                            <div class="col-12 d-flex justify-content-end">
+                                                {% if g.user['id'] == comment['author_id'] %}
+                                                    <a role="button" class="btn btn-link btn-sm btn-rounded text-danger"
+                                                       href="{{ url_for('forum.delete_comment', id=post['id'], comment_id=comment['id']) }}"
+                                                       onclick="return confirm('Deleting a comment is a permanent action. Are you absolutely certain that you want to proceed and delete this comment?');">Delete</a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
             </div>
             {% if not loop.last %}
                 <hr>
