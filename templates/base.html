@@ -22,8 +22,6 @@
 
     <!--    add css code in static/css/cookie.css-->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/cookie.css') }}">
-    <!--    add no_scroll.css-->
-    <link rel="stylesheet"  type="text/css" href="{{ url_for('static', filename='css/no_scroll.css') }}">
 
     <title>{% block title %}{% endblock %} - LCDA</title>
     <!-- Web icon -->
@@ -60,10 +58,10 @@
 <!-- Start your project here-->
 
 <!-- Cookie banner -->
-<div id="cookie-banner">
-  <p>We use cookies to improve your browsing experience. By continuing to use this site, you consent to our use of cookies. <a href="{{ url_for('legal.privacy') }}">Learn more</a></p>
-  <button id="accept-cookies">Accept</button>
-</div>
+    <div id="cookie-banner" class="cookie-banner">
+      <p>We use cookies to improve your browsing experience. By clicking "I accept", you agree to our <a href="{{ url_for('legal.about') }}">privacy policy</a>.</p>
+      <button id="close-button">I accept</button>
+    </div>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">

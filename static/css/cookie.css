@@ -1,35 +1,48 @@
-#cookie-banner {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background-color: #fff;
+/* Cookie banner styling */
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #222;
+  color: #fff;
+  padding: 10px;
+  box-sizing: border-box;
+  display: none;
+}
+
+.cookie-banner.fade-in {
+  animation: fadeIn 1s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
     opacity: 0;
-    transition: opacity 0.5s;
-    z-index: 9999;
-}
-
-#cookie-banner.show {
+  }
+  to {
     opacity: 1;
+  }
 }
 
-#cookie-banner p {
-    margin: 0;
-    padding: 10px;
+/* Button styling */
+.cookie-banner button {
+  background-color: #fff;
+  color: #222;
+  border: none;
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-#cookie-banner a {
-    color: #007bff;
+.cookie-banner button:hover {
+  background-color: #ddd;
 }
 
-#accept-cookies {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin: 10px;
-}
-
-#accept-cookies:hover {
-    background-color: #0056b3;
+/* Dim and block interaction with other parts of the website */
+/* Disable scrolling and dim background */
+.no-scroll {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
 }
