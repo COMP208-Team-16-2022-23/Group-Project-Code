@@ -20,8 +20,6 @@
     {# make preview image large #}
     <meta name="twitter:image" content="https://lcda-vgnazlwvxa-nw.a.run.app/static/img/preview_image.jpg"/>
 
-    <!--    add css code in static/css/cookie.css-->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/cookie.css') }}">
 
     <title>{% block title %}{% endblock %} - LCDA</title>
     <!-- Web icon -->
@@ -56,13 +54,6 @@
 </head>
 <body class="min-vh-100 d-flex flex-column m-0">
 <!-- Start your project here-->
-
-<!-- Cookie banner -->
-<div id="cookie-banner" class="cookie-banner">
-    <p>We use cookies to improve your browsing experience. By clicking "I accept", you agree to our <a
-            href="{{ url_for('legal.about') }}">privacy policy</a>.</p>
-    <button id="close-button">I accept</button>
-</div>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
@@ -205,10 +196,6 @@
             })
     })()
 </script>
-
-<!--add script at static/js/cookie.js-->
-<script src="{{ url_for('static', filename='js/cookie.js') }}"></script>
-
 </body>
 
 </html>
