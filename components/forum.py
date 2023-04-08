@@ -8,7 +8,7 @@ from werkzeug.exceptions import abort
 from components.auth import login_required
 from database import db_session
 from util.models import Post, Comment, User
-
+import re
 bp = Blueprint('forum', __name__, url_prefix='/forum')
 
 
@@ -151,9 +151,10 @@ def censor(post) -> dict:
     for key in post:
         if post[key] is not None:
             body = post[key]
-            # Avoid Chinese characters
-            if any(u'\u4e00' <= c <= u'\u9fff' for c in body):
-                error = 'Invalid characters detected. Please remove them and try again.'
+            # Avoid languages other than English
+            pattern = pattern = r'^[\u0020-\u007e]+$'
+            if not re.match(pattern, body):
+                error = 'We encourage communication in English in our forum. Please translate and try again.'
                 body = ''
             else:
                 from better_profanity import profanity
