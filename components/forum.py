@@ -28,10 +28,23 @@ def index():
         post_id = request.form['post_id']
 
         # Create a new comment
-        comment = Comment(author_id=g.user.id, post_id=int(post_id), body=body)
-        db_session.add(comment)
-        db_session.commit()
-        return redirect(url_for('forum.index'))
+
+        post = {
+            "title": None,
+            "body": body
+        }
+
+        post = censor(post)
+        body = post["body"]
+        error = post["error"]
+
+        if error:
+            flash(error)
+        else:
+            comment = Comment(author_id=g.user.id, post_id=int(post_id), body=body)
+            db_session.add(comment)
+            db_session.commit()
+            return redirect(url_for('forum.index'))
 
     return render_template('forum/index.html', posts=posts)
 
@@ -44,10 +57,21 @@ def create():
         body = request.form['body']
 
         # Create a new post
-        post = Post(author_id=g.user.id, title=title, body=body)
-        db_session.add(post)
-        db_session.commit()
-        return redirect(url_for('forum.index'))
+        post = {
+            "title": title,
+            "body": body
+        }
+        post = censor(post)
+        title = post["title"]
+        body = post["body"]
+        error = post["error"]
+        if error:
+            flash(error)
+        else:
+            post = Post(author_id=g.user.id, title=title, body=body)
+            db_session.add(post)
+            db_session.commit()
+            return redirect(url_for('forum.index'))
 
     return render_template('forum/create.html')
 
@@ -73,7 +97,20 @@ def update(id):
         title = request.form['title']
         body = request.form['body']
 
+        post = {
+            "title": title,
+            "body": body
+        }
+        post = censor(post)
+        title = post["title"]
+        body = post["body"]
+        error = post["error"]
+        if error:
+            flash(error)
+            return render_template('forum/update.html', post=get_post(id))
+
         # Update the post
+        post = get_post(id)
         post.title = title
         post.body = body
         post.modified = datetime.utcnow()
@@ -106,3 +143,30 @@ def delete_comment(id, comment_id):
     db_session.delete(comment)
     db_session.commit()
     return redirect(url_for('forum.index'))
+
+
+def censor(post) -> dict:
+    # post = {
+    #     "title": title,
+    #     "body": body
+    # }
+
+    error = None
+    for key in post:
+        if post[key] is not None:
+            body = post[key]
+            # Avoid Chinese characters
+            if any(u'\u4e00' <= c <= u'\u9fff' for c in body):
+                error = 'Invalid characters detected. Please remove them and try again.'
+                body = ''
+            else:
+                from better_profanity import profanity
+                # do censoring
+                censored_body = profanity.censor(body)
+                if censored_body != body:
+                    censored_body += '\n\n(Some words have been blocked due to the volation of our T&C.)'
+                    body = censored_body
+            post[key] = body
+
+    post['error'] = error
+    return post
