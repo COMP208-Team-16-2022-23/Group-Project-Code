@@ -4,10 +4,12 @@
 {% endblock %}
 
 {% block content %}
-    {% if get_flashed_messages() %}
-        <div class="container-fluid">
+
+
+    <div class="container-fluid p-3 flex-grow-1">
+        {% if get_flashed_messages() %}
             {% for message in get_flashed_messages() %}
-                <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show m-3"
+                <div class="alert alert-danger d-flex align-items-center alert-dismissible fade show my-3"
                      role="alert">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                          class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 18 18"
@@ -21,10 +23,8 @@
                             aria-label="Close"></button>
                 </div>
             {% endfor %}
-        </div>
-    {% endif %}
 
-    <div class="container-fluid p-3 flex-grow-1">
+        {% endif %}
         {% if g.user %}
             <div class="fixed-action-btn" id="fixed1">
                 <a class="btn text-white btn-lg btn-floating" style="background-color: #3692f4;"
@@ -106,7 +106,7 @@
                                             </div>
                                             <div class="col-12 d-flex justify-content-end">
                                                 {% if g.user['id'] == comment['author_id'] %}
-                                                    <a role="button" class="btn btn-link btn-sm btn-rounded"
+                                                    <a role="button" class="btn btn-link btn-sm btn-rounded text-danger"
                                                        href="{{ url_for('forum.delete_comment', id=post['id'], comment_id=comment['id']) }}"
                                                        onclick="return confirm('Deleting a comment is a permanent action. Are you absolutely certain that you want to proceed and delete this comment?');">Delete</a>
                                                 {% endif %}

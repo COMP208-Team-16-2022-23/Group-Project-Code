@@ -23,7 +23,6 @@ def index():
 
     # get new comment
     if request.method == 'POST':
-        a = request.form
         body = request.form['new_comment']
         post_id = request.form['post_id']
         # Create a new comment
