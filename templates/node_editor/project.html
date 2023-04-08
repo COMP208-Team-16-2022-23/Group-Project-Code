@@ -11,25 +11,28 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/baklavajs/dist/index.js"></script>
-<!--    <script src="https://unpkg.com/baklavajs"></script>-->
     <script src="/static/js/DataSourceNode.js"></script>
     <script src="/static/js/DataProcessingNode.js"></script>
 
     <script>
-        const datasets = {{datasets|safe}};
+        const datasets = {{ my_data|safe }};
+        const processing = {{ processing_cfg|safe }};
         
         
         const plugin = BaklavaJS.createBaklava(document.getElementById("editor"));
         const editor = plugin.editor;
         const viewPlugin = new BaklavaJS.PluginRendererVue.ViewPlugin();
+        const engine = new BaklavaJS.PluginEngine.Engine(true);
+        const interface = new BaklavaJS.PluginInterfaceTypes.InterfaceTypePlugin();
         
         editor.use(viewPlugin);
+        editor.use(engine);
+        editor.use(interface)
         editor.use(new BaklavaJS.PluginOptionsVue.OptionPlugin());
-        viewPlugin.registerOption("MyOption", BaklavaJS.Core.NodeOptions);
         
         editor.registerNodeType("Data", DataSourceNode);
         editor.registerNodeType("DataProcessing", DataProcessingNode);
-        editor.registerNodeType("Math", MathNode);
+        editor.registerNodeType("DisplayTest", TestNode);
         
     </script>
 

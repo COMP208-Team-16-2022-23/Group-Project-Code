@@ -2,20 +2,22 @@ class DataProcessingNode extends BaklavaJS.Core.Node {
 
     type = "data_processing";
     name = "DataProcessing";
-    // fetch('/algorithms/data_proc_para_cfg.json')
-    //     .then(response=>response.json())
     constructor() {
         super();
+        this.algo_names = [];
+        this.file_paths = [];
+        for (const algo of processing) {
+            this.algo_names.push(algo.name);
+            // this.file_paths.push(dataset.file_path);
+        }
         this.addInputInterface("Input Data");
         this.addOutputInterface("Result");
-        this.addOption("Operation", "SelectOption", {
-            selected: "",
-            items: ["Outlier Handling",
-                    "Tail shrinkage and truncation processing"
-            ]});
+        this.addOption("Processing Method", "SelectOption", this.algo_names[0], undefined,{
+            items: this.algo_names
+        });
     }
 
-    process() {
+    calculate() {
 
     }
 
