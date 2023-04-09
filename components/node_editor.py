@@ -3,13 +3,14 @@
 # @File: node_editor.PY
 """Node editor (Challenging). Handle visualizable process operation"""
 
-from flask import Blueprint, request, render_template, session, redirect, url_for
+from flask import Blueprint, request, render_template, g, redirect, url_for
 import json
 
 import pandas
 
 import config
 from util.storage_control import list_blobs, upload_blob, download_to_memory
+from util.file_util import add_suffix
 from algorithms import data_proc
 
 bp = Blueprint('node_editor', __name__, url_prefix='/node_editor')
@@ -36,13 +37,15 @@ def index():
 @bp.route("/processing", methods=['GET', 'POST'])
 def processing():
     result_path = ''
-    input_path = 'public/CW_Data.csv'
+    input_path = ''
     if request.method == 'POST':
         payload = request.get_json()
         column_selected = payload['column_selected']
         algorithm_config = payload
         algorithm_config["column_selected"] = column_selected.split(',')
+        input_path = algorithm_config.pop('file_path')
         result_path = algorithm_config.pop('result_path')
+        result_path = add_suffix(result_path, '', g.user.username, 'node_editor')
         print('paras:', algorithm_config)
 
         result_path = data_proc.process(input_path, algorithm_config, result_path)
@@ -55,4 +58,4 @@ def processing():
     # refresh the page
     # return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
 
-    return {'204': 'No Content'}
+    return json.dumps({'success':True, 'payload': result_path}), 200, {'ContentType': 'application/json'}

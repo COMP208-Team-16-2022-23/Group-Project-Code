@@ -41,8 +41,8 @@ class ColumnSelectionNode extends BaklavaJS.Core.Node {
             this.data_columns.push(dataset.columns);
         }
         this.addInputInterface("Dataset");
-        this.addOption("Columns", "TextOption", "Connect to show");
-        this.addOption("Selected Columns", "InputOption", "None");
+        this.addOption("Columns", "InputOption", "Connect to show");
+        this.addOption("Selected Columns", "InputOption");
         this.addOutputInterface("Output");
     }
 
@@ -71,7 +71,6 @@ class TestNode extends BaklavaJS.Core.Node {
 
     calculate() {
         let text = this.getInterface("Input").value;
-        console.log(text);
         this.setOptionValue("Text", text);
     }
 

@@ -5,13 +5,14 @@ class NormalizationNode extends BaklavaJS.Core.Node {
     constructor() {
         super();
         this.addInputInterface("Input Dataset");
-        this.addInputInterface("Selected Columns")
+        this.addInputInterface("Selected Columns");
+        this.addOption("New Filename", "InputOption");
         this.addOption("Normalization Method", "SelectOption", "Normalization Method", undefined,{
             items: ["Min-Max",
                     "Z-Score"]
         });
         this.addOption("Replace original data", "CheckboxOption");
-        this.addOutputInterface("Result");
+        this.addOutputInterface("New File");
     }
 
     calculate() {
@@ -23,20 +24,25 @@ class NormalizationNode extends BaklavaJS.Core.Node {
             "column_selected": this.getInterface("Selected Columns").value,
             "Method": this.getOptionValue("Normalization Method"),
             "Output option": "",
-            "result_path": "public/test.csv"
+            "result_path": this.getOptionValue("New Filename") + '.csv'
         };
         if (output_option == true)
             algorithm_config["Output option"] = "on";
-
+        var res;
         //call url_for('node_editor.processing')
         $.ajax({
+
             type: "POST",
             url: process_url,
             data: JSON.stringify(algorithm_config),
             contentType: "application/json",
-            dataType: 'json'
+            dataType: 'json',
+            success: function(response){
+                res = response.payload;
+                console.log(res);
+                this.getInterface("New File").value=res;
+            }.bind(this)
         });
-
         // const form = document.createElement('form');
         // form.method = 'post';
         // form.id = 'norm';
