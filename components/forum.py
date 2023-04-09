@@ -162,12 +162,12 @@ def censor(post) -> dict:
                     # do censoring
                     censored_body = profanity.censor(body)
                     if censored_body != body:
-                        censored_body += '\n\n(Some words have been blocked due to the violation of our T&C)'
+                        censored_body += '\n\n(Some words have been blocked due to the violation of our T&C.)'
                         body = censored_body
 
-                post[key] = body.replace('\r', '').replace('\n', '<br>')  # replace newlines with <br> tags
-    except Exception as e:
-        error = e
+                post[key] = body.replace('\r', '')
+    except:
+        error = 'Our forums promote meaningful communication in English. Please feel free to try again.'
 
     post['error'] = error
     return post
