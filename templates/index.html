@@ -67,18 +67,23 @@
             }
         }
 
-
+        /* Color of the links BEFORE scroll */
         .navbar-before-scroll .nav-link,
         .navbar-before-scroll .navbar-toggler,
         .navbar-before-scroll .username {
-            color: #fff;
+            color: #191919;
+        }
+
+        /* Color of the navbar BEFORE scroll */
+        .navbar-before-scroll {
+            background-color: #fff;
         }
 
         /* Color of the links AFTER scroll */
         .navbar-after-scroll .nav-link,
         .navbar-after-scroll .navbar-toggler,
         .navbar-after-scroll .username {
-            color: #4f4f4f;
+            color: #191919;
         }
 
         /* Color of the navbar AFTER scroll */
@@ -88,12 +93,12 @@
 
         /* Transition after scrolling */
         .navbar-after-scroll {
-            transition: background 0.5s ease-in-out, padding 0.5s ease-in-out;
+            transition: background 0.3s ease-in-out, padding 0.3s ease-in-out;
         }
 
         /* Transition to the initial state */
         .navbar-before-scroll {
-            transition: background 0.5s ease-in-out, padding 0.5s ease-in-out;
+            transition: background 0.3s ease-in-out, padding 0.3s ease-in-out;
         }
 
         /* An optional height of the navbar AFTER scroll */
@@ -110,7 +115,7 @@
 
             .nav-link,
             .navbar-toggler {
-                color: #4f4f4f !important;
+                color: #191919 !important;
             }
         }
     </style>
@@ -213,14 +218,14 @@
                 background: linear-gradient(
                 45deg,
                 {# change the color here. current color: https://uigradients.com/#Anamnisar #}
-                rgba(252,0,255,0.7), {# 0.7 is transparency #}
+                rgba(252,0,255,0), {# 0 is transparency #}
                 rgb(0,219,222) 100%
                 );
                 ">
             <div class="container d-flex align-items-center justify-content-center text-center h-100">
                 <div class="text-white">
 {#                    <h1 class="mb-3"><span>L</span><span>C</span><span>D</span><span>A</span></h1>#}
-                <h1 class="mb-3">Low-Code Data Analysis</h1>
+                <h1 class="mb-3" style="font-family: Georgia, serif;">Low-Code Data Analysis</h1>
                     <h5 class="mb-4">A simplified approach to data analysis with less coding required.</h5>
                     {% if not g.user %}
                         <a
