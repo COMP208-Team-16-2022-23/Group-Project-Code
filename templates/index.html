@@ -1,68 +1,364 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <meta name="description"
+          content="LCDA is a new approach to data analysis that aims to simplify the process of data analysis by reducing the amount of coding required.">
+    <meta property="og:url" content="https://lcda-vgnazlwvxa-nw.a.run.app/">
+    <meta property="og:title" content="LCDA - Low-Code Data Analysis Platform">
+    <meta property="og:site_name" content="LCDA">
+    <meta property="og:description"
+          content="LCDA is a new approach to data analysis that aims to simplify the process of data analysis by reducing the amount of coding required.">
+    <meta property="og:type">
+    <meta property="og:image" content="https://lcda-vgnazlwvxa-nw.a.run.app/static/img/preview_image.jpg">
+    <meta property="og:image:width" content="1281">
+    <meta property="og:image:height" content="854">
+    {# The preview image that you specify in the og:image meta tag should be at least 1200 pixels wide and 630 pixels tall #}
+    <meta name="twitter:card" content="summary_large_image"/>
+    {# make preview image large #}
+    <meta name="twitter:image" content="https://lcda-vgnazlwvxa-nw.a.run.app/static/img/preview_image.jpg"/>
 
 
-{% block header %}
-    {% block title %}Dashboard{% endblock %}
-{% endblock %}
+    <title>Wellcome - LCDA</title>
+    <!-- Web icon -->
+    <link rel="icon" href="/static/img/LCDA.ico" type="image/x-icon"/>
+    <!-- Font Awesome -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+            {#            href="../static/css/Roboto.fonts.css"#}
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+            rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css"
+            rel="stylesheet"
+    />
 
-{% block content %}
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
 
-    <div class="container mt-3">
-        <h1 class="mb-3">Low-Code Data Analysis Platform</h1>
-        <p>Test website for <a href="{{ url_for('legal.about') }}"><b>2022/23-COMP208-Team16</b></a></p>
+    <link rel="stylesheet" href="/static/css/LCDA.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+
+</head>
+
+<body>
+<!--Main Navigation-->
+<header>
+    <style>
+        /* Height for devices larger than 576px */
+        @media (min-width: 992px) {
+            #intro {
+                margin-top: 0px;
+            }
+        }
 
 
-        <div class="note note-primary mb-3">
-            <strong>Kind tips:</strong> Thank you for visiting our website! Please note that our website is currently
-            undergoing development, and some content may be subject to change.
-            Additionally, to ensure the best user experience, we may periodically delete user data.
-            We recommend that you regularly back up any important information to avoid any potential data loss.
-            We apologize for any inconvenience.
-            Thank you for your understanding and support as we continue to improve our website.
+        .navbar-before-scroll .nav-link,
+        .navbar-before-scroll .navbar-toggler,
+        .navbar-before-scroll .username {
+            color: #fff;
+        }
+
+        /* Color of the links AFTER scroll */
+        .navbar-after-scroll .nav-link,
+        .navbar-after-scroll .navbar-toggler,
+        .navbar-after-scroll .username {
+            color: #4f4f4f;
+        }
+
+        /* Color of the navbar AFTER scroll */
+        .navbar-after-scroll {
+            background-color: #fff;
+        }
+
+        /* Transition after scrolling */
+        .navbar-after-scroll {
+            transition: background 0.5s ease-in-out, padding 0.5s ease-in-out;
+        }
+
+        /* Transition to the initial state */
+        .navbar-before-scroll {
+            transition: background 0.5s ease-in-out, padding 0.5s ease-in-out;
+        }
+
+        /* An optional height of the navbar AFTER scroll */
+        .navbar.navbar-before-scroll.navbar-after-scroll {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        /* Navbar on mobile */
+        @media (max-width: 991.98px) {
+            #main-navbar {
+                background-color: #fff;
+            }
+
+            .nav-link,
+            .navbar-toggler {
+                color: #4f4f4f !important;
+            }
+        }
+    </style>
+
+    <!-- Navbar -->
+    <nav id="main-navbar" class="navbar navbar-expand-lg navbar-dark fixed-top navbar-before-scroll shadow-0"
+         style="z-index: 2000;">
+        <div class="container-fluid">
+
+            <!-- Toggle button -->
+            <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-mdb-toggle="collapse"
+                    data-mdb-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
+            >
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Collapsible wrapper -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- Navbar brand -->
+                <a class="navbar-brand mb-0 h1" href="{{ url_for('index') }}"
+                   style="font-family: Georgia, serif; color: #183F60;">
+                    <img src="{{ url_for('static', filename='img/LCDA.png') }}" alt="LCDA Logo" height="25">
+                    LCDA
+                </a>
+
+                <ul class="navbar-nav me-auto mb-0 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('my_data.my_data') }}">My Data</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('data_processing.index') }}">Data
+                            Processing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('data_analysis.index') }}">Data Analysis</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('node_editor.index') }}">Node Editor</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('forum.index') }}">Forum</a>
+                    </li>
+                </ul>
+
+
+                <!-- Right elements -->
+
+                <!-- Avatar -->
+                <div class="d-flex align-items-center ms-auto">
+                    {% if g.user %}
+                        <div class="dropdown">
+                            <a
+                                    class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                                    href="#"
+                                    id="navbarDropdownMenuAvatar"
+                                    role="button"
+                                    data-mdb-toggle="dropdown"
+                                    aria-expanded="false"
+                            >
+                                <img
+                                        src="/static/img/LCDA.ico"
+                                        class="rounded-circle"
+                                        height="25"
+                                        alt="LCDA Logo"
+                                        loading="lazy"
+                                />
+                                <div class="d-none d-md-block ms-2 username">
+                                    <span>{{ g.user['username'] }}</span>
+                                </div>
+                            </a>
+
+                            <ul
+                                    class="dropdown-menu dropdown-menu-end"
+                                    aria-labelledby="navbarDropdownMenuAvatar"
+                            >
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar -->
+
+    <!-- Background image -->
+    <div id="intro" class="bg-image vh-100 shadow-1-strong">
+        <video style="min-width: 100%; min-height: 100%;" playsinline autoplay muted loop>
+            <source class="h-100" src="https://mdbootstrap.com/img/video/Lines.mp4" type="video/mp4"/>
+        </video>
+        <div class="mask" style="
+                background: linear-gradient(
+                45deg,
+                {# change the color here. current color: https://uigradients.com/#Anamnisar #}
+                rgb(151,150,240, 0.7), {# 0.7 is transparency #}
+                rgb(251,199,212, 0.7) 100%
+                );
+                ">
+            <div class="container d-flex align-items-center justify-content-center text-center h-100">
+                <div class="text-white">
+                    <h1 class="mb-3"><span>L</span><span>C</span><span>D</span><span>A</span></h1>
+                    <h5 class="mb-4">A simplified approach to data analysis with less coding required.</h5>
+                    {% if not g.user %}
+                        <a
+                                class="btn btn-outline-light btn-lg m-2"
+                                href="{{ url_for('auth.register') }}"
+                                role="button"
+                                rel="nofollow"
+                                target="_blank"
+                        >Sign Up</a
+                        >
+                        <a
+                                class="btn btn-outline-light btn-lg m-2"
+                                href="{{ url_for('auth.login') }}"
+                                target="_blank"
+                                role="button"
+                        >Login</a
+                        >
+                    {% else %}
+                        <p>Good <span id="timeNow"></span>, {{ g.user.username }}!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Background image -->
+</header>
+<!--Main Navigation-->
+
+<!--Main layout-->
+<main class="mt-5">
+    <div class="container">
+        {#        <h1 class="mb-3">Low-Code Data Analysis Platform</h1>#}
+
+
+        <div class="note note-primary mb-5">
+            <strong>Kind tips:</strong> Our website is being developed and some content may change. We may delete user
+            data for a better user experience, so back up important information regularly. Sorry for any inconvenience
+            and thanks for your understanding.
         </div>
 
-        {% if g.user %}
-            <p>Good <span id="timeNow"></span>, {{ g.user.username }}!</p>
-        {% else %}
-            <p>Nice to meet you!</p>
-        {% endif %}
-
+        <h5 class="mb-4">What is LCDA?</h5>
         <p>
-            Welcome to LCDA.
-            LCDA is a new approach to data analysis that aims to simplify the process of data analysis by reducing the amount of coding required.
+            LCDA is a new approach to data analysis that aims to simplify the process of data analysis by reducing the
+            amount of coding required.
             With LCDA, users can analyze large datasets quickly and easily without having to write complex code.
-            The platform provides a user-friendly interface that enables users to drag and drop data into their analyses and visualize results.
+            The platform provides a user-friendly interface that enables users to drag and drop data into their analyses
+            and visualize results.
             Whether you are a data scientist, business analyst, or simply looking to gain insights from your data, LCDA
             can help you achieve your goals faster and more efficiently than ever before.
         </p>
 
-<!--        <p>Know more about our team? <br><a href="{{ url_for('legal.about') }}"><b>About us</b></a></p>-->
+        <!--        <p>Know more about our team? <br><a href="{{ url_for('legal.about') }}"><b>About us</b></a></p>-->
 
         <!-- set the link to sign up page-->
-        <p>Don't have an account? <br><a href='/auth/register'><b>Sign up here</b></a></p>
+        <p>Don't have an account? <br><a href='{{ url_for('auth.register') }}'><b>Sign up here</b></a></p>
         <!-- set the link to sign in page-->
-        <p>Already have an account? <br><a href='/auth/login'><b>Sign in here</b></a></p>
+        <p>Already have an account? <br><a href='{{ url_for('auth.login') }}'><b>Sign in here</b></a></p>
         <!--forget password-->
-        <p>Forgot your password? <br><a href='/auth/forgot_password'><b>Reset password here</b></a></p>
+        <p>Forgot your password? <br><a href='{{ url_for('auth.forgot_password') }}'><b>Reset password here</b></a></p>
+
+        <p>Website made by <a href="{{ url_for('legal.about') }}"><b>2022/23-COMP208-Team16</b></a></p>
+
     </div>
+</main>
+<!--Main layout-->
 
 
-    <script>
-        const elem = document.getElementById("timeNow");
-        const now = new Date();
-        if (now.getHours() < 6) {
-            elem.innerHTML = "night";
+<script>
+    const elem = document.getElementById("timeNow");
+    const now = new Date();
+    if (now.getHours() < 6) {
+        elem.innerHTML = "night";
 
-        } else if (now.getHours() < 12) {
-            elem.innerHTML = "morning";
+    } else if (now.getHours() < 12) {
+        elem.innerHTML = "morning";
 
-        } else if (now.getHours() < 18) {
-            elem.innerHTML = "afternoon";
+    } else if (now.getHours() < 18) {
+        elem.innerHTML = "afternoon";
+
+    } else {
+        elem.innerHTML = "evening";
+    }
+</script>
+
+<!-- Footer -->
+<footer class="text-center text-lg-start bg-light text-muted">
+    <!-- Copyright -->
+    <div class="text-center p-2" style="background-color: rgba(0, 0, 0, 0.02);">
+        &copy; 2023<a href="{{ url_for('legal.about') }}"> LCDA Team</a> |
+        <a href="{{ url_for('legal.terms') }}">Terms &amp; Conditions</a> |
+        <a href="{{ url_for('legal.privacy') }}">Privacy</a>
+    </div>
+    <!-- Copyright -->
+</footer>
+<!-- Footer -->
+
+<!-- End your project here-->
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function () {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
+<!-- Custom scripts -->
+<script type="text/javascript">
+
+    const navbar = document.getElementById("main-navbar")
+    window.addEventListener('scroll', function () {
+        if (window.pageYOffset > 0) {
+            navbar.classList.add("navbar-after-scroll")
+            navbar.classList.remove("shadow-0")
 
         } else {
-            elem.innerHTML = "evening";
+            navbar.classList.remove("navbar-after-scroll")
+            navbar.classList.add("shadow-0")
         }
-    </script>
+    })
+</script>
+</body>
 
-
-{% endblock %}
+</html>
