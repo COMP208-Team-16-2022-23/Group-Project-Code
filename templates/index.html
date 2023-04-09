@@ -260,27 +260,28 @@
             and thanks for your understanding.
         </div>
 
-        <h5 class="mb-4">What is LCDA?</h5>
+        <h2 class="mb-4">What is LCDA?</h2>
         <p>
-            LCDA is a new approach to data analysis that aims to simplify the process of data analysis by reducing the
-            amount of coding required.
-            With LCDA, users can analyze large datasets quickly and easily without having to write complex code.
-            The platform provides a user-friendly interface that enables users to drag and drop data into their analyses
-            and visualize results.
-            Whether you are a data scientist, business analyst, or simply looking to gain insights from your data, LCDA
-            can help you achieve your goals faster and more efficiently than ever before.
+            LCDA stands for Low-Code Data Analysis, a revolutionary approach to simplifying data analysis by minimizing
+            the need for coding. With LCDA, you can quickly and easily analyze large datasets without writing complex
+            code. The platform features a user-friendly interface for dragging and dropping data into analyses and
+            visualizing results. LCDA is perfect for data scientists, business analysts, and anyone looking to gain
+            insights from their data more efficiently.
         </p>
 
         <!--        <p>Know more about our team? <br><a href="{{ url_for('legal.about') }}"><b>About us</b></a></p>-->
 
         <!-- set the link to sign up page-->
-        <p>Don't have an account? <br><a href='{{ url_for('auth.register') }}'><b>Sign up here</b></a></p>
+        <h6>Don't have an account?</h6>
+        <p><a href='{{ url_for('auth.register') }}'>Sign up here</a></p>
         <!-- set the link to sign in page-->
-        <p>Already have an account? <br><a href='{{ url_for('auth.login') }}'><b>Sign in here</b></a></p>
+        <h6>Already have an account?</h6>
+        <p><a href='{{ url_for('auth.login') }}'>Sign in here</a></p>
         <!--forget password-->
-        <p>Forgot your password? <br><a href='{{ url_for('auth.forgot_password') }}'><b>Reset password here</b></a></p>
+        <h6>Forgot your password?</h6>
+        <p><a href='{{ url_for('auth.forgot_password') }}'>Reset password here</a></p>
 
-        <p>Website made by <a href="{{ url_for('legal.about') }}"><b>2022/23-COMP208-Team16</b></a></p>
+        <p>Website made by <a href="{{ url_for('legal.about') }}">2022/23-COMP208-Team16</a></p>
 
     </div>
 </main>
