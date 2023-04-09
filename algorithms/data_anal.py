@@ -100,10 +100,13 @@ def normality_test(df, parameters):
     ks_pvalue = ks_test.pvalue
     ks_result = '{}({})'.format(ks_statistic, ks_pvalue)
 
+    result_content.append(make_result_section(section_name="Detailed conclusions",
+                                              content_type="text",
+                                              content= ''))
 
 
     evaluation_table = [variable_name, sample_size, median, mean, std, skewness, kurtosis, shapiro_result, ks_result]
-    result_content.append(make_result_section(section_name="Evaluation Results",
+    result_content.append(make_result_section(section_name="Output 1",
                                               content_type="table",
                                               content={
                                                   "data": [
@@ -122,6 +125,14 @@ def normality_test(df, parameters):
                                                               ],
                                                   "index": ["data"]
                                               }))
+
+    result_content.append(make_result_section(section_name="Chart description:",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "The above table shows the results of Q1 descriptive statistics and normality test, including median, mean, etc., which are used to test the normality of the data.",
+                                                  "Usually there are two normal distribution test methods, one is the Shapiro-Wilk test, which is suitable for small sample data (sample size ≤ 5000); the other is the Kolmogorov–Smirnov test, which is suitable for large sample data (sample size >5000).",
+                                                  "If it is significant (P<0.05), it means that the null hypothesis is rejected (the data conforms to the normal distribution), and the data does not satisfy the normal distribution; otherwise, it means that the data conforms to the normal distribution."
+                                              ]))
 
     return result_content
 
