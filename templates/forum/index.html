@@ -37,16 +37,16 @@
         {% for post in posts %}
             <div class="card border border-secondary shadow-0">
                 <h5 class="card-header d-flex flex-row justify-content-start align-items-center">
-                    <div class="flex-fill pe-3">{{ post['title']|safe }}</div>
+                    <div class="flex-fill pe-3">{{ post['title']|escape  }}</div>
                     <div class="text-muted"><small>
-                        {{ post['author']["username"]|safe }} | Created:
+                        {{ post['author']["username"]|escape  }} | Created:
                         <script>
-                            var date = new Date('{{ post['created']|safe }} UTC');
+                            var date = new Date('{{ post['created']|escape  }} UTC');
                             document.write(date.toLocaleString());
                         </script>
                         , Modified:
                         <script>
-                            var date = new Date('{{ post['modified']|safe }} UTC');
+                            var date = new Date('{{ post['modified']|escape  }} UTC');
                             document.write(date.toLocaleString());
                         </script>
                     </small>
@@ -55,7 +55,7 @@
                 </h5>
                 <div class="card-body">
 
-                    <p class="card-text">{{ post['body']|safe }}</p>
+                    <p class="card-text">{{ post['body']|escape  }}</p>
 
                     {% if g.user['id'] == post['author_id'] %}
                         <div class="d-flex justify-content-end">
@@ -90,14 +90,14 @@
                                 {% for comment in post['comments'] %}
                                     <li class="list-group-item d-flex justify-content-between align-items-start">
                                         <div class="ms-2 me-auto">
-                                            <div class="fw-bold">{{ comment['author']['username']|safe }}</div>
-                                            {{ comment['body']|safe }}
+                                            <div class="fw-bold">{{ comment['author']['username']|escape  }}</div>
+                                            {{ comment['body']|escape  }}
                                         </div>
                                         <div class="row">
                                             <div class="col-12 mb-1 d-flex justify-content-end">
                                                 <span class="badge badge-primary rounded-pill">
                                                     <script>
-                                                        var date = new Date('{{ comment['created']|safe }} UTC');
+                                                        var date = new Date('{{ comment['created']|escape  }} UTC');
                                                         document.write(date.toLocaleString());
                                                     </script>
                                                 </span>
