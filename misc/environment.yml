@@ -16,3 +16,4 @@ dependencies:
   - seaborn
   - conda-forge::imbalanced-learn
   - xlrd
+  - conda-forge::langdetect

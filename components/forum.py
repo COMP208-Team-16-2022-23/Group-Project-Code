@@ -8,7 +8,9 @@ from werkzeug.exceptions import abort
 from components.auth import login_required
 from database import db_session
 from util.models import Post, Comment, User
-import re
+from langdetect import detect
+from better_profanity import profanity
+
 bp = Blueprint('forum', __name__, url_prefix='/forum')
 
 
@@ -150,19 +152,19 @@ def censor(post) -> dict:
     for key in post:
         if post[key] is not None:
             body = post[key]
-            # Avoid languages other than English
-            pattern = pattern = r'^[\u0020-\u007e]+$'
-            if not re.match(pattern, body):
-                error = 'We encourage communication in English in our forum. Please translate and try again.'
-                body = ''
+            # Detect the language of the body
+            lang = detect(body)
+            # If the language is not English, return an error
+            if lang != 'en':
+                error = 'Our forums promote meaningful communication in English. Please feel free to try again.'
             else:
-                from better_profanity import profanity
                 # do censoring
                 censored_body = profanity.censor(body)
                 if censored_body != body:
-                    censored_body += '\n\n(Some words have been blocked due to the violation of our T&C.)'
+                    censored_body += '\n\n(Some words have been blocked due to the violation of our T&C)'
                     body = censored_body
-            post[key] = body
+
+            post[key] = body.replace('\r', '').replace('\n', '<br>')  # replace newlines with <br> tags
 
     post['error'] = error
     return post
