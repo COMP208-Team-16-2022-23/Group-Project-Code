@@ -25,7 +25,6 @@
             {% endfor %}
 
         {% endif %}
-        {% if g.user %}
             <div class="fixed-action-btn" id="fixed1">
                 <a class="btn text-white btn-lg btn-floating" style="background-color: #3692f4;"
                    href="{{ url_for('forum.create') }}" role="button">
@@ -34,7 +33,6 @@
                 <ul class="list-unstyled">
                 </ul>
             </div>
-        {% endif %}
 
         {% for post in posts %}
             <div class="card border border-secondary shadow-0">

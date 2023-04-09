@@ -3,7 +3,7 @@
 # @File: data_analyse.PY
 """Handle data analysis process and visualization"""
 import pandas as pd
-from flask import Blueprint, request, flash, redirect, url_for, render_template, g
+from flask import Blueprint, request, flash, redirect, url_for, render_template, g, session
 
 import config
 from util import storage_control
@@ -36,6 +36,9 @@ def index():
     if request.method == 'POST':
         if not g.user:
             flash('Please log in first', 'warning-auth')
+            # save the current url to session
+            session['next_url'] = request.url
+            a=session
             return redirect(url_for('auth.login'))
 
         selected_file_path = request.form['file_selection']

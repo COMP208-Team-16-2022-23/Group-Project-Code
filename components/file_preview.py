@@ -49,7 +49,7 @@ def view_document(file_path='public/hello_world.csv'):
 '''Interfaces'''
 
 
-@bp.route('/upload', methods=['POST'])
+@bp.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload_dataset(redirect_path='my_data.my_data'):
     """
@@ -59,7 +59,7 @@ def upload_dataset(redirect_path='my_data.my_data'):
     """
     # check if the post request has the file part
     if 'file' not in request.files:
-        flash('No file part')
+        flash('Please select your file again after logging in')
         return redirect(url_for(redirect_path))
     upload_file = request.files['file']
     # If the user does not select a file, the browser submits an empty file without a filename.
@@ -67,7 +67,7 @@ def upload_dataset(redirect_path='my_data.my_data'):
         flash('No file selected for uploading')
         return redirect(url_for(redirect_path))
 
-    if upload_file and g.user:
+    if upload_file:
         filename = secure_filename(upload_file.filename)
         private_path = g.user.username
 
@@ -96,8 +96,7 @@ def upload_dataset(redirect_path='my_data.my_data'):
         sc.upload_blob(upload_file, filename, prefix=private_path)
         return redirect(url_for(redirect_path))
     else:
-        flash('Please log in first', 'warning-auth')
-        return redirect(url_for('auth.login'))
+        return redirect(url_for(redirect_path))
 
 
 @bp.route('/download/<path:file_path>')
