@@ -7,6 +7,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, prec
 from sklearn.utils import shuffle
 import seaborn as sns
 import pandas as pd
+from scipy import stats
 from scipy.stats import skew, kurtosis
 import matplotlib.pyplot as plt
 from util import storage_control
@@ -85,8 +86,27 @@ def normality_test(df, parameters):
     std = df[parameters["variable"]].std()
     skewness = skew(df[parameters["variable"]])
     kurtosis = df[parameters["variable"]].kurt()
-    evaluation_table = [variable_name, sample_size, median, mean, std, skewness, kurtosis]
-    result_content.append(make_result_section(section_name="Evaluation Results",
+
+
+    shapiro_test = stats.shapiro(df[parameters["variable"]])
+    #shapiro_test is the format of ShapiroResult(statistic=0.9813305735588074, pvalue=0.16855233907699585)
+    shapiro_statistic = shapiro_test.statistic
+    shapiro_pvalue = shapiro_test.pvalue
+    shapiro_result = '{}({})'.format(shapiro_statistic, shapiro_pvalue)
+
+    ks_test = stats.kstest(df[parameters["variable"]], stats.norm.cdf)
+    #ks_test is the format of KstestResult(statistic=0.17482387821055168, pvalue=0.001913921057766743)
+    ks_statistic = ks_test.statistic
+    ks_pvalue = ks_test.pvalue
+    ks_result = '{}({})'.format(ks_statistic, ks_pvalue)
+
+    result_content.append(make_result_section(section_name="Detailed conclusions",
+                                              content_type="text",
+                                              content= ''))
+
+
+    evaluation_table = [variable_name, sample_size, median, mean, std, skewness, kurtosis, shapiro_result, ks_result]
+    result_content.append(make_result_section(section_name="Output 1",
                                               content_type="table",
                                               content={
                                                   "data": [
@@ -97,12 +117,22 @@ def normality_test(df, parameters):
                                                        '%.3f' % (evaluation_table[4]),
                                                        '%.3f' % (evaluation_table[5]),
                                                        '%.3f' % (evaluation_table[6]),
+                                                       evaluation_table[7],
+                                                       evaluation_table[8],
                                                         ],
                                                   ],
-                                                  "columns": ['variable_name', 'sample_size', 'median', 'mean', 'std', 'skewness', 'kurtosis'
+                                                  "columns": ['variable_name', 'sample_size', 'median', 'mean', 'std', 'skewness', 'kurtosis', 'S-W test (statistics/pvalue)', 'K-S test (statistics/pvalue)'
                                                               ],
                                                   "index": ["data"]
                                               }))
+
+    result_content.append(make_result_section(section_name="Chart description:",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "The above table shows the results of Q1 descriptive statistics and normality test, including median, mean, etc., which are used to test the normality of the data.",
+                                                  "Usually there are two normal distribution test methods, one is the Shapiro-Wilk test, which is suitable for small sample data (sample size ≤ 5000); the other is the Kolmogorov–Smirnov test, which is suitable for large sample data (sample size >5000).",
+                                                  "If it is significant (P<0.05), it means that the null hypothesis is rejected (the data conforms to the normal distribution), and the data does not satisfy the normal distribution; otherwise, it means that the data conforms to the normal distribution."
+                                              ]))
 
     return result_content
 
