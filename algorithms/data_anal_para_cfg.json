@@ -10,9 +10,9 @@
         "link": "https://en.wikipedia.org/wiki/Normality_test",
         "variables": [
           {
-            "name": "variables",
-            "description": "The variables to test for normality.",
-            "type": "multi_select"
+            "name": "variable",
+            "description": "The variable to test for normality.",
+            "type": "single_select"
           }
         ],
         "parameters": [
