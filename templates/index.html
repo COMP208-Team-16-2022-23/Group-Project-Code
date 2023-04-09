@@ -48,7 +48,7 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
 
-{#    <link rel="stylesheet" href="/static/css/LCDA.css">#}
+        <link rel="stylesheet" href="/static/css/scrolldown.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
@@ -224,8 +224,8 @@
                 ">
             <div class="container d-flex align-items-center justify-content-center text-center h-100">
                 <div class="text-white">
-{#                    <h1 class="mb-3"><span>L</span><span>C</span><span>D</span><span>A</span></h1>#}
-                <h1 class="mb-3" style="font-family: Georgia, serif;">Low-Code Data Analysis</h1>
+                    {#                    <h1 class="mb-3"><span>L</span><span>C</span><span>D</span><span>A</span></h1>#}
+                    <h1 class="mb-3" style="font-family: Georgia, serif;">Low-Code Data Analysis</h1>
                     <h5 class="mb-4">A simplified approach to data analysis with less coding required.</h5>
                     {% if not g.user %}
                         <a
@@ -241,6 +241,9 @@
                     {% else %}
                         <p>Good <span id="timeNow"></span>, {{ g.user.username }}!</p>
                     {% endif %}
+                </div>
+                <div class="scroll-prompt" id="js_scrollPrompt">
+                    <div class="scroll-prompt-shape"></div>
                 </div>
             </div>
         </div>
