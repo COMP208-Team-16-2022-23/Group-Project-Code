@@ -77,9 +77,11 @@
 
         /* Color of the links AFTER scroll */
         .navbar-after-scroll .nav-link,
-        .navbar-after-scroll .navbar-toggler,
-        .navbar-after-scroll .username {
+        .navbar-after-scroll .navbar-toggler{
             color: #4f4f4f;
+        }
+        .navbar-after-scroll .username {
+            color: #3B71CA;
         }
 
         .navbar-after-scroll .navbar-brand {
@@ -117,6 +119,18 @@
             .navbar-toggler {
                 color: #4f4f4f !important;
             }
+
+            .navbar-brand {
+                color: #183F60 !important;
+            }
+
+            .username {
+                color: #3b71ca !important;
+            }
+
+            .logo {
+                content: url("{{ url_for('static', filename='img/LCDA.png') }}");
+            }
         }
     </style>
 
@@ -144,7 +158,7 @@
                 <a class="navbar-brand mb-0 h1" href="{{ url_for('index') }}"
                    style="font-family: Georgia, serif;">
                     <img src="{{ url_for('static', filename='img/LCDA-white.png') }}" alt="LCDA Logo" height="25"
-                         id="logo">
+                         id="logo" class="logo">
                     LCDA
                 </a>
 
@@ -181,16 +195,16 @@
                                     data-mdb-toggle="dropdown"
                                     aria-expanded="false"
                             >
-                                <img
-                                        src="/static/img/LCDA.ico"
-                                        class="rounded-circle"
-                                        height="25"
-                                        alt="LCDA Logo"
-                                        loading="lazy"
-                                />
-                                <div class="d-none d-md-block ms-2 username">
-                                    <span>{{ g.user['username'] }}</span>
-                                </div>
+                                {#                                <img#}
+                                {#                                        src="/static/img/LCDA.ico"#}
+                                {#                                        class="rounded-circle"#}
+                                {#                                        height="25"#}
+                                {#                                        alt="LCDA Logo"#}
+                                {#                                        loading="lazy"#}
+                                {#                                />#}
+
+                                <span class="username">{{ g.user['username'] }}</span>
+
                             </a>
 
                             <ul
