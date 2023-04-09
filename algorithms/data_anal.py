@@ -7,6 +7,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, prec
 from sklearn.utils import shuffle
 import seaborn as sns
 import pandas as pd
+from scipy.stats import skew, kurtosis
 import matplotlib.pyplot as plt
 from util import storage_control
 from util import file_util
@@ -48,6 +49,7 @@ def analysis(file_path, parameters):
     # Define dictionary mapping method names to functions
     method_dict = {
         'knn_classification': knn_classification,
+        'normality_test' : normality_test
     }
 
     # Call the corresponding function
@@ -66,6 +68,47 @@ def analysis(file_path, parameters):
     return processed_file_path
 
 
+def normality_test(df, parameters):
+    result_content = []
+    result_content.append(make_result_section(section_name="Analysis steps",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "Perform the Shapiro-Wilk (small data sample, generally less than 5000 samples) or Kolmogorov–Smirnov (large data sample, generally more than 5000 samples) test on the data to check its significance.",
+                                                  "If it does not show significance (P>0.05), it means that it conforms to the normal distribution, otherwise it means that it does not conform to the normal distribution (PS: Usually it is difficult to meet the test in real research situations, if the absolute value of the sample kurtosis is less than 10 and the skewness The absolute value is less than 3, combined with the normal distribution histogram, PP diagram or QQ diagram, it can be described as basically conforming to the normal distribution)."
+                                              ]))
+
+    df[parameters["variable"]] = df[parameters["variable"]].astype(float)
+    variable_name = parameters["variable"]
+    sample_size = len(df[parameters["variable"]])
+    median = df[parameters["variable"]].median()
+    mean = df[parameters["variable"]].mean()
+    std = df[parameters["variable"]].std()
+    skewness = skew(df[parameters["variable"]])
+    kurtosis = df[parameters["variable"]].kurt()
+    evaluation_table = [variable_name, sample_size, median, mean, std, skewness, kurtosis]
+    result_content.append(make_result_section(section_name="Evaluation Results",
+                                              content_type="table",
+                                              content={
+                                                  "data": [
+                                                      [evaluation_table[0],
+                                                       evaluation_table[1],
+                                                       '%.3f' % (evaluation_table[2]),
+                                                       '%.3f' % (evaluation_table[3]),
+                                                       '%.3f' % (evaluation_table[4]),
+                                                       '%.3f' % (evaluation_table[5]),
+                                                       '%.3f' % (evaluation_table[6]),
+                                                        ],
+                                                  ],
+                                                  "columns": ['variable_name', 'sample_size', 'median', 'mean', 'std', 'skewness', 'kurtosis'
+                                                              ],
+                                                  "index": ["data"]
+                                              }))
+
+    return result_content
+
+
+
+
 # def analysis(df, para_received):
 #     analytical_method = para_received["analytical_method"]
 #     return {
@@ -77,6 +120,7 @@ def shuffle_dataset(x, y):
     return x, y
 
 
+#test_size is the proportion of the test set in the data set
 def dataset_split(x, y, testing_set_ratio):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=testing_set_ratio, random_state=0)
 
