@@ -25,32 +25,6 @@
     ]
   },
   {
-    "name": "Mean",
-    "function_name": "Mean",
-    "parameters": [
-      {
-        "name": "Parameter 1",
-        "type": "checkbox",
-        "description": "d"
-      },
-      {
-        "name": "Parameter 2",
-        "type": "checkbox",
-        "description": "d"
-      },
-      {
-        "name": "Parameter 3",
-        "type": "checkbox",
-        "description": "d"
-      },
-      {
-        "name": "Parameter 4",
-        "type": "checkbox",
-        "description": "d"
-      }
-    ]
-  },
-  {
     "name": "Tail shrinkage and truncation processing",
     "function_name": "tail_shrinkage_or_truncation_processing",
     "parameters": [
