@@ -106,7 +106,7 @@ def normality_test(df, parameters):
 
 
     evaluation_table = [variable_name, sample_size, median, mean, std, skewness, kurtosis, shapiro_result, ks_result]
-    result_content.append(make_result_section(section_name="Output 1",
+    result_content.append(make_result_section(section_name="Output 1: overall description of the results",
                                               content_type="table",
                                               content={
                                                   "data": [
@@ -134,8 +134,46 @@ def normality_test(df, parameters):
                                                   "If it is significant (P<0.05), it means that the null hypothesis is rejected (the data conforms to the normal distribution), and the data does not satisfy the normal distribution; otherwise, it means that the data conforms to the normal distribution."
                                               ]))
 
+    # create histogram to visualize values in dataset
+    histogram_pic = make_histogram_pic(df[parameters["variable"]], variable_name)
+
+    result_content.append(make_result_section(section_name="Output 2: normality test histogram",
+                                              content_type="img",
+                                              content=histogram_pic
+                                              ))
+
     return result_content
 
+def make_histogram_pic(column, variable):
+    """
+    Make the picture of histogram
+    :param column: column to make the histogram
+    :return: A string represents heatmap picture in form of base64
+    """
+
+    # plot histogram and density curve
+    f = plt.figure()
+    fig, ax = plt.subplots()
+    ax.hist(column, edgecolor='black', bins=20, density=True)
+    ax.set_xlabel(variable)
+    ax.set_ylabel("Density")
+    ax.set_title("Histogram")
+
+    kde = np.linspace(column.min(), column.max(), 100)
+    kde_smooth = stats.gaussian_kde(column)(kde)
+    ax.plot(kde, kde_smooth)
+
+    # Encode into a string in the form of base64
+    pic_io = io.BytesIO()
+    plt.savefig(pic_io, format='png')
+    pic_io.seek(0)
+    base64_pic = base64.b64encode(pic_io.read()).decode()
+
+    # Clear plt buffer
+    f.clear()
+    plt.close()
+
+    return base64_pic
 
 
 
