@@ -114,14 +114,14 @@ def download(file_path='public/hello_world.csv'):
 
 
 @bp.route('/embedded/<path:file_path>')
-def embedded_view(file_path='public/hello_world.csv'):
+def embedded_view(file_path):
     # Specify the file path
     filename = file_path.split('/')[-1]
     # get the file extension
     file_extension = filename.split('.')[-1]
     file_name = filename.split('.')[0]
     # random file_name
-    file_name += randint(10000000, 99999999)
+    file_name += str(randint(10000000, 99999999))
 
     # if is csv
     if file_extension == 'csv':
