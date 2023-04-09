@@ -1,3 +1,5 @@
+from random import randint
+
 from flask import Blueprint, render_template, url_for, redirect, flash, g, request, send_file, get_flashed_messages
 import requests
 from werkzeug.utils import secure_filename
@@ -118,6 +120,8 @@ def embedded_view(file_path='public/hello_world.csv'):
     # get the file extension
     file_extension = filename.split('.')[-1]
     file_name = filename.split('.')[0]
+    # random file_name
+    file_name += randint(10000000, 99999999)
 
     # if is csv
     if file_extension == 'csv':
