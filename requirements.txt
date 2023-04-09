@@ -1,3 +1,4 @@
+better_profanity
 Flask
 Flask_Mail
 google-cloud-storage

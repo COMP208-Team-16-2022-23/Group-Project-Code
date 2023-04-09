@@ -9,7 +9,6 @@
         "options": [
           "3-sigma",
           "IQR",
-          "Z-score",
           "MAD"
         ]
       },
@@ -21,6 +20,58 @@
           "set to mean",
           "set to median"
         ]
+      }
+    ]
+  },
+  {
+    "name": "Missing value handling",
+    "function_name": "missing_value_handling",
+    "parameters": [
+      {
+        "name": "identification_method",
+        "type": "select",
+        "options": [
+          "empty",
+          "space",
+          "'None'",
+          "non-numeric value"
+        ]
+      },
+      {
+        "name": "filling_method",
+        "type": "select",
+        "description": "Statistics_filling",
+        "options": [
+          "mean",
+          "median",
+          "mode"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Mean",
+    "function_name": "Mean",
+    "parameters": [
+      {
+        "name": "Parameter 1",
+        "type": "checkbox",
+        "description": "d"
+      },
+      {
+        "name": "Parameter 2",
+        "type": "checkbox",
+        "description": "d"
+      },
+      {
+        "name": "Parameter 3",
+        "type": "checkbox",
+        "description": "d"
+      },
+      {
+        "name": "Parameter 4",
+        "type": "checkbox",
+        "description": "d"
       }
     ]
   },
@@ -84,13 +135,14 @@
       {
         "name": "n_components",
         "type": "number"
-      },
+      }
+    ],
+    "variables": [
       {
         "name": "target_column",
-        "type": "select",
-        "options": [
-
-        ]
+        "description": "Target column(LDA)",
+        "type": "multi_select",
+        "required": false
       }
     ]
   },
@@ -100,12 +152,19 @@
     "parameters": [
       {
         "name": "balancing_method",
-        "type": "radio",
+        "type": "select",
         "options": [
           "undersample",
           "oversample",
           "combined"
         ]
+      }
+    ],
+    "variables": [
+      {
+        "name": "target_column",
+        "description": "Target column",
+        "type": "multi_select"
       }
     ]
   },

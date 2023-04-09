@@ -1,16 +1,12 @@
 {% extends 'base.html' %}
 
-{% block title %}Data Analysis{% endblock %}
+{% block title %}Node Editor{% endblock %}
 
 {% block content %}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/baklavajs/dist/index.css">
 
-    <div style="width:100vw;height:100vh">
-        <div id="editor"></div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/baklavajs/dist/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/baklavajs@1/dist/index.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/baklavajs@1/dist/index.min.css">
     <script src="/static/js/DataSourceNode.js"></script>
     <script src="/static/js/DataProcessingNode.js"></script>
     <script src="/static/js/NormalizationNode.js"></script>
@@ -29,6 +25,10 @@
             });
         });
     </script>
+
+    <div class="vh-100">
+        <div id="editor"></div>
+    </div>
 
     <script>
         const datasets = {{ my_data|safe }};

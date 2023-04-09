@@ -2,6 +2,7 @@ class DataSourceNode extends BaklavaJS.Core.Node {
 
     type = "data_source";
     name = "Data";
+
     constructor() {
         super();
         this.file_names = [];
@@ -27,7 +28,7 @@ class DataSourceNode extends BaklavaJS.Core.Node {
 
 }
 
-class TestNode extends BaklavaJS.Core.Node{
+class TestNode extends BaklavaJS.Core.Node {
 
     type = "TestNode";
     name = "DisplayTest";
@@ -38,7 +39,7 @@ class TestNode extends BaklavaJS.Core.Node{
         this.addOption("Text", "TextOption");
     }
 
-     calculate() {
+    calculate() {
         let text = this.getInterface("Input").value;
         console.log(text);
         this.setOptionValue("Text", text);

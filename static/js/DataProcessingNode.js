@@ -2,6 +2,7 @@ class DataProcessingNode extends BaklavaJS.Core.Node {
 
     type = "data_processing";
     name = "DataProcessing";
+
     constructor() {
         super();
         this.algo_names = [];
@@ -12,7 +13,7 @@ class DataProcessingNode extends BaklavaJS.Core.Node {
         }
         this.addInputInterface("Input Data");
         this.addOutputInterface("Result");
-        this.addOption("Processing Method", "SelectOption", this.algo_names[0], undefined,{
+        this.addOption("Processing Method", "SelectOption", this.algo_names[0], undefined, {
             items: this.algo_names
         });
     }
