@@ -34,7 +34,8 @@ def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            flash('Please log in first.','warning-auth')
+            flash('Please log in first.', 'warning-auth')
+            session['next_url'] = request.url
             return redirect(url_for('auth.login'))
 
         return view(**kwargs)
@@ -77,10 +78,15 @@ def login():
             error = 'Incorrect username or password'
 
         if error is None:
-            session.clear()
+            next_url = None  # the url the user is redirected to after login
+            if 'next_url' in session:  # if the user is redirected to the login page
+                next_url = session['next_url']
+            session.clear()  # clear the session
             session['user_id'] = user.id
             user.last_login = datetime.utcnow()
             db_session.commit()
+            if next_url:
+                return redirect(next_url)
             return redirect(url_for('my_data.my_data'))
 
         flash(error, 'warning-auth')
@@ -220,7 +226,8 @@ def reset_password():
             user.last_password_change_time = datetime.utcnow()
             try:
                 db_session.commit()
-                flash('Your password has been reset successfully. Please log in with your new password.', 'message-auth')
+                flash('Your password has been reset successfully. Please log in with your new password.',
+                      'message-auth')
             except Exception as e:
                 flash('An error occurred while resetting your password.', 'warning-auth')
                 return redirect(url_for('auth.reset_password'))
