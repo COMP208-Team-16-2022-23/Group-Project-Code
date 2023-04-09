@@ -24,11 +24,6 @@
     <title>Wellcome - LCDA</title>
     <!-- Web icon -->
     <link rel="icon" href="/static/img/LCDA.ico" type="image/x-icon"/>
-    <!-- Font Awesome -->
-    <link
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-            rel="stylesheet"
-    />
     <!-- Google Fonts -->
     <link
             {#            href="../static/css/Roboto.fonts.css"#}
@@ -71,16 +66,20 @@
         .navbar-before-scroll .nav-link,
         .navbar-before-scroll .navbar-toggler,
         .navbar-before-scroll .username,
+        .navbar-before-scroll .fa-user,
         .navbar-after-scroll .navbar-brand {
             color: #fff;
         }
 
         /* Color of the links AFTER scroll */
         .navbar-after-scroll .nav-link,
-        .navbar-after-scroll .navbar-toggler{
+        .navbar-after-scroll .navbar-toggler {
             color: #4f4f4f;
         }
-        .navbar-after-scroll .username {
+
+        .navbar-after-scroll .username,
+        .navbar-after-scroll .fa-user
+        {
             color: #3B71CA;
         }
 
@@ -124,7 +123,8 @@
                 color: #183F60 !important;
             }
 
-            .username {
+            .username,
+            .fa-user {
                 color: #3b71ca !important;
             }
 
@@ -202,7 +202,7 @@
                                 {#                                        alt="LCDA Logo"#}
                                 {#                                        loading="lazy"#}
                                 {#                                />#}
-
+                                <i class="fas fa-user me-2"></i>
                                 <span class="username">{{ g.user['username'] }}</span>
 
                             </a>
