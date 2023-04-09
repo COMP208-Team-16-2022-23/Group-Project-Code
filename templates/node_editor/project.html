@@ -12,18 +12,18 @@
     <script src="/static/js/NormalizationNode.js"></script>
 
     <script>
-        forms = document.getElementsByTagName("form");
-        window.addEventListener('submit', function(event) {
-            event.preventDefault();    // prevent page from refreshing
-            const formData = new FormData(forms);  // grab the data inside the form fields
-            fetch('/', {   // assuming the backend is hosted on the same server
-                method: 'POST',
-                body: formData,
-            }).then(function(response) {
+        // forms = document.getElementsByTagName("form");
+        // window.addEventListener('submit', function(event) {
+        //     event.preventDefault();    // prevent page from refreshing
+        //     const formData = new FormData(forms);  // grab the data inside the form fields
+        //     fetch('/', {   // assuming the backend is hosted on the same server
+        //         method: 'POST',
+        //         body: formData,
+        //     }).then(function(response) {
                 // do something with the response if needed.
                 // If you want the table to be built only after the backend handles the request and replies, call buildTable() here.
-            });
-        });
+            // });
+        // });
     </script>
 
     <div class="vh-100">
@@ -48,6 +48,7 @@
         editor.use(new BaklavaJS.PluginOptionsVue.OptionPlugin());
         
         editor.registerNodeType("Data", DataSourceNode);
+        editor.registerNodeType("Column Selection", ColumnSelectionNode);
         editor.registerNodeType("DataProcessing", DataProcessingNode);
         editor.registerNodeType("DisplayTest", TestNode);
         editor.registerNodeType("Normalization", NormalizationNode);

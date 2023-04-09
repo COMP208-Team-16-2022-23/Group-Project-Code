@@ -5,10 +5,11 @@
 
 from flask import Blueprint, request, render_template, session, redirect, url_for
 import json
-import html
-import config
 
-from util.storage_control import list_blobs, upload_blob
+import pandas
+
+import config
+from util.storage_control import list_blobs, upload_blob, download_to_memory
 from algorithms import data_proc
 
 bp = Blueprint('node_editor', __name__, url_prefix='/node_editor')
@@ -19,6 +20,12 @@ def index():
     datasets = list_blobs(prefix='public', ext_filter=config.ALLOWED_EXTENSIONS)
     with open('algorithms/data_proc_para_cfg.json', 'r') as f:
         processing_cfg = json.load(f)
+
+    for dataset in datasets:
+        df = pandas.read_csv(download_to_memory(dataset['file_path']))
+        column_list = list(df.columns.values)
+        column_info = {'columns': column_list}
+        dataset.update(column_info)
 
     datasets = json.dumps(datasets)
     processing_cfg = json.dumps(processing_cfg)
@@ -31,10 +38,10 @@ def processing():
     result_path = ''
     input_path = 'public/CW_Data.csv'
     if request.method == 'POST':
-        column_selected = request.form.getlist('column_selected')
-        column_selected = column_selected[0].split(',')
-        algorithm_config = request.form.to_dict()
-        algorithm_config["column_selected"] = column_selected
+        payload = request.get_json()
+        column_selected = payload['column_selected']
+        algorithm_config = payload
+        algorithm_config["column_selected"] = column_selected.split(',')
         result_path = algorithm_config.pop('result_path')
         print('paras:', algorithm_config)
 
@@ -48,4 +55,4 @@ def processing():
     # refresh the page
     # return redirect(url_for('data_processing.project', processing_project_id=processing_project_id))
 
-    return result_path
+    return {'204': 'No Content'}
