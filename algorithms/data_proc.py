@@ -197,7 +197,7 @@ def missing_value_handling(df, parameters):
     elif identification_method == "'None'":
         for column_name in parameters['column_selected']:
             df = value_replace_None(df, filling_method, column_name=column_name)
-    elif identification_method == "No numeric value":
+    elif identification_method == "non-numeric value":
         for column_name in parameters['column_selected']:
             df = value_replace_NoNumeric(df, filling_method, column_name=column_name)
 
@@ -207,8 +207,9 @@ def missing_value_handling(df, parameters):
 
 def value_replace_empty(df, filling_method, column_name):
 
-    df[column_name].replace('', np.nan, inplace=True)
-    column = df[column_name].fillna(0).astype(int)  # repalce NaN to 0
+    column = df[column_name].apply(pd.to_numeric, errors='coerce')
+    #to calculate mean including other invalid string
+    column = column.fillna(0) # repalce NaN to 0
 
     mean = column.mean()
     median = column.median()
@@ -216,69 +217,69 @@ def value_replace_empty(df, filling_method, column_name):
 
 
     if filling_method == 'mean':
-        df[column_name] = df[column_name].apply(lambda x: mean if pd.isna(x) else x)
+        df[column_name] = df[column_name].apply(lambda x: mean if pd.isnull(x) else x)
     elif filling_method == 'median':
-        df[column_name] = df[column_name].apply(lambda x: median if pd.isna(x) else x)
+        df[column_name] = df[column_name].apply(lambda x: median if pd.isnull(x) else x)
     elif filling_method == 'mode':
-        df[column_name] = df[column_name].apply(lambda x: mode if pd.isna(x) else x)
+        df[column_name] = df[column_name].apply(lambda x: mode if pd.isnull(x) else x)
 
     return df
 
 
 
 def value_replace_space(df, filling_method, column_name):
-
-    df[column_name] = df[column_name].replace(' ', value=pd.np.nan, regex=True)
-    column = df[column_name].fillna(0).astype(int)  # repalce NaN to 0
+    column = df[column_name].apply(pd.to_numeric, errors='coerce')
+    # to calculate mean including other invalid string
+    column = column.fillna(0)  # repalce NaN to 0
 
     mean = column.mean()
     median = column.median()
     mode = column.mode()
 
     if filling_method == 'mean':
-        df[column_name] = df[column_name].apply(lambda x: mean if pd.isna(x) else x)
+        df[column_name] = df[column_name].apply(lambda x: mean if x == ' ' else x)
     elif filling_method == 'median':
-        df[column_name] = df[column_name].apply(lambda x: median if pd.isna(x) else x)
+        df[column_name] = df[column_name].apply(lambda x: median if x == ' ' else x)
     elif filling_method == 'mode':
-        df[column_name] = df[column_name].apply(lambda x: mode if pd.isna(x) else x)
+        df[column_name] = df[column_name].apply(lambda x: mode if x == ' ' else x)
 
     return df
 
 
 
 def value_replace_None(df, filling_method, column_name):
-
-    df[column_name].replace("None", np.nan, inplace=True)
-    column = df[column_name].fillna(0).astype(int)  # Replace NaN with 0, and convert to integer
+    df[column_name] = df[column_name].apply(pd.to_numeric, errors='coerce')
+    column = df[column_name].apply(pd.to_numeric, errors='coerce')
+    # to calculate mean including other invalid string
+    column = column.fillna(0)  # repalce NaN to 0
 
     mean = column.mean()
     median = column.median()
     mode = column.mode()
 
     if filling_method == 'mean':
-        df[column_name] = df[column_name].apply(lambda x: mean if pd.isna(x) else x)
+        df[column_name] = df[column_name].apply(lambda x: mean if pd.isnull(x) else x)
     elif filling_method == 'median':
-        df[column_name] = df[column_name].apply(lambda x: median if pd.isna(x) else x)
+        df[column_name] = df[column_name].apply(lambda x: median if pd.isnull(x) else x)
     elif filling_method == 'mode':
-        df[column_name] = df[column_name].apply(lambda x: mode if pd.isna(x) else x)
+        df[column_name] = df[column_name].apply(lambda x: mode if pd.isnull(x) else x)
 
     return df
 
 def value_replace_NoNumeric(df, filling_method, column_name):
+    column = pd.to_numeric(df[column_name], errors='coerce')
 
-    df[column_name] = df[column_name].apply(pd.to_numeric, errors='coerce')
-    #column = df[column_name].fillna(0).astype(int)
 
-    mean = df[column_name].mean()
-    median = df[column_name].median()
-    mode = df[column_name].mode()
+    mean = column.mean()
+    median = column.median()
+    mode = column.mode()[0]
 
     if filling_method == 'mean':
-        df[column_name] = df[column_name].apply(lambda x: mean if pd.isna(x) else x)
+        df[column_name] = column.apply(lambda x: mean if pd.isnull(x) else x)
     elif filling_method == 'median':
-        df[column_name] = df[column_name].apply(lambda x: median if pd.isna(x) else x)
+        df[column_name] = column.apply(lambda x: median if pd.isnull(x) else x)
     elif filling_method == 'mode':
-        df[column_name] = df[column_name].apply(lambda x: mode if pd.isna(x) else x)
+        df[column_name] = column.apply(lambda x: mode if pd.isnull(x) else x)
 
     return df
 
