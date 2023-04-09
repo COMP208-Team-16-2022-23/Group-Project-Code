@@ -48,7 +48,7 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
 
-    <link rel="stylesheet" href="/static/css/LCDA.css">
+{#    <link rel="stylesheet" href="/static/css/LCDA.css">#}
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
@@ -213,30 +213,26 @@
                 background: linear-gradient(
                 45deg,
                 {# change the color here. current color: https://uigradients.com/#Anamnisar #}
-                rgb(151,150,240, 0.7), {# 0.7 is transparency #}
-                rgb(251,199,212, 0.7) 100%
+                rgba(252,0,255,0.7), {# 0.7 is transparency #}
+                rgb(0,219,222) 100%
                 );
                 ">
             <div class="container d-flex align-items-center justify-content-center text-center h-100">
                 <div class="text-white">
-                    <h1 class="mb-3"><span>L</span><span>C</span><span>D</span><span>A</span></h1>
+{#                    <h1 class="mb-3"><span>L</span><span>C</span><span>D</span><span>A</span></h1>#}
+                <h1 class="mb-3">Low-Code Data Analysis</h1>
                     <h5 class="mb-4">A simplified approach to data analysis with less coding required.</h5>
                     {% if not g.user %}
                         <a
                                 class="btn btn-outline-light btn-lg m-2"
                                 href="{{ url_for('auth.register') }}"
                                 role="button"
-                                rel="nofollow"
-                                target="_blank"
-                        >Sign Up</a
-                        >
+                        >Sign Up</a>
                         <a
                                 class="btn btn-outline-light btn-lg m-2"
                                 href="{{ url_for('auth.login') }}"
-                                target="_blank"
                                 role="button"
-                        >Login</a
-                        >
+                        >Login</a>
                     {% else %}
                         <p>Good <span id="timeNow"></span>, {{ g.user.username }}!</p>
                     {% endif %}
@@ -316,8 +312,6 @@
     <!-- Copyright -->
 </footer>
 <!-- Footer -->
-
-<!-- End your project here-->
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
