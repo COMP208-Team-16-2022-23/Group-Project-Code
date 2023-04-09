@@ -48,7 +48,7 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
 
-        <link rel="stylesheet" href="/static/css/scrolldown.css">
+    <link rel="stylesheet" href="/static/css/scrolldown.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
@@ -67,23 +67,23 @@
             }
         }
 
-        /* Color of the links BEFORE scroll */
+
         .navbar-before-scroll .nav-link,
         .navbar-before-scroll .navbar-toggler,
-        .navbar-before-scroll .username {
-            color: #191919;
-        }
-
-        /* Color of the navbar BEFORE scroll */
-        .navbar-before-scroll {
-            background-color: #fff;
+        .navbar-before-scroll .username,
+        .navbar-after-scroll .navbar-brand {
+            color: #fff;
         }
 
         /* Color of the links AFTER scroll */
         .navbar-after-scroll .nav-link,
         .navbar-after-scroll .navbar-toggler,
         .navbar-after-scroll .username {
-            color: #191919;
+            color: #4f4f4f;
+        }
+
+        .navbar-after-scroll .navbar-brand {
+            color: #183F60;
         }
 
         /* Color of the navbar AFTER scroll */
@@ -93,12 +93,12 @@
 
         /* Transition after scrolling */
         .navbar-after-scroll {
-            transition: background 0.3s ease-in-out, padding 0.3s ease-in-out;
+            transition: background 0.5s ease-in-out, padding 0.5s ease-in-out;
         }
 
         /* Transition to the initial state */
         .navbar-before-scroll {
-            transition: background 0.3s ease-in-out, padding 0.3s ease-in-out;
+            transition: background 0.5s ease-in-out, padding 0.5s ease-in-out;
         }
 
         /* An optional height of the navbar AFTER scroll */
@@ -115,7 +115,7 @@
 
             .nav-link,
             .navbar-toggler {
-                color: #191919 !important;
+                color: #4f4f4f !important;
             }
         }
     </style>
@@ -142,8 +142,9 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Navbar brand -->
                 <a class="navbar-brand mb-0 h1" href="{{ url_for('index') }}"
-                   style="font-family: Georgia, serif; color: #183F60;">
-                    <img src="{{ url_for('static', filename='img/LCDA.png') }}" alt="LCDA Logo" height="25">
+                   style="font-family: Georgia, serif;">
+                    <img src="{{ url_for('static', filename='img/LCDA-white.png') }}" alt="LCDA Logo" height="25"
+                         id="logo">
                     LCDA
                 </a>
 
@@ -218,15 +219,16 @@
                 background: linear-gradient(
                 45deg,
                 {# change the color here. current color: https://uigradients.com/#Anamnisar #}
-                rgba(252,0,255,0), {# 0 is transparency #}
-                rgb(0,219,222) 100%
+                rgba(29, 236, 197, 0.7), {# 0.7 is transparency #}
+                rgba(91, 14, 214, 0.7) 100%
                 );
                 ">
             <div class="container d-flex align-items-center justify-content-center text-center h-100">
                 <div class="text-white">
-{#                    <h1 class="mb-3"><span>L</span><span>C</span><span>D</span><span>A</span></h1>#}
-                <h1 class="mb-3" style="font-family: Georgia, serif;">Low-Code Data Analysis</h1>
-                    <h5 class="mb-4" style="font-family: Georgia, serif;">A simplified approach to data analysis with less coding required.</h5>
+                    {#                    <h1 class="mb-3"><span>L</span><span>C</span><span>D</span><span>A</span></h1>#}
+                    <h1 class="mb-3" style="font-family: Georgia, serif;">Low-Code Data Analysis</h1>
+                    <h5 class="mb-4" style="font-family: Georgia, serif;">A simplified approach to data analysis with
+                        less coding required.</h5>
                     {% if not g.user %}
                         <a
                                 class="btn btn-outline-light btn-lg m-2"
@@ -327,40 +329,21 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-<script>
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function () {
-        'use strict'
-
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.querySelectorAll('.needs-validation')
-
-        // Loop over them and prevent submission
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-
-                    form.classList.add('was-validated')
-                }, false)
-            })
-    })()
-</script>
 <!-- Custom scripts -->
 <script type="text/javascript">
 
     const navbar = document.getElementById("main-navbar")
+    const logo = document.getElementById("logo")
     window.addEventListener('scroll', function () {
         if (window.pageYOffset > 0) {
             navbar.classList.add("navbar-after-scroll")
             navbar.classList.remove("shadow-0")
+            logo.src = "{{ url_for('static', filename='img/LCDA.png') }}"
 
         } else {
             navbar.classList.remove("navbar-after-scroll")
             navbar.classList.add("shadow-0")
+            logo.src = "{{ url_for('static', filename='img/LCDA-white.png') }}"
         }
     })
 </script>
