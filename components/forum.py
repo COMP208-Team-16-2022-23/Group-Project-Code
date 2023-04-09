@@ -149,22 +149,25 @@ def censor(post) -> dict:
     # }
 
     error = None
-    for key in post:
-        if post[key] is not None:
-            body = post[key]
-            # Detect the language of the body
-            lang = detect(body)
-            # If the language is not English, return an error
-            if lang != 'en':
-                error = 'Our forums promote meaningful communication in English. Please feel free to try again.'
-            else:
-                # do censoring
-                censored_body = profanity.censor(body)
-                if censored_body != body:
-                    censored_body += '\n\n(Some words have been blocked due to the violation of our T&C)'
-                    body = censored_body
+    try:
+        for key in post:
+            if post[key] is not None:
+                body = post[key]
+                # Detect the language of the body
+                lang = detect(body)
+                # If the language is not English, return an error
+                if lang != 'en':
+                    error = 'Our forums promote meaningful communication in English. Please feel free to try again.'
+                else:
+                    # do censoring
+                    censored_body = profanity.censor(body)
+                    if censored_body != body:
+                        censored_body += '\n\n(Some words have been blocked due to the violation of our T&C)'
+                        body = censored_body
 
-            post[key] = body.replace('\r', '').replace('\n', '<br>')  # replace newlines with <br> tags
+                post[key] = body.replace('\r', '').replace('\n', '<br>')  # replace newlines with <br> tags
+    except Exception as e:
+        error = e
 
     post['error'] = error
     return post
