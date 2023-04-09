@@ -226,18 +226,20 @@
                 <div class="text-white">
 {#                    <h1 class="mb-3"><span>L</span><span>C</span><span>D</span><span>A</span></h1>#}
                 <h1 class="mb-3" style="font-family: Georgia, serif;">Low-Code Data Analysis</h1>
-                    <h5 class="mb-4">A simplified approach to data analysis with less coding required.</h5>
+                    <h5 class="mb-4" style="font-family: Georgia, serif;">A simplified approach to data analysis with less coding required.</h5>
                     {% if not g.user %}
                         <a
                                 class="btn btn-outline-light btn-lg m-2"
                                 href="{{ url_for('auth.register') }}"
                                 role="button"
+                                style="width: 108px;"
                         >Sign Up</a>
                         <a
                                 class="btn btn-outline-light btn-lg m-2"
                                 href="{{ url_for('auth.login') }}"
                                 role="button"
-                        >Login</a>
+                                style="width: 108px;"
+                        >Log in</a>
                     {% else %}
                         <p>Good <span id="timeNow"></span>, {{ g.user.username }}!</p>
                     {% endif %}
