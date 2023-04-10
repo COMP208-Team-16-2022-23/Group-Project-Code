@@ -38,6 +38,9 @@ def index():
     # use index.html as the index page
     return render_template('index.html')
 
+@app.context_processor
+def inject_domain_name():
+    return {'DOMAIN_NAME': app.config['DOMAIN']}
 
 app.register_blueprint(auth.bp)
 app.register_blueprint(data_manager.bp)

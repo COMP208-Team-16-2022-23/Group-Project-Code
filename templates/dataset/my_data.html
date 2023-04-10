@@ -129,7 +129,7 @@
                 <iframe
                         class="align-middle h-100 w-100"
                         id="data_view"
-                        src="https://view.officeapps.live.com/op/embed.aspx?src=https://lcda-vgnazlwvxa-uw.a.run.app/file/embedded/public/CW_Data.csv&wdHideSheetTabs=True"
+                        src="https://view.officeapps.live.com/op/embed.aspx?src={{ DOMAIN_NAME }}/file/embedded/public/CW_Data.csv&wdHideSheetTabs=True"
                 ></iframe>
             </div>
         </div>
@@ -137,7 +137,7 @@
     <script>
         function go(loc) {
             let path = "";
-            path = "https://view.officeapps.live.com/op/embed.aspx?src=https://lcda-vgnazlwvxa-uw.a.run.app/file/embedded/".concat(loc)
+            path = "https://view.officeapps.live.com/op/embed.aspx?src={{ DOMAIN_NAME }}/file/embedded/".concat(loc)
             path = path.concat("&wdHideSheetTabs=True")
             document.getElementById('data_view').src = path;
         }
