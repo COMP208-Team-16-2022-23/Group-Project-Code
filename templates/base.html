@@ -82,21 +82,30 @@
 
             <ul class="navbar-nav me-auto mb-0 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ url_for('my_data.my_data') }}">My Data</a>
+                    <a class="nav-link {{ 'active' if request.path == url_for('my_data.my_data') else '' }}"
+                       href="{{ url_for('my_data.my_data') }}">My Data</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ url_for('data_processing.index') }}">Data
+                    <a class="nav-link {{ 'active' if 'data_processing' in request.path else '' }}"
+                       href="{{ url_for('data_processing.index') }}">Data
                         Processing</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ url_for('data_analysis.index') }}">Data Analysis</a>
+                    <a class="nav-link {{ 'active' if 'data_analysis' in request.path else '' }}"
+                       href="{{ url_for('data_analysis.index') }}">Data Analysis</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ url_for('forum.index') }}">Forum</a>
+                    <a class="nav-link {{ 'active' if 'forum' in request.path else '' }}"
+                       href="{{ url_for('forum.index') }}">Forum</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ url_for('node_editor.index') }}">Node Editor <span
-                            class="badge badge-primary">Beta</span></a>
+                    <a class="nav-link {{ 'active' if 'node_editor' in request.path else '' }}"
+                       href="{{ url_for('node_editor.index') }}">
+                        <div class="d-inline-flex flex-row justify-content-start align-items-center">
+                            <div class="me-1">Node Editor</div>
+                            <span class="badge badge-primary">Beta</span>
+                        </div>
+                    </a>
                 </li>
             </ul>
 
@@ -115,13 +124,13 @@
                                 data-mdb-toggle="dropdown"
                                 aria-expanded="false"
                         >
-{#                            <img#}
-{#                                    src="/static/img/LCDA.ico"#}
-{#                                    class="rounded-circle"#}
-{#                                    height="25"#}
-{#                                    alt="LCDA Logo"#}
-{#                                    loading="lazy"#}
-{#                            />#}
+                            {#                            <img#}
+                            {#                                    src="/static/img/LCDA.ico"#}
+                            {#                                    class="rounded-circle"#}
+                            {#                                    height="25"#}
+                            {#                                    alt="LCDA Logo"#}
+                            {#                                    loading="lazy"#}
+                            {#                            />#}
                             <i class="fas fa-user me-2"></i>
                             {{ g.user['username'] }}
                         </a>

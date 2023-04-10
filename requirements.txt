@@ -18,3 +18,5 @@ SQLAlchemy
 Werkzeug
 xlrd
 langdetect
+statsmodels
+pingouin

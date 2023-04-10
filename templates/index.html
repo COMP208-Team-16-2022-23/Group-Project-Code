@@ -21,7 +21,7 @@
     <meta name="twitter:image" content="https://lcda-vgnazlwvxa-uw.a.run.app/static/img/preview_image.jpg"/>
 
 
-    <title>Wellcome - LCDA</title>
+    <title>Welcome - LCDA</title>
     <!-- Web icon -->
     <link rel="icon" href="/static/img/LCDA.ico" type="image/x-icon"/>
     <!-- Google Fonts -->
@@ -78,8 +78,7 @@
         }
 
         .navbar-after-scroll .username,
-        .navbar-after-scroll .fa-user
-        {
+        .navbar-after-scroll .fa-user {
             color: #3B71CA;
         }
 
@@ -174,9 +173,16 @@
                         <a class="nav-link" href="{{ url_for('data_analysis.index') }}">Data Analysis</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('node_editor.index') }}">Node Editor</a>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('forum.index') }}">Forum</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('node_editor.index') }}">
+                            <div class="d-inline-flex flex-row justify-content-start align-items-center">
+
+                                <div class="me-1">Node Editor</div>
+                                <span class="badge badge-primary">Beta</span>
+                            </div>
+                        </a>
                     </li>
                 </ul>
 

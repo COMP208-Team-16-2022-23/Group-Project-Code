@@ -9,6 +9,7 @@ import seaborn as sns
 import pandas as pd
 from scipy import stats
 from scipy.stats import skew, kurtosis
+import pingouin as pg
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
 
@@ -53,7 +54,8 @@ def analysis(file_path, parameters):
     # Define dictionary mapping method names to functions
     method_dict = {
         'knn_classification': knn_classification,
-        'normality_test' : normality_test
+        'normality_test' : normality_test,
+        'reliability_analysis' : reliability_analysis
     }
 
     # Call the corresponding function
@@ -71,6 +73,69 @@ def analysis(file_path, parameters):
 
     return processed_file_path
 
+def reliability_analysis(df, parameters):
+
+    result_content = []
+
+    result_content.append(make_result_section(section_name="Analysis steps",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "There is currently no uniform standard for the analysis of Cronbach's α coefficient (or half coefficient), but according to the views of most scholars, generally if the Cronb's α coefficient (or half coefficient) is above 0.9, the reliability of the test or scale is very good , between 0.8-0.9 means the reliability is good, between 0.7-0.8 means the reliability is acceptable, between 0.6-0.7 means the reliability is average, between 0.5-0.6 means the reliability is not ideal, if it is below 0.5 Consider reorganizing the questionnaire.",
+                                                  "Carry out further analysis on the item summary statistics table to see which items lead to the decline of the overall reliability. If the value of the 'correlation between the corrected item and the total' is lower than 0.3, or the value of α coefficient after deleting the item significantly higher than the α coefficient, you can consider removing this topic at this time."
+                                              ]))
+
+    result_content.append(make_result_section(section_name="Detailed conclusions",
+                                              content_type="text",
+                                              content=''))
+
+
+    #here variable_names is the array of variables
+    variable_names = parameters["variables"]
+    #new_df  includes the columns need to conduct reliablity analysis
+    new_df = df.loc[:, variable_names]
+    cronbach_alpha_result = pg.cronbach_alpha(data=new_df)
+    #the format of cronbach_alpha_result is   (0.7734375, array([0.336, 0.939]))
+
+    Cronbach_alpha_coefficient = cronbach_alpha_result[0]
+    column_size = len(variable_names)
+    sample_size = len(df)
+
+    evaluation_table = [Cronbach_alpha_coefficient, column_size, sample_size]
+
+    result_content.append(make_result_section(section_name="Output 1: overall description of the results",
+                                              content_type="table",
+                                              content={
+                                                  "data": [
+                                                      ['%.3f' % (evaluation_table[0]),
+                                                       evaluation_table[1],
+                                                       evaluation_table[2],
+                                                       ],
+                                                  ],
+                                                  "columns": ["Cronbach's alpha coefficient",
+                                                              "number of items",
+                                                              "sample size"
+                                                              ],
+                                                  "index": ["data"]
+                                              }))
+
+    result_content.append(make_result_section(section_name="Chart description:",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "The above table shows the results of the Cronbach's α coefficient of the model, including the Cronbach's α coefficient value, the number of items, and the number of samples, which are used to measure the reliability quality level of the data.",
+                                                  "Cronbach's α coefficient value: Evaluate whether the collected data is true and reliable, and check out unreasonable or random answers based on this.",
+                                                  "Number of items: The number of variables involved in the calculation of reliability analysis."
+                                              ]))
+
+    result_content.append(make_result_section(section_name="Low score suggestion:",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "Check whether your questions are reasonable and whether they cause misunderstanding and confusion to the respondent.",
+                                                  "Check each answer sheet, and you can eliminate answer sheets with poor quality answers.",
+                                                  "Remove or add some scale items for re-analysis."
+                                              ]))
+
+
+    return result_content
 
 def normality_test(df, parameters):
     result_content = []
@@ -80,6 +145,8 @@ def normality_test(df, parameters):
                                                   "Perform the Shapiro-Wilk (small data sample, generally less than 5000 samples) or Kolmogorov–Smirnov (large data sample, generally more than 5000 samples) test on the data to check its significance.",
                                                   "If it does not show significance (P>0.05), it means that it conforms to the normal distribution, otherwise it means that it does not conform to the normal distribution (PS: Usually it is difficult to meet the test in real research situations, if the absolute value of the sample kurtosis is less than 10 and the skewness The absolute value is less than 3, combined with the normal distribution histogram, PP diagram or QQ diagram, it can be described as basically conforming to the normal distribution)."
                                               ]))
+
+
 
     df[parameters["variable"]] = df[parameters["variable"]].astype(float)
     variable_name = parameters["variable"]
@@ -124,7 +191,7 @@ def normality_test(df, parameters):
                                                        evaluation_table[8],
                                                         ],
                                                   ],
-                                                  "columns": ['variable_name', 'sample_size', 'median', 'mean', 'std', 'skewness', 'kurtosis', 'S-W test (statistics/pvalue)', 'K-S test (statistics/pvalue)'
+                                                  "columns": ['variable name', 'sample size', 'median', 'mean', 'std', 'skewness', 'kurtosis', 'S-W test (statistics/pvalue)', 'K-S test (statistics/pvalue)'
                                                               ],
                                                   "index": ["data"]
                                               }))

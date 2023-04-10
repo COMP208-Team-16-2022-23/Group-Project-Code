@@ -17,3 +17,5 @@ dependencies:
   - conda-forge::imbalanced-learn
   - xlrd
   - conda-forge::langdetect
+  - conda-forge::pingouin
+  - statsmodels
