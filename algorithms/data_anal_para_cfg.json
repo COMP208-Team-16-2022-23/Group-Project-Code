@@ -31,7 +31,7 @@
         "link": "https://en.wikipedia.org/wiki/Normality_test",
         "variables": [
           {
-            "name": "variable",
+            "name": "variables",
             "description": "The variables to conduct the reliability analysis.",
             "type": "multi_select"
           }
