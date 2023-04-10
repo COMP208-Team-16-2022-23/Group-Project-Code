@@ -32,7 +32,7 @@ def view_document_demo():
 @bp.route('/preview/<path:file_path>', methods=['GET'])
 def view_document(file_path='public/hello_world.csv'):
     # Replace the URL with the URL of your Office document
-    document_url = f'https://lcda-vgnazlwvxa-nw.a.run.app/file/embedded/{file_path}'
+    document_url = f'https://lcda-vgnazlwvxa-uw.a.run.app/file/embedded/{file_path}'
 
     # import urllib.parse
     # safe_document_url = urllib.parse.quote(document_url, safe='')
