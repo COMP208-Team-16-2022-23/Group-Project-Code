@@ -71,6 +71,13 @@ def analysis(file_path, parameters):
 
     return processed_file_path
 
+def reliability_analysis(df, parameters):
+    result_content = []
+
+
+
+
+    return result_content
 
 def normality_test(df, parameters):
     result_content = []

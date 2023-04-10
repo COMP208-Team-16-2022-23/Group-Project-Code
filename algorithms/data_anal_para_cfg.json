@@ -21,6 +21,37 @@
     ]
   },
   {
+    "section_name": "Questionaire Analysis",
+    "code_name": "questionaire_analysis",
+    "algorithms": [
+      {
+        "name": "Reliability Analysis",
+        "code_name": "reliability_analysis",
+        "description": "Reliability analysis is mainly used to examine the stability and consistency of the results measured by the scale in the questionnaire, that is, to test whether the scale samples in the questionnaire are reliable and credible. The scale question type is the option of the question, which is set according to the level of statement. For example, our love for mobile phones has changed from very fond of to dislike. The most famous scale in the scale is the Likert 5-level scale. The options of this scale are mainly divided into \"strongly agree\", \"agree\", \"not sure\", \"disagree\", \"very disagree\"” five answers, recorded as 5, 4, 3, 2, 1 respectively.",
+        "link": "https://en.wikipedia.org/wiki/Normality_test",
+        "variables": [
+          {
+            "name": "variable",
+            "description": "The variables to conduct the reliability analysis.",
+            "type": "multi_select"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Analytical method",
+            "code_name": "reliability_analysis",
+            "type": "select",
+            "options": [
+              "Cronbach's α",
+              "Split-half Reliability"
+            ],
+            "description": "Cronbach's α reliability coefficient is the most commonly used reliability coefficient, α coefficient evaluation\nThe most important thing is the consistency between the scores of each item in the scale, which belongs to the internal consistency coefficient.\nThe split-half reliability method divides the survey items into two halves and calculates the correlation between the scores of the two halves.\ncoefficient to estimate the reliability of the entire scale. When conducting half-way reliability analysis, such as\nIf the scale contains anti-meaning items, the scores of anti-meaning items should be reversed first,\nIn order to ensure the consistency of the scoring direction of each item, all the items are divided into odd-even or former\nDivide into two halves that are as equal as possible"
+          }
+          ]
+      }
+    ]
+  },
+  {
     "section_name": "ML Classification",
     "code_name": "ml_classification",
     "algorithms": [
