@@ -74,7 +74,7 @@
         /* Color of the links AFTER scroll */
         .navbar-after-scroll .nav-link,
         .navbar-after-scroll .navbar-toggler {
-            color: #191919;
+            color: #4f4f4f;
         }
 
         .navbar-after-scroll .username,
@@ -176,8 +176,13 @@
                         <a class="nav-link" href="{{ url_for('forum.index') }}">Forum</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('node_editor.index') }}">Node Editor
-                            <span class="badge badge-primary">Beta</span></a>
+                        <a class="nav-link" href="{{ url_for('node_editor.index') }}">
+                            <div class="d-inline-flex flex-row justify-content-start align-items-center">
+
+                                <div class="me-1">Node Editor</div>
+                                <span class="badge badge-primary">Beta</span>
+                            </div>
+                        </a>
                     </li>
                 </ul>
 
