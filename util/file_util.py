@@ -12,7 +12,7 @@ def csv_to_xlsx(filename, temp_path) -> BytesIO:
     # temporary data
     target_xlsx = BytesIO()
     df = pd.read_csv(temp_path, encoding='utf-8', header=0)
-    print(df)
+    # print(df)
     df.to_excel(target_xlsx, sheet_name=filename, index=False)
     target_xlsx.seek(0)
     return target_xlsx

@@ -31,8 +31,15 @@ def view_document_demo():
 # embedded viewer
 @bp.route('/preview/<path:file_path>', methods=['GET'])
 def view_document(file_path='public/hello_world.csv'):
+    try:
+        config_dict = json.loads(os.environ.get('CONFIG'))
+        domain = config_dict['DOMAIN']
+    except:
+        import secret
+        domain = secret.DOMAIN
+
     # Replace the URL with the URL of your Office document
-    document_url = f'https://lcda-vgnazlwvxa-uw.a.run.app/file/embedded/{file_path}'
+    document_url = f'{domain}/file/embedded/{file_path}'
 
     # import urllib.parse
     # safe_document_url = urllib.parse.quote(document_url, safe='')

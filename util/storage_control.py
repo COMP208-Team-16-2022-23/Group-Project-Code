@@ -4,21 +4,24 @@
 import io
 import os
 import json
-import config
 
 from flask import send_file, flash
 from google.cloud import storage
 
 try:
-    config_str = os.environ.get('BUCKET_KEY')
-    config_dict = json.loads(config_str)
-    storage_client = storage.Client.from_service_account_info(info=config_dict)
+    bucket_dict = json.loads(os.environ.get('BUCKET_KEY'))
+    storage_client = storage.Client.from_service_account_info(info=bucket_dict)
+    # Get configuration from system variables
+    config_dict = json.loads(os.environ.get('CONFIG'))
+    bucket_name = config_dict['BUCKET_NAME']
 except:
     import secret
     storage_client = storage.Client.from_service_account_info(secret.GOOGLE_APPLICATION_CREDENTIALS)
+    bucket_name = secret.BUCKET_NAME
 
 
-def upload_blob(file, blob_name, bucket_name=config.BUCKET_NAME, public=False, prefix=''):
+
+def upload_blob(file, blob_name, bucket_name=bucket_name, public=False, prefix=''):
     """Uploads a file to the bucket."""
     try:
         # md5_hash = hashlib.md5(filepath.read_bytes())  # nosec
@@ -40,7 +43,7 @@ def upload_blob(file, blob_name, bucket_name=config.BUCKET_NAME, public=False, p
         return False
 
 
-def delete_blob(blob_name, bucket_name=config.BUCKET_NAME):
+def delete_blob(blob_name, bucket_name=bucket_name):
     """Deletes a blob from the bucket."""
     try:
         blob = storage_client.bucket(bucket_name).blob(blob_name)
@@ -51,7 +54,7 @@ def delete_blob(blob_name, bucket_name=config.BUCKET_NAME):
         return False
 
 
-def download_to_memory(src_path, bucket_name=config.BUCKET_NAME) -> io.BytesIO:
+def download_to_memory(src_path, bucket_name=bucket_name) -> io.BytesIO:
     """Downloads a blob from the bucket and store in memory"""
     # todo verification
     file_data = io.BytesIO()
@@ -65,7 +68,7 @@ def download_to_memory(src_path, bucket_name=config.BUCKET_NAME) -> io.BytesIO:
         return None
 
 
-def download_for_embedding(src_path, dest_path='', bucket_name=config.BUCKET_NAME):
+def download_for_embedding(src_path, dest_path='', bucket_name=bucket_name):
     """
     Download file from Cloud temporarily and respond file name and file data
     :return: file name and file data in memory
@@ -76,13 +79,13 @@ def download_for_embedding(src_path, dest_path='', bucket_name=config.BUCKET_NAM
     return filename, temp_path
 
 
-def download_with_response(src_path, dest_path='', bucket_name=config.BUCKET_NAME):
+def download_with_response(src_path, dest_path='', bucket_name=bucket_name):
     """Download file from Cloud and respond"""
     filename, file_data = download_for_embedding(src_path, dest_path, bucket_name)
     return send_file(file_data, as_attachment=True, download_name=filename)
 
 
-def list_blobs(bucket_name=config.BUCKET_NAME, prefix='', ext_filter: list = None):
+def list_blobs(bucket_name=bucket_name, prefix='', ext_filter: list = None):
     """
     Lists all the blobs in the bucket.
     :param bucket_name: name of the bucket
@@ -110,7 +113,7 @@ def list_blobs(bucket_name=config.BUCKET_NAME, prefix='', ext_filter: list = Non
         return False
 
 
-def list_blobs_names(bucket_name=config.BUCKET_NAME, prefix='', ext_filter: list = None):
+def list_blobs_names(bucket_name=bucket_name, prefix='', ext_filter: list = None):
     """
     Lists all the blobs name in the bucket
     :param bucket_name: name of the bucket

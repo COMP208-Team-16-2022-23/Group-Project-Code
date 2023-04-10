@@ -1,5 +1,8 @@
 from datetime import timedelta
 
+# DOMAIN
+DOMAIN = 'https://lcda-vgnazlwvxa-uw.a.run.app'
+
 SECRET_KEY = 'COMP208_Team16'
 PERMANENT_SESSION_LIFETIME = timedelta(minutes=45)
 
@@ -33,6 +36,7 @@ GOOGLE_APPLICATION_CREDENTIALS = {
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/lcda-website%40lcda-platform.iam.gserviceaccount.com"
 }
+BUCKET_NAME = 'lcda'
 
 # openAI api key
 OPENAI_API_KEY = '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' # invalid key
