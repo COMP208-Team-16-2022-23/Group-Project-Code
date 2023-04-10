@@ -10,6 +10,7 @@ import pandas as pd
 from scipy import stats
 from scipy.stats import skew, kurtosis
 import matplotlib.pyplot as plt
+import pylab
 from util import storage_control
 from util import file_util
 from flask import g
@@ -142,13 +143,29 @@ def normality_test(df, parameters):
                                               content=histogram_pic
                                               ))
 
+    result_content.append(make_result_section(section_name="Chart description:",
+                                              content_type="text",
+                                              content="The figure above shows the normality test histogram of the Q1 data. If the normality chart is basically bell-shaped (high in the middle and low at both ends), it means that although the data is not absolutely normal, it is basically acceptable as a normal distribution."
+                                              ))
+
+    pp_pic = make_pp_plot(df[parameters["variable"]])
+    result_content.append(make_result_section(section_name="Output 3: P-P Plot",
+                                              content_type="img",
+                                              content=pp_pic
+                                              ))
+    result_content.append(make_result_section(section_name="Chart description:",
+                                              content_type="txt",
+                                              content="The figure above shows the fitting situation between the cumulative probability (P) of Q1 calculation observation and the normal cumulative probability (P). The higher the degree of fitting, the more it obeys the normal distribution."
+                                              ))
+
+
     return result_content
 
 def make_histogram_pic(column, variable):
     """
     Make the picture of histogram
     :param column: column to make the histogram
-    :return: A string represents heatmap picture in form of base64
+    :return: A string represents histogram picture in form of base64
     """
 
     # plot histogram and density curve
@@ -175,6 +192,32 @@ def make_histogram_pic(column, variable):
 
     return base64_pic
 
+def make_pp_plot(column):
+    """
+    Make the picture of P-P plot
+    :param column: column to make the P-P plot
+    :return: A string represents P-P plot in form of base64
+    """
+
+    # plot P-P plot
+    f = plt.figure()
+    fig, ax = plt.subplots()
+    stats.probplot(column, dist="norm", plot=ax)
+    ax.set_xlabel("Theoretical quantiles")
+    ax.set_ylabel("Sample quantiles")
+    ax.set_title("P-P Plot")
+
+    # Encode into a string in the form of base64
+    pic_io = io.BytesIO()
+    plt.savefig(pic_io, format='png')
+    pic_io.seek(0)
+    base64_pic = base64.b64encode(pic_io.read()).decode()
+
+    # Clear plt buffer
+    f.clear()
+    plt.close()
+
+    return base64_pic
 
 
 # def analysis(df, para_received):
