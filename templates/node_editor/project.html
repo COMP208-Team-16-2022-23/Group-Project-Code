@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/baklavajs@1/dist/index.min.css">
     <script src="/static/js/DataSourceNode.js"></script>
     <script src="/static/js/DataProcessingNode.js"></script>
-    <script src="/static/js/NormalizationNode.js"></script>
 
     <div class="vh-100">
         <div id="editor"></div>
@@ -37,7 +36,14 @@
         editor.registerNodeType("ColumnSelection", ColumnSelectionNode);
         // editor.registerNodeType("DataProcessing", DataProcessingNode);
         editor.registerNodeType("DisplayTest", TestNode);
+        
+        editor.registerNodeType("DataTransform", DataTransformNode);
+        editor.registerNodeType("DimensionReduction", DimensionReductionNode);
+        editor.registerNodeType("MissingValueHandling", MissingValueHandlingNode);
         editor.registerNodeType("Normalization", NormalizationNode);
+        editor.registerNodeType("OutlierHandling", OutlierHandlingNode);
+        editor.registerNodeType("SampleBalancing", SampleBalancingNode);
+        editor.registerNodeType("TailShrinkageAndTruncationProcessing", TailShrinkageAndTruncationProcessingNode);
         
         // let root_node_list = [ColumnSelectionNode, NormalizationNode];
         // engine.rootNodes = root_node_list;
