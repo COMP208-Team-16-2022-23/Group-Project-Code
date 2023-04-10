@@ -21,7 +21,7 @@
     <meta name="twitter:image" content="https://lcda-vgnazlwvxa-nw.a.run.app/static/img/preview_image.jpg"/>
 
 
-    <title>Wellcome - LCDA</title>
+    <title>Welcome - LCDA</title>
     <!-- Web icon -->
     <link rel="icon" href="/static/img/LCDA.ico" type="image/x-icon"/>
     <!-- Google Fonts -->
@@ -74,12 +74,11 @@
         /* Color of the links AFTER scroll */
         .navbar-after-scroll .nav-link,
         .navbar-after-scroll .navbar-toggler {
-            color: #4f4f4f;
+            color: #191919;
         }
 
         .navbar-after-scroll .username,
-        .navbar-after-scroll .fa-user
-        {
+        .navbar-after-scroll .fa-user {
             color: #3B71CA;
         }
 
@@ -174,9 +173,11 @@
                         <a class="nav-link" href="{{ url_for('data_analysis.index') }}">Data Analysis</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('node_editor.index') }}">Node Editor</a>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('forum.index') }}">Forum</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('node_editor.index') }}">Node Editor
+                            <span class="badge badge-primary">Beta</span></a>
                     </li>
                 </ul>
 
