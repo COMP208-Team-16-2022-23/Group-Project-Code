@@ -9,6 +9,7 @@ import json
 import pandas
 
 import config
+from components.auth import login_required
 from util.storage_control import list_blobs, upload_blob, download_to_memory
 from util.file_util import add_suffix
 from algorithms import data_proc
@@ -17,8 +18,10 @@ bp = Blueprint('node_editor', __name__, url_prefix='/node_editor')
 
 
 @bp.route("/", methods=['GET', 'POST'])
+@login_required
 def index():
     datasets = list_blobs(prefix='public', ext_filter=config.ALLOWED_EXTENSIONS)
+    datasets += list_blobs(prefix=g.user.username, ext_filter=config.ALLOWED_EXTENSIONS)
     with open('algorithms/data_proc_para_cfg.json', 'r') as f:
         processing_cfg = json.load(f)
 

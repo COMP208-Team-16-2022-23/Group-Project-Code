@@ -8,7 +8,8 @@
     <script src="https://cdn.jsdelivr.net/npm/baklavajs@1/dist/index.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/baklavajs@1/dist/index.min.css">
     <script src="/static/js/DataSourceNode.js"></script>
-    <script src="/static/js/DataProcessingNode.js"></script>
+    <script src="/static/js/DataProcessingNodes.js"></script>
+    <script src="/static/js/OutputNodes.js"></script>
 
     <div class="vh-100">
         <div id="editor"></div>
@@ -16,7 +17,6 @@
 
     <script>
         const datasets = {{ my_data|safe }};
-        const processing = {{ processing_cfg|safe }};
         const process_url =  "/node_editor/processing";
         
         
@@ -34,8 +34,8 @@
         
         editor.registerNodeType("Data", DataSourceNode);
         editor.registerNodeType("ColumnSelection", ColumnSelectionNode);
-        // editor.registerNodeType("DataProcessing", DataProcessingNode);
-        editor.registerNodeType("DisplayTest", TestNode);
+        editor.registerNodeType("Display", DisplayNode);
+        editor.registerNodeType("EndProcess", EndNode);
         
         editor.registerNodeType("DataTransform", DataTransformNode);
         editor.registerNodeType("DimensionReduction", DimensionReductionNode);

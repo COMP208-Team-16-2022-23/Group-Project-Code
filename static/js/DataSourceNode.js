@@ -12,13 +12,13 @@ class DataSourceNode extends BaklavaJS.Core.Node {
             this.file_paths.push(dataset.file_path);
         }
         this.addOutputInterface("Output");
-        this.addOption("Operation", "SelectOption", "Select your Data", undefined,
+        this.addOption("Data Selection", "SelectOption", "Select your data", undefined,
             {items: this.file_names}
         );
     }
 
     calculate() {
-        const operation = this.getOptionValue("Operation");
+        const operation = this.getOptionValue("Data Selection");
         let result;
         var index = this.file_names.indexOf(operation);
         result = this.file_paths[index];
@@ -57,22 +57,3 @@ class ColumnSelectionNode extends BaklavaJS.Core.Node {
     }
 
 }
-
-class TestNode extends BaklavaJS.Core.Node {
-
-    type = "TestNode";
-    name = "DisplayTest";
-
-    constructor() {
-        super();
-        this.addInputInterface("Input");
-        this.addOption("Text", "TextOption");
-    }
-
-    calculate() {
-        let text = this.getInterface("Input").value;
-        this.setOptionValue("Text", text);
-    }
-
-}
-
