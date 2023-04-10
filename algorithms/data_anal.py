@@ -9,8 +9,10 @@ import seaborn as sns
 import pandas as pd
 from scipy import stats
 from scipy.stats import skew, kurtosis
+import statsmodels.api as sm
 import matplotlib.pyplot as plt
-import pylab
+
+
 from util import storage_control
 from util import file_util
 from flask import g
@@ -154,10 +156,19 @@ def normality_test(df, parameters):
                                               content=pp_pic
                                               ))
     result_content.append(make_result_section(section_name="Chart description:",
-                                              content_type="txt",
+                                              content_type="text",
                                               content="The figure above shows the fitting situation between the cumulative probability (P) of Q1 calculation observation and the normal cumulative probability (P). The higher the degree of fitting, the more it obeys the normal distribution."
                                               ))
 
+    qq_pic = make_qq_plot(df[parameters["variable"]])
+    result_content.append(make_result_section(section_name="Output 4: Q-Q Plot",
+                                              content_type="img",
+                                              content=qq_pic
+                                              ))
+    result_content.append(make_result_section(section_name="Chart description:",
+                                              content_type="text",
+                                              content="Q-Q diagram, the full name is 'Quantile Quantile Plot'. Compare the probability distributions of different quantiles of the observed value and the predicted value (assuming normal distribution) in a graphical way, so as to test whether it is consistent with the normal distribution law. And the actual data is used as the X-axis, and the quantile of the data when it is assumed to be normal is used as the Y-axis to make a scatter diagram. The higher the coincidence between the scatter point and the straight line, the more it obeys the normal distribution, and the larger the difference between the scatter points, the more it does not obey the normal state. The distribution depends on the actual situation."
+                                              ))
 
     return result_content
 
@@ -192,6 +203,7 @@ def make_histogram_pic(column, variable):
 
     return base64_pic
 
+
 def make_pp_plot(column):
     """
     Make the picture of P-P plot
@@ -200,7 +212,6 @@ def make_pp_plot(column):
     """
 
     # plot P-P plot
-    f = plt.figure()
     fig, ax = plt.subplots()
     stats.probplot(column, dist="norm", plot=ax)
     ax.set_xlabel("Theoretical quantiles")
@@ -214,11 +225,35 @@ def make_pp_plot(column):
     base64_pic = base64.b64encode(pic_io.read()).decode()
 
     # Clear plt buffer
-    f.clear()
     plt.close()
 
     return base64_pic
 
+def make_qq_plot(column):
+    """
+    Make the picture of Q-Q plot
+    :param column: column to make the Q-Q plot
+    :return: A string represents Q-Q plot in form of base64
+    """
+
+    # plot Q-Q plot
+    fig, ax = plt.subplots()
+    sm.ProbPlot(column).qqplot(line='s', ax=ax)
+    ax.set_xlabel("Theoretical quantiles")
+    ax.set_ylabel("Sample quantiles")
+    ax.set_title("Q-Q Plot")
+
+    # Encode into a string in the form of base64
+    pic_io = io.BytesIO()
+    plt.savefig(pic_io, format='png')
+    pic_io.flush()
+    pic_io.seek(0)
+    base64_pic = base64.b64encode(pic_io.read()).decode()
+
+    # Clear plt buffer
+    plt.close()
+
+    return base64_pic
 
 # def analysis(df, para_received):
 #     analytical_method = para_received["analytical_method"]
