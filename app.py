@@ -38,9 +38,24 @@ def index():
     # use index.html as the index page
     return render_template('index.html')
 
+
 @app.context_processor
-def inject_domain_name():
-    return {'DOMAIN_NAME': app.config['DOMAIN']}
+def inject_():
+    try:
+        maintenance_json = os.environ.get('MAINTENANCE')
+        maintenance = json.loads(maintenance_json)
+        MAINTENANCE_MESSAGE = maintenance['MAINTENANCE_MESSAGE']
+        MAINTENANCE_TITLE = maintenance['MAINTENANCE_TITLE']
+    except:
+        MAINTENANCE_MESSAGE = config.MAINTENANCE_MESSAGE
+        MAINTENANCE_TITLE = config.MAINTENANCE_TITLE
+
+    return {
+        'DOMAIN_NAME': app.config['DOMAIN'],
+        'MAINTENANCE_MESSAGE': MAINTENANCE_MESSAGE,
+        'MAINTENANCE_TITLE': MAINTENANCE_TITLE,
+    }
+
 
 app.register_blueprint(auth.bp)
 app.register_blueprint(data_manager.bp)

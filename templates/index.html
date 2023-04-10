@@ -281,12 +281,11 @@
     <div class="container">
         {#        <h1 class="mb-3">Low-Code Data Analysis Platform</h1>#}
 
-
+        {% if MAINTENANCE_MESSAGE and MAINTENANCE_TITLE %}
         <div class="note note-primary mb-5">
-            <strong>Kind tips:</strong> Our website is being developed and some content may change. We may delete user
-            data for a better user experience, so back up important information regularly. Sorry for any inconvenience
-            and thanks for your understanding.
+            <strong>{{MAINTENANCE_TITLE}}</strong> {{ MAINTENANCE_MESSAGE }}
         </div>
+        {% endif %}
 
         <h2 class="mb-4">What is LCDA?</h2>
         <p>
