@@ -27,6 +27,17 @@ except:
     import secret
     app.config.from_pyfile('secret.py')
 
+try:
+    maintenance_json = os.environ.get('MAINTENANCE')
+    maintenance = json.loads(maintenance_json)
+    maintenance_message = maintenance['maintenance_message']
+    maintenance_title = maintenance['maintenance_title']
+except:
+    maintenance_status = False
+else:
+    maintenance_status = True
+
+
 # initialize the mail extension
 mail = Mail(app)
 
@@ -35,26 +46,30 @@ db.init_db()
 
 @app.route('/')
 def index():
+    try:
+        notice = json.loads(os.environ.get('NOTICE'))
+        notice_title = notice['NOTICE_TITLE']
+        notice_message = notice['NOTICE_MESSAGE']
+    except:
+        notice_title = config.NOTICE_TITLE
+        notice_message = config.NOTICE_MESSAGE
+
     # use index.html as the index page
-    return render_template('index.html')
+    return render_template('index.html', NOTICE_TITLE=notice_title, NOTICE_MESSAGE=notice_message)
 
 
 @app.context_processor
 def inject_():
-    try:
-        maintenance_json = os.environ.get('MAINTENANCE')
-        maintenance = json.loads(maintenance_json)
-        MAINTENANCE_MESSAGE = maintenance['MAINTENANCE_MESSAGE']
-        MAINTENANCE_TITLE = maintenance['MAINTENANCE_TITLE']
-    except:
-        MAINTENANCE_MESSAGE = config.MAINTENANCE_MESSAGE
-        MAINTENANCE_TITLE = config.MAINTENANCE_TITLE
-
-    return {
-        'DOMAIN_NAME': app.config['DOMAIN'],
-        'MAINTENANCE_MESSAGE': MAINTENANCE_MESSAGE,
-        'MAINTENANCE_TITLE': MAINTENANCE_TITLE,
-    }
+    if not maintenance_status:
+        return {
+            'DOMAIN_NAME': app.config['DOMAIN']
+        }
+    else:
+        return {
+            'DOMAIN_NAME': app.config['DOMAIN'],
+            'MAINTENANCE_MESSAGE': maintenance_message,
+            'MAINTENANCE_TITLE': maintenance_title
+        }
 
 
 app.register_blueprint(auth.bp)

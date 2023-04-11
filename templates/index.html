@@ -49,6 +49,14 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
+    {% if MAINTENANCE_MESSAGE or MAINTENANCE_TITLE %}
+    <script type="text/javascript">
+		window.onload = function() {
+			alert("{{ MAINTENANCE_TITLE }} {{ MAINTENANCE_MESSAGE }}");
+		}
+	</script>
+    {% endif %}
+
 </head>
 
 <body>
@@ -281,9 +289,15 @@
     <div class="container">
         {#        <h1 class="mb-3">Low-Code Data Analysis Platform</h1>#}
 
-        {% if MAINTENANCE_MESSAGE and MAINTENANCE_TITLE %}
+<!--        {% if MAINTENANCE_MESSAGE and MAINTENANCE_TITLE %}-->
+<!--        <div class="note note-primary mb-5">-->
+<!--            <strong>{{MAINTENANCE_TITLE}}</strong> {{ MAINTENANCE_MESSAGE }}-->
+<!--        </div>-->
+<!--        {% endif %}-->
+
+        {% if NOTICE_MESSAGE or NOTICE_TITLE %}
         <div class="note note-primary mb-5">
-            <strong>{{MAINTENANCE_TITLE}}</strong> {{ MAINTENANCE_MESSAGE }}
+            <strong>{{NOTICE_TITLE}}</strong> {{ NOTICE_MESSAGE }}
         </div>
         {% endif %}
 

@@ -11,5 +11,5 @@ OPENAI_MAX_TOKENS = 900
 
 # Strings
 LOGIN_REQUIRED = 'Please log in first'
-MAINTENANCE_TITLE = 'Kind tips:'
-MAINTENANCE_MESSAGE = 'Our website is being developed and some content may change. We may delete user data for a better user experience, so back up important information regularly. Sorry for any inconvenience and thanks for your understanding.'
+NOTICE_TITLE = 'Kind tips:'
+NOTICE_MESSAGE = 'Our platform is being developed and some content may change. We may delete user data for a better user experience, so back up important information regularly. Sorry for any inconvenience and thanks for your understanding. We hope you can enjoy using our platform.'
