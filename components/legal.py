@@ -22,3 +22,8 @@ def privacy():
 @bp.route("/about", methods=['GET'])
 def about():
     return render_template('legal/about.html')
+
+# OSS
+@bp.route("/oss", methods=['GET'])
+def oss():
+    return render_template('legal/oss.html')
