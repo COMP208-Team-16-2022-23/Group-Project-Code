@@ -28,15 +28,7 @@ except:
     import secret
     app.config.from_pyfile('secret.py')
 
-try:
-    maintenance_json = os.environ.get('MAINTENANCE')
-    maintenance = json.loads(maintenance_json)
-    maintenance_message = maintenance['MAINTENANCE_MESSAGE']
-    maintenance_title = maintenance['MAINTENANCE_TITLE']
-except:
-    maintenance_status = False
-else:
-    maintenance_status = True
+maintenance_message = os.environ.get('MAINTENANCE')
 
 try:
     notice = json.loads(os.environ.get('NOTICE'))
@@ -65,15 +57,14 @@ def index():
 
 @app.context_processor
 def inject_():
-    if not maintenance_status:
+    if not maintenance_message:
         return {
             'DOMAIN_NAME': app.config['DOMAIN']
         }
     else:
         return {
             'DOMAIN_NAME': app.config['DOMAIN'],
-            'MAINTENANCE_MESSAGE': maintenance_message,
-            'MAINTENANCE_TITLE': maintenance_title
+            'MAINTENANCE_MESSAGE': maintenance_message
         }
 
 
