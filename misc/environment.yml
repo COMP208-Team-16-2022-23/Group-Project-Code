@@ -1,4 +1,4 @@
-name: COMP208
+name: COMP208-test
 dependencies:
   - python=3.10
   - pip
@@ -18,4 +18,5 @@ dependencies:
   - xlrd
   - conda-forge::langdetect
   - conda-forge::pingouin
+  - conda-forge::prettytable
   - statsmodels
