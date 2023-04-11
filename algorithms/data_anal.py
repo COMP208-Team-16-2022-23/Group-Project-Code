@@ -11,10 +11,11 @@ import seaborn as sns
 import pandas as pd
 from scipy import stats
 from scipy.stats import skew, kurtosis
+import psython as psy
 import pingouin as pg
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
-
+import matplotlib.font_manager as font_manager
 from util import storage_control
 from util import file_util
 from flask import g
@@ -110,7 +111,7 @@ def reliability_analysis(df, parameters):
                                                       ['%.3f' % (evaluation_table[0]),
                                                        evaluation_table[1],
                                                        evaluation_table[2],
-                                                       ],
+                                                       ]
                                                   ],
                                                   "columns": ["Cronbach's alpha coefficient",
                                                               "number of items",
@@ -119,7 +120,9 @@ def reliability_analysis(df, parameters):
                                                   "index": ["data"]
                                               }))
 
-    result_content.append(make_result_section(section_name="Chart description:",
+
+
+    result_content.append(make_result_section(section_name="Table description:",
                                               content_type="ordered_list",
                                               content=[
                                                   "The above table shows the results of the Cronbach's α coefficient of the model, including the Cronbach's α coefficient value, the number of items, and the number of samples, which are used to measure the reliability quality level of the data.",
@@ -135,7 +138,39 @@ def reliability_analysis(df, parameters):
                                                   "Remove or add some scale items for re-analysis."
                                               ]))
 
+    the_Cronbach, if_deleted_table = psy.cronbach_alpha_scale_if_deleted(df)
+
+    table_data = []
+    for index, row in if_deleted_table.iterrows():
+        row_data = list(row)
+        table_data.append(row_data)
+
+    num_rows = if_deleted_table.shape[0]
+    row_nums = list(range(1, num_rows + 1))
+
+    result_content.append(make_result_section(section_name="Output 2: delete the statistical summary of the analysis item",
+                                              content_type="table",
+                                              content={
+                                                  "data": table_data,
+                                                  "columns": ["Item",
+                                                              "Scale Mean if Item Deleted",
+                                                              "Scale Variance if Item Deleted",
+                                                              "Corrected Item-Total Correlation",
+                                                              "Cronbach's Alpha if Item Deleted"
+                                                              ],
+                                                  "index": row_nums
+                                              }))
+
+    result_content.append(make_result_section(section_name="Table description:",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "The above table shows the statistical results of the items of the model. Through the control variable method, the correlation and Cronbach's α coefficient and other indicators before and after deleting a certain item are compared to assist in judging whether the scale item should be corrected.",
+                                                  "Generally, first judge whether the overall correlation after item deletion is less than 0.3, and if it is satisfied, then determine whether the α coefficient after item deletion is greater than the original coefficient. If all are not satisfied, it can be considered that the item is in good condition, otherwise it needs to be checked.",
+
+                                              ]))
+
     return result_content
+
 
 
 def normality_test(df, parameters):
@@ -237,6 +272,9 @@ def normality_test(df, parameters):
                                               ))
 
     return result_content
+
+
+
 
 
 def make_histogram_pic(column, variable):
