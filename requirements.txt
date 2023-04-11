@@ -20,3 +20,5 @@ xlrd
 langdetect
 statsmodels
 pingouin
+psython
+prettytable
