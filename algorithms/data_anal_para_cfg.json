@@ -39,7 +39,7 @@
         "parameters": [
           {
             "name": "Analytical method",
-            "code_name": "reliability_analysis",
+            "code_name": "Analytical_method",
             "type": "select",
             "options": [
               "Cronbach's α",

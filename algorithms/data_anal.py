@@ -10,8 +10,9 @@ from sklearn.utils import shuffle
 import seaborn as sns
 import pandas as pd
 from scipy import stats
-from scipy.stats import skew, kurtosis
-import psython as psy
+from scipy.stats import skew
+from scipy.stats import spearmanr
+import psython
 import pingouin as pg
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
@@ -78,8 +79,18 @@ def analysis(file_path, parameters):
 
 
 def reliability_analysis(df, parameters):
-    result_content = []
 
+    if parameters["Analytical_method"] == "Cronbach's α":
+        result_content = cronbach(df, parameters)
+    elif parameters["Analytical_method"] == "Split-half Reliability":
+        result_content = splitHalf(df, parameters)
+
+
+    return result_content
+
+def cronbach(df, parameters):
+
+    result_content = []
     result_content.append(make_result_section(section_name="Analysis steps",
                                               content_type="ordered_list",
                                               content=[
@@ -120,8 +131,6 @@ def reliability_analysis(df, parameters):
                                                   "index": ["data"]
                                               }))
 
-
-
     result_content.append(make_result_section(section_name="Table description:",
                                               content_type="ordered_list",
                                               content=[
@@ -138,7 +147,7 @@ def reliability_analysis(df, parameters):
                                                   "Remove or add some scale items for re-analysis."
                                               ]))
 
-    the_Cronbach, if_deleted_table = psy.cronbach_alpha_scale_if_deleted(df)
+    the_Cronbach, if_deleted_table = psython.cronbach_alpha_scale_if_deleted(df)
 
     table_data = []
     for index, row in if_deleted_table.iterrows():
@@ -148,18 +157,19 @@ def reliability_analysis(df, parameters):
     num_rows = if_deleted_table.shape[0]
     row_nums = list(range(1, num_rows + 1))
 
-    result_content.append(make_result_section(section_name="Output 2: delete the statistical summary of the analysis item",
-                                              content_type="table",
-                                              content={
-                                                  "data": table_data,
-                                                  "columns": ["Item",
-                                                              "Scale Mean if Item Deleted",
-                                                              "Scale Variance if Item Deleted",
-                                                              "Corrected Item-Total Correlation",
-                                                              "Cronbach's Alpha if Item Deleted"
-                                                              ],
-                                                  "index": row_nums
-                                              }))
+    result_content.append(
+        make_result_section(section_name="Output 2: delete the statistical summary of the analysis item",
+                            content_type="table",
+                            content={
+                                "data": table_data,
+                                "columns": ["Item",
+                                            "Scale Mean if Item Deleted",
+                                            "Scale Variance if Item Deleted",
+                                            "Corrected Item-Total Correlation",
+                                            "Cronbach's Alpha if Item Deleted"
+                                            ],
+                                "index": row_nums
+                            }))
 
     result_content.append(make_result_section(section_name="Table description:",
                                               content_type="ordered_list",
@@ -171,7 +181,92 @@ def reliability_analysis(df, parameters):
 
     return result_content
 
+def splitHalf(df, parameters):
 
+    result_content = []
+
+    result_content.append(make_result_section(section_name="Analysis steps",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "There is currently no uniform standard for the analysis of Cronbach's α coefficient (or half coefficient), but according to the views of most scholars, generally if the Cronb's α coefficient (or half coefficient) is above 0.9, the reliability of the test or scale is very good , between 0.8-0.9 means the reliability is good, between 0.7-0.8 means the reliability is acceptable, between 0.6-0.7 means the reliability is average, between 0.5-0.6 means the reliability is not ideal, if it is below 0.5 Consider reorganizing the questionnaire.",
+                                                  "Carry out further analysis on the item summary statistics table to see which items lead to the decline of the overall reliability. If the value of the reliability is lower than 0.3, or the value of 'α coefficient after deleting the item' Significantly higher than the α coefficient, you can consider removing this topic at this time."
+
+                                              ]))
+
+    result_content.append(make_result_section(section_name="Detailed conclusions",
+                                              content_type="text",
+                                              content=''))
+
+    # here variable_names is the array of variables
+    variable_names = parameters["variables"]
+    # new_df  includes the columns need to conduct reliablity analysis
+    new_df = df.loc[:, variable_names]
+
+
+    n_cols = len(new_df.columns)
+    half_cols = n_cols // 2
+
+    df1 = new_df.iloc[:, :half_cols]
+    df2 = new_df.iloc[:, half_cols:]
+
+
+    number_of_items1 = df1.shape[1]
+    number_of_items2 = df2.shape[1]
+
+    result1 = pg.cronbach_alpha(data=df1)[0]
+    result2 = pg.cronbach_alpha(data=df2)[0]
+
+    # 计算两组数据的总分
+    sum1 = df1.sum(axis=1)
+    sum2 = df2.sum(axis=1)
+
+
+    # 计算两组数据的斯皮尔曼相关系数
+    corr = spearmanr(sum1, sum2).correlation
+
+    # 计算 Spearman-Brown 系数
+    sb = 2 * corr / (1 + corr)
+
+    result_content.append(make_result_section(section_name="Output 1: Half-half reliability coefficient table",
+                                              content_type="table",
+                                              content={
+                                                  "data": [
+                                                      [ result1,
+                                                        number_of_items1
+                                                       ],
+                                                      [
+                                                        result2,
+                                                        number_of_items2
+                                                      ]
+                                                  ],
+                                                  "columns": ["Cronbach's alpha coefficient",
+                                                              "number of items"
+                                                              ],
+                                                  "index": ["first half","second half"]
+                                              }))
+
+    result_content.append(make_result_section(section_name="Output 2: Spearman-Brown coefficient",
+                                              content_type="table",
+                                              content={
+                                                  "data": [
+                                                      [sb]
+                                                  ],
+                                                  "columns": ["Spearman-Brown coefficient"
+                                                              ],
+                                                  "index": ["total dataset"]
+                                              }))
+
+    result_content.append(make_result_section(section_name="Chart description:",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "The above table shows the results of half-half reliability analysis of the model, including Cronbach's α coefficient value, correlation coefficient value, and half-half coefficient.",
+                                                  "The split-half reliability method is to divide the survey item into two halves, calculate the correlation coefficient of the scores of the two halves, and then estimate the reliability of the entire scale;",
+                                                  "The Cronbach α of the two parts before and after can be calculated to obtain the correlation coefficient value of the two parts of the data, and the correlation coefficient value participates in the calculation of the Spearman-Brown coefficient.",
+                                                  "If the number of items is an odd number n, the number of items in the first part is (n+1)/2, and the number of items in the second half is (n-1)/2, which is 'unequal length'. If the number of items isEven n, the number of items in the first part is n/2, and the number of items in the second half is n/2, which are 'equal length'.",
+                                                  "According to whether the number of items in the two parts is 'equal length' or 'unequal length', select the corresponding half coefficient (Spearman-Brown) to judge the reliability effect."
+                                              ]))
+
+    return result_content
 
 def normality_test(df, parameters):
     result_content = []
