@@ -21,4 +21,3 @@ langdetect
 statsmodels
 pingouin
 psython
-prettytable

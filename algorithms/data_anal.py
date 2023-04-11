@@ -16,7 +16,6 @@ import psython
 import pingouin as pg
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
-import matplotlib.font_manager as font_manager
 from util import storage_control
 from util import file_util
 from flask import g
