@@ -50,9 +50,9 @@ db.init_db()
 @app.route('/')
 def index():
     if notice_status == "True":
-        return render_template('index.html', NOTICE_TITLE=notice_title, NOTICE_MESSAGE=notice_message)
+        return render_template('index.html', INTRODUCTION=config.INTRODUCTION, NOTICE_TITLE=notice_title, NOTICE_MESSAGE=notice_message)
     else:
-        return render_template('index.html')
+        return render_template('index.html', INTRODUCTION=config.INTRODUCTION)
 
 
 @app.context_processor

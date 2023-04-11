@@ -303,11 +303,7 @@
 
         <h2 class="mb-4">What is LCDA?</h2>
         <p>
-            LCDA stands for Low-Code Data Analysis, a revolutionary approach to simplifying data analysis by minimizing
-            the need for coding. With LCDA, you can quickly and easily analyze large datasets without writing complex
-            code. The platform features a user-friendly interface for dragging and dropping data into analyses and
-            visualizing results. LCDA is perfect for data scientists, business analysts, and anyone looking to gain
-            insights from their data more efficiently.
+            {{ INTRODUCTION }}
         </p>
 
         <!--        <p>Know more about our team? <br><a href="{{ url_for('legal.about') }}"><b>About us</b></a></p>-->
@@ -322,7 +318,8 @@
         <h6>Forgot your password?</h6>
         <p><a href='{{ url_for('auth.forgot_password') }}'>Reset password here</a></p>
 
-        <p>Website made by <a href="{{ url_for('legal.about') }}">2022/23-COMP208-Team16</a></p>
+        <h6>Website made by <a href="{{ url_for('legal.about') }}">2022/23-COMP208-Team16</a></h6>
+        <p>LCDA is impossible to run without the <a href="{{ url_for('legal.oss') }}">open source software</a>.</p>
 
     </div>
 </main>
