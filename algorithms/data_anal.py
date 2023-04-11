@@ -1,9 +1,11 @@
 import numpy as np
+from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split, KFold
 from sklearn.metrics.pairwise import euclidean_distances, manhattan_distances
 from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, precision_score, f1_score
+from sklearn.svm import SVR
 from sklearn.utils import shuffle
 import seaborn as sns
 import pandas as pd
@@ -12,7 +14,6 @@ from scipy.stats import skew, kurtosis
 import pingouin as pg
 import statsmodels.api as sm
 import matplotlib.pyplot as plt
-
 
 from util import storage_control
 from util import file_util
@@ -54,8 +55,9 @@ def analysis(file_path, parameters):
     # Define dictionary mapping method names to functions
     method_dict = {
         'knn_classification': knn_classification,
-        'normality_test' : normality_test,
-        'reliability_analysis' : reliability_analysis
+        'normality_test': normality_test,
+        'reliability_analysis': reliability_analysis,
+        'svm_classification': svm_classification
     }
 
     # Call the corresponding function
@@ -73,8 +75,8 @@ def analysis(file_path, parameters):
 
     return processed_file_path
 
-def reliability_analysis(df, parameters):
 
+def reliability_analysis(df, parameters):
     result_content = []
 
     result_content.append(make_result_section(section_name="Analysis steps",
@@ -88,13 +90,12 @@ def reliability_analysis(df, parameters):
                                               content_type="text",
                                               content=''))
 
-
-    #here variable_names is the array of variables
+    # here variable_names is the array of variables
     variable_names = parameters["variables"]
-    #new_df  includes the columns need to conduct reliablity analysis
+    # new_df  includes the columns need to conduct reliablity analysis
     new_df = df.loc[:, variable_names]
     cronbach_alpha_result = pg.cronbach_alpha(data=new_df)
-    #the format of cronbach_alpha_result is   (0.7734375, array([0.336, 0.939]))
+    # the format of cronbach_alpha_result is   (0.7734375, array([0.336, 0.939]))
 
     Cronbach_alpha_coefficient = cronbach_alpha_result[0]
     column_size = len(variable_names)
@@ -134,8 +135,8 @@ def reliability_analysis(df, parameters):
                                                   "Remove or add some scale items for re-analysis."
                                               ]))
 
-
     return result_content
+
 
 def normality_test(df, parameters):
     result_content = []
@@ -146,8 +147,6 @@ def normality_test(df, parameters):
                                                   "If it does not show significance (P>0.05), it means that it conforms to the normal distribution, otherwise it means that it does not conform to the normal distribution (PS: Usually it is difficult to meet the test in real research situations, if the absolute value of the sample kurtosis is less than 10 and the skewness The absolute value is less than 3, combined with the normal distribution histogram, PP diagram or QQ diagram, it can be described as basically conforming to the normal distribution)."
                                               ]))
 
-
-
     df[parameters["variable"]] = df[parameters["variable"]].astype(float)
     variable_name = parameters["variable"]
     sample_size = len(df[parameters["variable"]])
@@ -157,23 +156,21 @@ def normality_test(df, parameters):
     skewness = skew(df[parameters["variable"]])
     kurtosis = df[parameters["variable"]].kurt()
 
-
     shapiro_test = stats.shapiro(df[parameters["variable"]])
-    #shapiro_test is the format of ShapiroResult(statistic=0.9813305735588074, pvalue=0.16855233907699585)
+    # shapiro_test is the format of ShapiroResult(statistic=0.9813305735588074, pvalue=0.16855233907699585)
     shapiro_statistic = shapiro_test.statistic
     shapiro_pvalue = shapiro_test.pvalue
     shapiro_result = '{}({})'.format(shapiro_statistic, shapiro_pvalue)
 
     ks_test = stats.kstest(df[parameters["variable"]], stats.norm.cdf)
-    #ks_test is the format of KstestResult(statistic=0.17482387821055168, pvalue=0.001913921057766743)
+    # ks_test is the format of KstestResult(statistic=0.17482387821055168, pvalue=0.001913921057766743)
     ks_statistic = ks_test.statistic
     ks_pvalue = ks_test.pvalue
     ks_result = '{}({})'.format(ks_statistic, ks_pvalue)
 
     result_content.append(make_result_section(section_name="Detailed conclusions",
                                               content_type="text",
-                                              content= ''))
-
+                                              content=''))
 
     evaluation_table = [variable_name, sample_size, median, mean, std, skewness, kurtosis, shapiro_result, ks_result]
     result_content.append(make_result_section(section_name="Output 1: overall description of the results",
@@ -189,9 +186,11 @@ def normality_test(df, parameters):
                                                        '%.3f' % (evaluation_table[6]),
                                                        evaluation_table[7],
                                                        evaluation_table[8],
-                                                        ],
+                                                       ],
                                                   ],
-                                                  "columns": ['variable name', 'sample size', 'median', 'mean', 'std', 'skewness', 'kurtosis', 'S-W test (statistics/pvalue)', 'K-S test (statistics/pvalue)'
+                                                  "columns": ['variable name', 'sample size', 'median', 'mean', 'std',
+                                                              'skewness', 'kurtosis', 'S-W test (statistics/pvalue)',
+                                                              'K-S test (statistics/pvalue)'
                                                               ],
                                                   "index": ["data"]
                                               }))
@@ -238,6 +237,7 @@ def normality_test(df, parameters):
                                               ))
 
     return result_content
+
 
 def make_histogram_pic(column, variable):
     """
@@ -296,6 +296,7 @@ def make_pp_plot(column):
 
     return base64_pic
 
+
 def make_qq_plot(column):
     """
     Make the picture of Q-Q plot
@@ -322,6 +323,7 @@ def make_qq_plot(column):
 
     return base64_pic
 
+
 # def analysis(df, para_received):
 #     analytical_method = para_received["analytical_method"]
 #     return {
@@ -333,7 +335,7 @@ def shuffle_dataset(x, y):
     return x, y
 
 
-#test_size is the proportion of the test set in the data set
+# test_size is the proportion of the test set in the data set
 def dataset_split(x, y, testing_set_ratio):
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=testing_set_ratio, random_state=0)
 
@@ -552,6 +554,160 @@ def knn_classification(df, parameters):
                                                   content=accuracy))
     else:
         result_content += cross_validation(x_train, y_train, neigh,
+                                           int(parameters["cross_validation"].split("-", 1)[0]))  # k-fold
+
+    return result_content
+
+
+def svm_classification(df, parameters):
+    result_content = []
+
+    result_content.append(make_result_section(section_name="Analysis steps",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "Establish a Support vector machine (SVM) class classification model through the training set data.",
+                                                  "Apply the established Support vector machine (SVM) classification model to the training and test data to obtain the classification evaluation results of the model.",
+                                                  "Due to the random nature of support vector machine (SVM) classification, the results of each operation are not the same"
+                                                  "Note: The Support vector machine (SVM) classification model cannot obtain a definite equation like the traditional model, and the model is usually evaluated by testing the classification effect of the data."
+                                              ]))
+
+    # Constructing a support vector machine (SVM) classifier model
+    clf = svm.SVC(kernel=parameters["kernel"], C=float(parameters["C"]), tol=float(parameters["tol"]),
+                  max_iter=int(parameters["max_iter"]))
+
+    # slice the dataframe according to the features selected by the user
+    x_train = df[parameters["features"]]
+    y_train = df[parameters["target"]]
+
+    # If the data needs to be shuffled, the shuffle operation is performed
+    if parameters["shuffle"] == "True":
+        x_train, y_train = shuffle_dataset(x_train, y_train)
+
+    # Divide the dataset and return the divided training and test sets
+    if parameters["cross_validation"] == "None":
+        x_train, x_test, y_train, y_test = dataset_split(x_train, y_train, 1 - float(parameters["train_ratio"]))
+        clf.fit(x_train, y_train)
+
+        # Prediction on training and test sets
+        y_train_pred = clf.predict(x_train)
+        y_test_pred = clf.predict(x_test)
+
+        # Calculate evaluation metrics
+        accuracy_train, accuracy_test, recall_train, recall_test, precision_train, precision_test, f1_train, f1_test = \
+            get_evaluation_metrics(y_train, y_train_pred, y_test, y_test_pred)
+
+        # Compute confusion matrix
+        cnf_matrix = pd.DataFrame(confusion_matrix(y_test, y_test_pred))
+
+        pic = make_heatmap_pic(cnf_matrix)
+
+        # get the accuracy
+        accuracy = clf.score(x_test, y_test)
+
+        # make all the values in result_table and confusion_matrix_table to one dictionary
+        evaluation_table = [accuracy_train, recall_train, precision_train, f1_train, accuracy_test, recall_test,
+                            precision_test, f1_test]
+        result_content.append(make_result_section(section_name="Evaluation Results",
+                                                  content_type="table",
+                                                  content={
+                                                      "data": [['%.3f' % (evaluation_table[0]),
+                                                                '%.3f' % (evaluation_table[1]),
+                                                                '%.3f' % (evaluation_table[2]),
+                                                                '%.3f' % (evaluation_table[3])],
+                                                               # '%.3f' % means 3 decimal places
+                                                               ['%.3f' % (evaluation_table[4]),
+                                                                '%.3f' % (evaluation_table[5]),
+                                                                '%.3f' % (evaluation_table[6]),
+                                                                '%.3f' % (evaluation_table[7])]],
+                                                      "columns": ["Accuracy", "Recall", "Precision", "F1"],
+                                                      "index": ["Training Set", "Test Set"]
+                                                  }))
+        # result_content.append(make_result_section(section_name="Confusion Matrix",
+        #                                           content_type="table",
+        #                                           content=cnf_matrix.to_dict(orient='split')))
+        result_content.append(make_result_section(section_name="Heatmap", content_type="img", content=pic))
+        result_content.append(make_result_section(section_name="Accuracy",
+                                                  content_type="text",
+                                                  content=accuracy))
+    else:
+        result_content += cross_validation(x_train, y_train, clf,
+                                           int(parameters["cross_validation"].split("-", 1)[0]))  # k-fold
+
+    return result_content
+
+
+def svr_regression(df, parameters):
+    result_content = []
+
+    result_content.append(make_result_section(section_name="Analysis steps",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "Establish a Support vector machine regression (SVR) model through the training set data.",
+                                                  "Apply the established Support vector machine regression (SVR) model to the training and test data to obtain the classification evaluation results of the model.",
+                                                  "Due to the random nature of support vector machine (SVR) regression, the results of each operation are not the same"
+                                                  "Note: The Support vector machine regression (SVR) model cannot obtain a definite equation like the traditional model, and the model is usually evaluated by testing the classification effect of the data."
+                                              ]))
+
+    # Constructing SVM regression models
+    svm = SVR(kernel=parameters["kernel"], C=float(parameters["C"]), tol=float(parameters["tol"]),
+              max_iter=int(parameters["max_iter"]))
+
+    # 从数据框中选取用户指定的特征和目标列
+    x_train = df[parameters["features"]]
+    y_train = df[parameters["target"]]
+
+    # If the data needs to be shuffled, the shuffle operation is performed
+    if parameters["shuffle"] == "True":
+        x_train, y_train = shuffle_dataset(x_train, y_train)
+
+    # Divide the dataset and return the divided training and test sets
+    if parameters["cross_validation"] == "None":
+        x_train, x_test, y_train, y_test = dataset_split(x_train, y_train, 1 - float(parameters["train_ratio"]))
+        svm.fit(x_train, y_train)
+
+        # Prediction on training and test sets
+        y_train_pred = svm.predict(x_train)
+        y_test_pred = svm.predict(x_test)
+
+        # Calculate evaluation metrics
+        accuracy_train, accuracy_test, recall_train, recall_test, precision_train, precision_test, f1_train, f1_test = \
+            get_evaluation_metrics(y_train, y_train_pred, y_test, y_test_pred)
+
+        # Compute confusion matrix
+        cnf_matrix = pd.DataFrame(confusion_matrix(y_test, y_test_pred))
+
+        pic = make_heatmap_pic(cnf_matrix)
+
+        # get the accuracy
+        accuracy = svm.score(x_test, y_test)
+
+        # make all the values in result_table and confusion_matrix_table to one dictionary
+        evaluation_table = [accuracy_train, recall_train, precision_train, f1_train, accuracy_test, recall_test,
+                            precision_test, f1_test]
+        result_content.append(make_result_section(section_name="Evaluation Results",
+                                                  content_type="table",
+                                                  content={
+                                                      "data": [['%.3f' % (evaluation_table[0]),
+                                                                '%.3f' % (evaluation_table[1]),
+                                                                '%.3f' % (evaluation_table[2]),
+                                                                '%.3f' % (evaluation_table[3])],
+                                                               # '%.3f' % means 3 decimal places
+                                                               ['%.3f' % (evaluation_table[4]),
+                                                                '%.3f' % (evaluation_table[5]),
+                                                                '%.3f' % (evaluation_table[6]),
+                                                                '%.3f' % (evaluation_table[7])]],
+                                                      "columns": ["Accuracy", "Recall", "Precision", "F1"],
+                                                      "index": ["Training Set", "Test Set"]
+                                                  }))
+        # result_content.append(make_result_section(section_name="Confusion Matrix",
+        #                                           content_type="table",
+        #                                           content=cnf_matrix.to_dict(orient='split')))
+        result_content.append(make_result_section(section_name="Heatmap", content_type="img", content=pic))
+        result_content.append(make_result_section(section_name="Accuracy",
+                                                  content_type="text",
+                                                  content=accuracy))
+    else:
+        result_content += cross_validation(x_train, y_train, svm,
                                            int(parameters["cross_validation"].split("-", 1)[0]))  # k-fold
 
     return result_content

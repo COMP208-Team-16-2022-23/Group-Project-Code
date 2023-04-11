@@ -150,6 +150,89 @@
         ]
       },
       {
+        "name": "SVM classification",
+        "code_name": "svm_classification",
+        "description": "Support vector machine (SVM) is a class of generalised linear classifiers that perform binary classification of data in a supervised learning fashion, with a decision boundary that is a maximum margin hyperplane solved for the learned samples.",
+        "link": "https://en.wikipedia.org/wiki/Support_vector_machine",
+        "variables": [
+          {
+            "name": "features",
+            "description": "The variables to use as features.",
+            "type": "multi_select"
+          },
+          {
+            "name": "target",
+            "description": "The variable to use as the target.",
+            "type": "single_select"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Data shuffling",
+            "code_name": "shuffle",
+            "type": "checkbox",
+            "description": "Reshuffle the data to re-segment the data according to the training.",
+            "default": "checked"
+          },
+          {
+            "name": "Training ratio",
+            "code_name": "train_ratio",
+            "type": "number",
+            "description": "The ratio of the data to use for training.",
+            "default": 0.7
+          },
+          {
+            "name": "Cross validation",
+            "code_name": "cross_validation",
+            "type": "select",
+            "options": [
+              "None",
+              "10-fold",
+              "5-fold",
+              "4-fold",
+              "3-fold",
+              "2-fold"
+            ],
+            "description": "The cross validation method to use.",
+            "default": "None"
+          },
+          {
+            "name": "penalty coefficient",
+            "code_name": "C",
+            "type": "number",
+            "description": "The higher the value of the penalty coefficient, the more intolerant the error is.",
+            "default": 1.00
+          },
+          {
+            "name": "Kernel algorithm",
+            "code_name": "kernel",
+            "type": "select",
+            "options": [
+              "linear",
+              "poly",
+              "rbf",
+              "sigmoid"
+            ],
+            "description": "The \"linear\" kernel function is suitable for linearly divisible data sets, the \"poly\" kernel function is suitable for non-linear data sets with simple distribution patterns, the \"rbf\" kernel function is suitable for complex non-linear data sets, and the \"sigmoid\" kernel function is suitable for handling binary classification problems.",
+            "default": "rbf"
+          },
+          {
+            "name": "Error convergence conditions",
+            "code_name": "tol",
+            "type": "number",
+            "description": "Error value size for stopping training",
+            "default": 0.001
+          },
+          {
+            "name": "Maximum number of iterations",
+            "code_name": "max_iter",
+            "type": "number",
+            "description": "If the algorithm does not converge, the computation stops when the maximum number of iterations is reached.",
+            "default": 1000
+          }
+        ]
+      },
+      {
         "name": "Decision Tree",
         "code_name": "decision_tree",
         "description": "A decision tree is a flowchart-like structure in which each internal node represents a test on an attribute, each branch represents the outcome of the test, and each leaf node represents a class label (decision taken after computing all attributes).",
