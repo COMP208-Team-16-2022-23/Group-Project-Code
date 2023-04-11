@@ -100,6 +100,7 @@ def project(analysis_project_id):
     for analysis_result in analysis_results:
         # read the result file in .json format
         results.append(json.load(storage_control.download_to_memory(analysis_result.result_file_path)))
+        results[-1]['result_id'] = analysis_result.id
         # for local test
         # print(results[-1])
 

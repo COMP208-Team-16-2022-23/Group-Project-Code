@@ -141,12 +141,12 @@ def embedded_view(file_path):
         return download(file_path)
 
 
-@bp.route('/view_report/<report_id>')
-def fullscreen_view(report_id):
+@bp.route('/report/<report_id>')
+def view_report(report_id):
     # todo credential
     result = AnalysisResult.query.filter_by(id=report_id).first()
     content = [json.load(sc.download_to_memory(result.result_file_path))]
-    return render_template('data_analysis/report.html', results=content, independent='true')
+    return render_template('data_analysis/report.html', results=content, independent=True)
 
 
 @bp.route('/delete/my_data/<path:file_path>')

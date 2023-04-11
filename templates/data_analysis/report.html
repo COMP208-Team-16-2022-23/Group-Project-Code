@@ -1,4 +1,4 @@
-{% if independent == 'true' %}
+{% if independent %}
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -19,72 +19,76 @@
                 href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.2.0/mdb.min.css"
                 rel="stylesheet"
         />
-    
-        <link
-                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
-                rel="stylesheet"
-        />
+
         <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css"/>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
     </head>
-    <body>
+    <body class="m-3">
 {% endif %}
 {% for result in results %}
     <div id="info_{{ result['name'] }}" class="info">
+        {% if not independent %}
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">
+                <a class="btn btn-primary" type="button"
+                   href="{{ url_for("file_preview.view_report",report_id=result['result_id']) }}"
+                   target="_blank">Print report</a>
+            </div>
+        {% endif %}
         <h5 class="mb-3 h5">{{ result["name"] }}</h5>
         <hr>
         {% for section in result["content"] %}
-        <p class="fw-bold mt-3">{{ section["section_name"] }}</p>
-        {% if section["type"] == "ordered_list" %}
-        <ol>
-            {% for item in section["content"] %}
-            <li>{{ item }}</li>
-            {% endfor %}
-        </ol>
-        {% elif section["type"] == "unordered_list" %}
-        <ul>
-            {% for item in section["content"] %}
-            <li>{{ item }}</li>
-            {% endfor %}
-        </ul>
-        {% elif section["type"] == "table" %}
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <thead>
-                <tr>
-                    <th scope="col"></th>
-                    {% for header in section["content"]["columns"] %}
-                    <th scope="col">{{ header }}</th>
+            <p class="fw-bold mt-3">{{ section["section_name"] }}</p>
+            {% if section["type"] == "ordered_list" %}
+                <ol>
+                    {% for item in section["content"] %}
+                        <li>{{ item }}</li>
                     {% endfor %}
-                </tr>
-                </thead>
-                <tbody>
-                {% for index in section["content"]["index"] %}
-                <tr>
-                    <td>{{ index }}</td>
-                    {% for item in section["content"]["data"][loop.index0] %}
-                    <td>{{ item }}</td>
+                </ol>
+            {% elif section["type"] == "unordered_list" %}
+                <ul>
+                    {% for item in section["content"] %}
+                        <li>{{ item }}</li>
                     {% endfor %}
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% elif section["type"] == "text" %}
-        <p>{{ section["content"] }}</p>
-        {% elif section["type"] == "img" %}
-        <img src="data:image/png;base64,{{ section["content"] }}" alt="Red dot" />
-        {% endif %}
+                </ul>
+            {% elif section["type"] == "table" %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            {% for header in section["content"]["columns"] %}
+                                <th scope="col">{{ header }}</th>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for index in section["content"]["index"] %}
+                            <tr>
+                                <td>{{ index }}</td>
+                                {% for item in section["content"]["data"][loop.index0] %}
+                                    <td>{{ item }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% elif section["type"] == "text" %}
+                <p>{{ section["content"] }}</p>
+            {% elif section["type"] == "img" %}
+                <div class="text-center">
+                    <img src="data:image/png;base64,{{ section["content"] }}" alt="Red dot"/>
+                </div>
+            {% endif %}
         {% endfor %}
     </div>
-    
+
 {% endfor %}
-    
-{% if independent=='true' %}
+
+{% if independent %}
     </body>
     <!--    Print this page-->
     <script>
