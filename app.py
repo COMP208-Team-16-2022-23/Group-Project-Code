@@ -17,6 +17,7 @@ import config
 
 app = Flask(__name__)
 
+# Configuration for different environments
 try:
     # Get configuration from system variables
     config_str = os.environ.get('CONFIG')
@@ -30,12 +31,22 @@ except:
 try:
     maintenance_json = os.environ.get('MAINTENANCE')
     maintenance = json.loads(maintenance_json)
-    maintenance_message = maintenance['maintenance_message']
-    maintenance_title = maintenance['maintenance_title']
+    maintenance_message = maintenance['MAINTENANCE_MESSAGE']
+    maintenance_title = maintenance['MAINTENANCE_TITLE']
 except:
     maintenance_status = False
 else:
     maintenance_status = True
+
+try:
+    notice = json.loads(os.environ.get('NOTICE'))
+    notice_title = notice['NOTICE_TITLE']
+    notice_message = notice['NOTICE_MESSAGE']
+    notice_status = notice['NOTICE_STATUS']
+except:
+    notice_title = config.NOTICE_TITLE
+    notice_message = config.NOTICE_MESSAGE
+    notice_status = config.NOTICE_STATUS
 
 
 # initialize the mail extension
@@ -46,16 +57,10 @@ db.init_db()
 
 @app.route('/')
 def index():
-    try:
-        notice = json.loads(os.environ.get('NOTICE'))
-        notice_title = notice['NOTICE_TITLE']
-        notice_message = notice['NOTICE_MESSAGE']
-    except:
-        notice_title = config.NOTICE_TITLE
-        notice_message = config.NOTICE_MESSAGE
-
-    # use index.html as the index page
-    return render_template('index.html', NOTICE_TITLE=notice_title, NOTICE_MESSAGE=notice_message)
+    if notice_status == "True":
+        return render_template('index.html', NOTICE_TITLE=notice_title, NOTICE_MESSAGE=notice_message)
+    else:
+        return render_template('index.html')
 
 
 @app.context_processor
