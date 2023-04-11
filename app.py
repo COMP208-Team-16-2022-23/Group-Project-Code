@@ -17,6 +17,7 @@ import config
 
 app = Flask(__name__)
 
+# Configuration for different environments
 try:
     # Get configuration from system variables
     config_str = os.environ.get('CONFIG')
@@ -27,6 +28,27 @@ except:
     import secret
     app.config.from_pyfile('secret.py')
 
+try:
+    maintenance_json = os.environ.get('MAINTENANCE')
+    maintenance = json.loads(maintenance_json)
+    maintenance_message = maintenance['MAINTENANCE_MESSAGE']
+    maintenance_title = maintenance['MAINTENANCE_TITLE']
+except:
+    maintenance_status = False
+else:
+    maintenance_status = True
+
+try:
+    notice = json.loads(os.environ.get('NOTICE'))
+    notice_title = notice['NOTICE_TITLE']
+    notice_message = notice['NOTICE_MESSAGE']
+    notice_status = notice['NOTICE_STATUS']
+except:
+    notice_title = config.NOTICE_TITLE
+    notice_message = config.NOTICE_MESSAGE
+    notice_status = config.NOTICE_STATUS
+
+
 # initialize the mail extension
 mail = Mail(app)
 
@@ -35,26 +57,24 @@ db.init_db()
 
 @app.route('/')
 def index():
-    # use index.html as the index page
-    return render_template('index.html')
+    if notice_status == "True":
+        return render_template('index.html', NOTICE_TITLE=notice_title, NOTICE_MESSAGE=notice_message)
+    else:
+        return render_template('index.html')
 
 
 @app.context_processor
 def inject_():
-    try:
-        maintenance_json = os.environ.get('MAINTENANCE')
-        maintenance = json.loads(maintenance_json)
-        MAINTENANCE_MESSAGE = maintenance['MAINTENANCE_MESSAGE']
-        MAINTENANCE_TITLE = maintenance['MAINTENANCE_TITLE']
-    except:
-        MAINTENANCE_MESSAGE = config.MAINTENANCE_MESSAGE
-        MAINTENANCE_TITLE = config.MAINTENANCE_TITLE
-
-    return {
-        'DOMAIN_NAME': app.config['DOMAIN'],
-        'MAINTENANCE_MESSAGE': MAINTENANCE_MESSAGE,
-        'MAINTENANCE_TITLE': MAINTENANCE_TITLE,
-    }
+    if not maintenance_status:
+        return {
+            'DOMAIN_NAME': app.config['DOMAIN']
+        }
+    else:
+        return {
+            'DOMAIN_NAME': app.config['DOMAIN'],
+            'MAINTENANCE_MESSAGE': maintenance_message,
+            'MAINTENANCE_TITLE': maintenance_title
+        }
 
 
 app.register_blueprint(auth.bp)
