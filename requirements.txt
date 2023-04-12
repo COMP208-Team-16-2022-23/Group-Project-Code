@@ -10,6 +10,9 @@ openai
 openpyxl
 pandas
 PyMySQL
+pingouin
+psython
+prettytable
 requests
 scikit-learn
 scipy
@@ -19,5 +22,3 @@ Werkzeug
 xlrd
 langdetect
 statsmodels
-pingouin
-psython

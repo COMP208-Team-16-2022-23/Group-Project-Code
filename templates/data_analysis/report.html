@@ -30,20 +30,12 @@
 {% endif %}
 {% for result in results %}
     <div id="info_{{ result['name'] }}" class="info">
-<!--        {% if not independent %}-->
-<!--            <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-3">-->
-<!--                <a class="btn btn-primary" type="button"-->
-<!--                   href="{{ url_for("file_preview.view_report",report_id=result['result_id']) }}"-->
-<!--                   target="_blank">Print</a>-->
-<!--            </div>-->
-<!--        {% endif %}-->
-<!--        <h5 class="mb-3 h5">{{ result["name"] }}</h5>-->
 
-        <div class="d-flex justify-content-between align-items-center">
-            <h5 class="mb-3 h5">{{ result["name"] }}</h5>
+        <div class="d-flex flex-row justify-content-center align-items-center mb-3">
+            <h5 class="h5 flex-fill me-3">{{ result["name"] }}</h5>
             {% if not independent %}
-            <div class="justify-content-md-end mb-3">
-                <a class="btn btn-primary btn-default" type="button"
+            <div class="justify-content-md-end">
+                <a class="btn btn-secondary fw-bolder" type="button"
                    href="{{ url_for("file_preview.view_report",report_id=result['result_id']) }}"
                 target="_blank">Print</a>
             </div>

@@ -4,6 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 import os
 import json
 
+local_test = False
 try:
     # Get configuration from system variables
     config_str = os.environ.get('CONFIG')
@@ -26,18 +27,22 @@ try:
     password = config_dict['PASSWORD']
 except:
     import secret
+
     hostname = secret.HOSTNAME
     port = secret.PORT
     database = secret.DATABASE
     username = secret.USERNAME
     password = secret.PASSWORD
+    local_test = secret.LOCAL_TEST
 
 # build the connection string
 connection_string = f'mysql+pymysql://{username}:{password}@{hostname}:{port}/{database}'
 
 # dialect://username:password@host:port/database e.g. mysql://scott:tiger@localhost/project
-engine = create_engine(connection_string)
-# engine = create_engine('sqlite:///project.db')
+if not local_test:
+    engine = create_engine(connection_string)
+else:
+    engine = create_engine('sqlite:///project.db')
 
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,

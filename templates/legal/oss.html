@@ -1,66 +1,87 @@
 {% extends 'base.html' %}
 
 {% block header %}
-{% block title %}Open Source Software{% endblock %}
+    {% block title %}Open Source Software{% endblock %}
 {% endblock %}
 
 {% block content %}
-<div class="container flex-grow-1 d-flex flex-column justify-content-center py-3">
-    <h1 class="text-left mb-4">Open Source Software</h1>
-    <div class="row">
-        <div class="mx-auto">
-            <h6 class="text-left">LCDA is impossible to run without the following open source software:
-            </h6>
-            <p class="text-center small text-muted"></p>
-            <ul>
-                <li><a href="https://github.com/snguyenthanh/better_profanity">better_profanity</a> - License: <a
-                        href="https://github.com/snguyenthanh/better_profanity/blob/main/LICENSE">MIT</a></li>
-                <li><a href="https://palletsprojects.com/p/flask/">Flask</a> - License: <a
-                        href="https://github.com/pallets/flask/blob/main/LICENSE.rst">BSD-3-Clause</a></li>
-                <li><a href="https://pythonhosted.org/Flask-Mail/">Flask_Mail</a> - License: <a
-                        href="https://github.com/mattupstate/flask-mail/blob/master/LICENSE">BSD-3-Clause</a></li>
-                <li><a href="https://github.com/googleapis/python-storage">google-cloud-storage</a> - License: <a
-                        href="https://github.com/googleapis/python-storage/blob/main/LICENSE">Apache-2.0</a></li>
-                <li><a href="https://gunicorn.org/">gunicorn</a> - License: <a
-                        href="https://github.com/benoitc/gunicorn/blob/master/LICENSE">MIT</a></li>
-                <li><a href="https://github.com/scikit-learn-contrib/imbalanced-learn">imblearn</a> - License: <a
-                        href="https://github.com/scikit-learn-contrib/imbalanced-learn/blob/master/LICENSE">MIT</a></li>
-                <li><a href="https://pypi.org/project/langdetect/">langdetect</a> - License: <a
-                        href="https://github.com/Mimino666/langdetect/blob/master/LICENSE">Apache-2.0</a></li>
-                <li><a href="https://matplotlib.org/">matplotlib</a> - License: <a
-                        href="https://github.com/matplotlib/matplotlib/blob/master/LICENSE/LICENSE">PSF</a></li>
-                <li><a href="https://numpy.org/">numpy</a> - License: <a
-                        href="https://github.com/numpy/numpy/blob/main/LICENSE.txt">BSD-3-Clause</a></li>
-                <li><a href="https://github.com/openai">openai</a> - License: <a
-                        href="https://github.com/openai/LICENSE/blob/master/LICENSE">MIT</a></li>
-                <li><a href="https://openpyxl.readthedocs.io/en/stable/">openpyxl</a> - License: <a
-                        href="https://github.com/openpyxl/openpyxl/blob/main/LICENSE.txt">MIT</a></li>
-                <li><a href="https://pandas.pydata.org/">pandas</a> - License: <a
-                        href="https://github.com/pandas-dev/pandas/blob/main/LICENSE">BSD-3-Clause</a></li>
-                <li><a href="https://pingouin-stats.org/">pingouin</a> - License: <a
-                        href="https://github.com/raphaelvallat/pingouin/blob/master/LICENSE">MIT</a></li>
-                <li><a href="https://github.com/PyMySQL/PyMySQL">PyMySQL</a> - License: <a
-                        href="https://github.com/PyMySQL/PyMySQL/blob/master/LICENSE">MIT</a></li>
-                <li><a href="https://requests.readthedocs.io/en/latest/">requests</a> - License: <a
-                        href="https://github.com/psf/requests/blob/master/LICENSE">Apache-2.0</a></li>
-                <li><a href="https://scikit-learn.org/">scikit-learn</a> - License: <a
-                        href="https://github.com/scikit-learn/scikit-learn/blob/main/COPYING">BSD-3-Clause</a></li>
-                <li><a href="https://www.scipy.org/">scipy</a> - License: <a
-                        href="https://github.com/scipy/scipy/blob/master/LICENSE.txt">BSD-3-Clause</a></li>
-                <li><a href="https://seaborn.pydata.org/">seaborn</a> - License: <a
-                        href="https://github.com/mwaskom/seaborn/blob/master/LICENSE">BSD-3-Clause</a></li>
-                <li><a href="https://www.sqlalchemy.org/">SQLAlchemy</a> - License: <a
-                        href="https://github.com/sqlalchemy/sqlalchemy/blob/main/LICENSE">MIT</a></li>
-                <li><a href="https://www.statsmodels.org/stable/index.html">statsmodels</a> - License: <a
-                        href="https://github.com/statsmodels/statsmodels/blob/main/LICENSE">BSD-3-Clause</a></li>
-                <li><a href="https://werkzeug.palletsprojects.com/">Werkzeug</a> - License: <a
-                        href="https://github.com/pallets/werkzeug/blob/main/LICENSE.rst">BSD-3-Clause</a></li>
-                <li><a href="https://pypi.org/project/xlrd/">xlrd</a> - License: <a
-                        href="https://github.com/python-excel/xlrd/blob/master/LICENSE">BSD-3-Clause</a></li>
+    <div class="container flex-grow-1 d-flex flex-column justify-content-center py-3">
+        <h1 class="text-left mb-4">Open Source Software</h1>
+        <div class="row">
+            <div class="mx-auto">
+                <h6 class="text-left">LCDA is impossible to run without the following open source software:
+                </h6>
+                <p class="text-center small text-muted"></p>
+                <ul>
+                    <li><a href="https://github.com/snguyenthanh/better_profanity">better_profanity</a> - License: <a
+                            href="https://github.com/snguyenthanh/better_profanity/blob/main/LICENSE">MIT</a></li>
+                    <li><a href="https://github.com/newcat/baklavajs">BaklavaJS</a> - License: <a
+                            href="https://github.com/newcat/baklavajs/blob/master/LICENSE">MIT</a></li>
+                    <li><a href="https://www.anaconda.com/">Conda</a> - License: <a
+                            href="https://docs.conda.io/en/latest/license.html">BSD-3-Clause</a></li>
+                    <li><a href="https://palletsprojects.com/p/flask/">Flask</a> - License: <a
+                            href="https://github.com/pallets/flask/blob/main/LICENSE.rst">BSD-3-Clause</a></li>
+                    <li><a href="https://pythonhosted.org/Flask-Mail/">Flask_Mail</a> - License: <a
+                            href="https://github.com/mattupstate/flask-mail/blob/master/LICENSE">BSD-3-Clause</a></li>
+                    <li><a href="https://github.com/googleapis/python-storage">google-cloud-storage</a> - License: <a
+                            href="https://github.com/googleapis/python-storage/blob/main/LICENSE">Apache-2.0</a></li>
+                    <li><a href="https://fonts.google.com/specimen/Roboto">Google Fonts - Roboto</a> - License: <a
+                            href="https://fonts.google.com/specimen/Roboto/about">Apache-2.0</a></li>
+                    <li><a href="https://gunicorn.org/">gunicorn</a> - License: <a
+                            href="https://github.com/benoitc/gunicorn/blob/master/LICENSE">MIT</a></li>
+                    <li><a href="https://github.com/scikit-learn-contrib/imbalanced-learn">imblearn</a> - License: <a
+                            href="https://github.com/scikit-learn-contrib/imbalanced-learn/blob/master/LICENSE">MIT</a>
+                    </li>
+                    <li><a href="https://jinja.palletsprojects.com/">Jinja</a> - License: <a
+                            href="https://github.com/pallets/jinja/blob/main/LICENSE.rst">BSD-3-Clause</a></li>
+                    <li><a href="https://jquery.com/">jQuery</a> - License: <a
+                            href="https://jquery.org/license/">MIT</a></li>
+                    <li><a href="https://pypi.org/project/langdetect/">langdetect</a> - License: <a
+                            href="https://github.com/Mimino666/langdetect/blob/master/LICENSE">Apache-2.0</a></li>
+                    <li><a href="https://matplotlib.org/">matplotlib</a> - License: <a
+                            href="https://github.com/matplotlib/matplotlib/blob/master/LICENSE/LICENSE">PSF</a></li>
+                    <li>
+                        <a href="https://mdbootstrap.com/">MDBootstrap</a> - License: <a
+                            href="https://mdbootstrap.com/license/">MIT</a>
+                    </li>
+                    <li><a href="https://numpy.org/">numpy</a> - License: <a
+                            href="https://github.com/numpy/numpy/blob/main/LICENSE.txt">BSD-3-Clause</a></li>
+                    <li><a href="https://github.com/openai">openai</a> - License: <a
+                            href="https://github.com/openai/LICENSE/blob/master/LICENSE">MIT</a></li>
+                    <li><a href="https://openpyxl.readthedocs.io/en/stable/">openpyxl</a> - License: <a
+                            href="https://github.com/openpyxl/openpyxl/blob/main/LICENSE.txt">MIT</a></li>
+                    <li><a href="https://pandas.pydata.org/">pandas</a> - License: <a
+                            href="https://github.com/pandas-dev/pandas/blob/main/LICENSE">BSD-3-Clause</a></li>
+                    <li><a href="https://pingouin-stats.org/">pingouin</a> - License: <a
+                            href="https://github.com/raphaelvallat/pingouin/blob/master/LICENSE">MIT</a></li>
+                    <li><a href="https://pypi.org/project/pip/">pip</a> - License: <a
+                            href="https://github.com/pypa/pip/blob/main/LICENSE.txt">MIT</a>
+                    <li><a href="https://github.com/PyMySQL/PyMySQL">PyMySQL</a> - License: <a
+                            href="https://github.com/PyMySQL/PyMySQL/blob/master/LICENSE">MIT</a></li>
+                    <li><a href="https://www.python.org/">Python</a> - License: <a
+                            href="https://docs.python.org/3/license.html">PSF and Zero-Clause BSD</a></li>
+                    <li><a href="https://requests.readthedocs.io/en/latest/">requests</a> - License: <a
+                            href="https://github.com/psf/requests/blob/master/LICENSE">Apache-2.0</a></li>
+                    <li><a href="https://scikit-learn.org/">scikit-learn</a> - License: <a
+                            href="https://github.com/scikit-learn/scikit-learn/blob/main/COPYING">BSD-3-Clause</a></li>
+                    <li><a href="https://www.scipy.org/">scipy</a> - License: <a
+                            href="https://github.com/scipy/scipy/blob/master/LICENSE.txt">BSD-3-Clause</a></li>
+                    <li><a href="https://seaborn.pydata.org/">seaborn</a> - License: <a
+                            href="https://github.com/mwaskom/seaborn/blob/master/LICENSE">BSD-3-Clause</a></li>
+                    <li><a href="https://www.sqlalchemy.org/">SQLAlchemy</a> - License: <a
+                            href="https://github.com/sqlalchemy/sqlalchemy/blob/main/LICENSE">MIT</a></li>
+                    <li><a href="https://www.statsmodels.org/stable/index.html">statsmodels</a> - License: <a
+                            href="https://github.com/statsmodels/statsmodels/blob/main/LICENSE">BSD-3-Clause</a></li>
+                    <li><a href="https://vuejs.org/">Vue.js</a> - License: <a
+                            href="https://github.com/vuejs/vue/blob/main/LICENSE">MIT</a></li>
+                    <li><a href="https://werkzeug.palletsprojects.com/">Werkzeug</a> - License: <a
+                            href="https://github.com/pallets/werkzeug/blob/main/LICENSE.rst">BSD-3-Clause</a></li>
+                    <li><a href="https://pypi.org/project/xlrd/">xlrd</a> - License: <a
+                            href="https://github.com/python-excel/xlrd/blob/master/LICENSE">BSD-3-Clause</a></li>
 
 
-            </ul>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}
