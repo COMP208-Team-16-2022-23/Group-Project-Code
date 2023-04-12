@@ -116,7 +116,7 @@ class MissingValueHandlingNode extends BaklavaJS.Core.Node {
             items: [
                 "empty",
                 "space",
-                "nan-numeric value",
+                "non-numeric value",
                 "'None'"
             ]
         });
