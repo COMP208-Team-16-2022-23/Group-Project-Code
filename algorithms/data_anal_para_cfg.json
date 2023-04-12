@@ -52,6 +52,31 @@
     ]
   },
   {
+    "section_name": "Econometric Models",
+    "code_name": "econometric_models",
+    "algorithms": [
+      {
+        "name": "ADF Test",
+        "code_name": "adf_test",
+        "description": "When using many time series models, such as ARMA and ARIMA, the time series is required to be stationary, so generally when studying a period of time series, the first step is to perform a stationarity test. In addition to the method of visual inspection, in addition The more commonly used strict statistical test method is the ADF test, also known as the unit root test.",
+        "link": "https://en.wikipedia.org/wiki/Augmented_Dickey%E2%80%93Fuller_test",
+        "variables": [
+          {
+            "name": "time series data",
+            "description": "Put in time series data (number of variables = 1)",
+            "type": "single_select"
+          },
+          {
+            "name": "time item",
+            "description": "Put in time item variables (number of variables = 1)",
+            "type": "single_select"
+          }
+        ]
+      }
+
+      ]
+  },
+  {
     "section_name": "ML Classification",
     "code_name": "ml_classification",
     "algorithms": [

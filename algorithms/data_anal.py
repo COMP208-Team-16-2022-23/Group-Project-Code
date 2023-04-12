@@ -15,6 +15,8 @@ from scipy.stats import spearmanr
 import psython
 import pingouin as pg
 import statsmodels.api as sm
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.arima.model import ARIMA
 import matplotlib.pyplot as plt
 from util import storage_control
 from util import file_util
@@ -58,7 +60,8 @@ def analysis(file_path, parameters):
         'knn_classification': knn_classification,
         'normality_test': normality_test,
         'reliability_analysis': reliability_analysis,
-        'svm_classification': svm_classification
+        'svm_classification': svm_classification,
+        'adf_test': adf_test
     }
 
     # Call the corresponding function
@@ -75,6 +78,128 @@ def analysis(file_path, parameters):
     processed_file_path = storage_control.upload_blob(file=result_json, blob_name=new_file_path)
 
     return processed_file_path
+
+def adf_test(df, parameters):
+    result_content = []
+    result_content.append(make_result_section(section_name="Analysis steps",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "By analyzing the t value, analyze whether it can significantly reject the null hypothesis of sequence instability (P<0.05).",
+                                                  "If it is significant, it indicates that the null hypothesis that the series is not stationary is rejected, and the series is a stationary time series.",
+                                                  "If it is not significant, it indicates that the null hypothesis that the sequence is not stable cannot be rejected. The sequence is an unstable time series. Considering the difference of the data, generally no more than the second order difference."
+                                              ]))
+
+    result_content.append(make_result_section(section_name="Detailed conclusions",
+                                              content_type="text",
+                                              content=''))
+
+    # difference order = 0
+    time_series_data = df[parameters["time series data"]]
+    time_item = df[parameters["time item"]]
+
+    adf_result1 = adfuller(time_series_data)
+    t_value1 = adf_result1[0]
+    p_value1 = adf_result1[1]
+    critical_value1_1 = adf_result1[4]['1%']
+    critical_value1_5 = adf_result1[4]['5%']
+    critical_value1_10 = adf_result1[4]['10%']
+
+    index1 = f'{parameters["time series data"]} difference order 0'
+
+    model = ARIMA(time_series_data, order=(1, 1, 1))
+    result1 = model.fit()
+    aic1 = result1.aic
+
+    #difference order = 1
+    diff1_time_series_data = time_series_data.diff()
+    diff1_time_series_data = diff1_time_series_data.drop(diff1_time_series_data.index[0])
+    adf_result2 = adfuller(diff1_time_series_data)
+    t_value2 = adf_result2[0]
+    p_value2 = adf_result2[1]
+    critical_value2_1 = adf_result2[4]['1%']
+    critical_value2_5 = adf_result2[4]['5%']
+    critical_value2_10 = adf_result2[4]['10%']
+
+    index2 = f'{parameters["time series data"]} difference order 1'
+
+    model = ARIMA(diff1_time_series_data, order=(1, 1, 1))
+    result2 = model.fit()
+    aic2 = result2.aic
+
+    # difference order = 2
+    diff2_time_series_data = diff1_time_series_data.diff()
+    diff2_time_series_data = diff2_time_series_data.drop(diff2_time_series_data.index[0])
+
+    adf_result3 = adfuller(diff2_time_series_data)
+    t_value3 = adf_result3[0]
+    p_value3 = adf_result3[1]
+    critical_value3_1 = adf_result3[4]['1%']
+    critical_value3_5 = adf_result3[4]['5%']
+    critical_value3_10 = adf_result3[4]['10%']
+
+    index3 = f'{parameters["time series data"]} difference order 2'
+
+    model = ARIMA(diff2_time_series_data, order=(1, 1, 1))
+    result3 = model.fit()
+    aic3 = result3.aic
+
+    result_content.append(make_result_section(section_name="Output 1: ADF inspection table",
+                                              content_type="table",
+                                              content={
+                                                  "data": [
+                                                      [
+                                                       '%.3f' % t_value1,
+                                                       '%.3f' % p_value1,
+                                                       '%.3f' % aic1,
+                                                       '%.3f' % critical_value1_1,
+                                                       '%.3f' % critical_value1_5,
+                                                       '%.3f' % critical_value1_10
+                                                       ],
+                                                      [
+                                                          '%.3f' % t_value2,
+                                                          '%.3f' % p_value2,
+                                                          '%.3f' % aic2,
+                                                          '%.3f' % critical_value2_1,
+                                                          '%.3f' % critical_value2_5,
+                                                          '%.3f' % critical_value2_10
+                                                      ],
+                                                      [
+                                                          '%.3f' % t_value3,
+                                                          '%.3f' % p_value3,
+                                                          '%.3f' % aic3,
+                                                          '%.3f' % critical_value3_1,
+                                                          '%.3f' % critical_value3_5,
+                                                          '%.3f' % critical_value3_10
+                                                      ],
+                                                  ],
+                                                  "columns": [
+                                                              "t",
+                                                              "P",
+                                                              "AIC",
+                                                              "critical value(1%)",
+                                                              "critical value(5%)",
+                                                              "critical value(10%)"
+                                                              ],
+                                                  "index": [index1,index2,index3
+                                                            ]
+                                              }))
+
+    result_content.append(make_result_section(section_name="Table description:",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "The above table is the result of ADF test, including variables, difference order, T test results, AIC value, etc., which are used to test whether the time series is stable.",
+                                                  "The model requires that the sequence must be a stationary time series data. By analyzing the t value, analyze whether it can significantly reject the null hypothesis of sequence instability.",
+                                                  "If it is significant (P<0.05), it means that the null hypothesis is rejected, and the series is a stationary time series; otherwise, it means that the series is an unstationary time series.",
+                                                  "The critical value of 1%, 5%, 10% compares the statistical value of rejecting the null hypothesis in different degrees and the ADF Test result, and the ADF Test result is less than 1%, 5%, and 10% at the same time, which means that the hypothesis is rejected very well.",
+                                                  "Difference order: essentially the next value, minus the previous value, mainly to eliminate some fluctuations and make the data tend to be stable. Non-stationary sequences can be transformed into stationary sequences through differential transformation.",
+                                                  "AIC value: A standard to measure the goodness of statistical model fitting, the smaller the value, the better.",
+                                                  "Critical value: A critical value is a fixed value corresponding to a given significance level."
+                                              ]))
+
+
+
+    return result_content
+
 
 
 def reliability_analysis(df, parameters):
