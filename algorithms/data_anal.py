@@ -10,13 +10,15 @@ from sklearn.utils import shuffle
 import seaborn as sns
 import pandas as pd
 from scipy import stats
+from scipy.stats import t
 from scipy.stats import skew
 from scipy.stats import spearmanr
 import psython
 import pingouin as pg
 import statsmodels.api as sm
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.arima.model import ARIMA
 import matplotlib.pyplot as plt
-import matplotlib.font_manager as font_manager
 from util import storage_control
 from util import file_util
 from flask import g
@@ -59,7 +61,9 @@ def analysis(file_path, parameters):
         'knn_classification': knn_classification,
         'normality_test': normality_test,
         'reliability_analysis': reliability_analysis,
-        'svm_classification': svm_classification
+        'svm_classification': svm_classification,
+        'adf_test': adf_test,
+        'Bland-Altman_method': Bland_Altman_method
     }
 
     # Call the corresponding function
@@ -77,6 +81,292 @@ def analysis(file_path, parameters):
 
     return processed_file_path
 
+def Bland_Altman_method(df, parameters):
+    result_content = []
+
+    result_content.append(make_result_section(section_name="Analysis steps",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "Analyze the results of the Bland-Altman method to obtain the mean value, P value (used to assist in judging the consistency) and the value of the limit of agreement (LoA).",
+                                                  "Analyzing the Bland-Altman graph, the more points are within 95% LoA (dotted line in the graph), the better the consistency."
+                                              ]))
+
+    first_method = parameters['first method']
+    second_method = parameters['second method']
+
+    if parameters['testing_method'] == "difference":
+        df['difference'] = df[first_method].sub(df[second_method])
+    elif parameters['testing_method'] == "ratio":
+        df['difference'] = df[first_method] / df[second_method]
+
+    sample_size = df.shape[0]
+
+    std = np.std(df['difference'], ddof=1)
+
+    if parameters['testing_method'] == "difference":
+        mean_value1 = df[first_method].mean()
+        mean_value2 = df[second_method].mean()
+        mean_value = abs(mean_value1 - mean_value2)
+    elif parameters['testing_method'] == "ratio":
+        mean_value1 = df[first_method].mean()
+        mean_value2 = df[second_method].mean()
+        mean_value = abs(mean_value1 / mean_value2)
+
+
+    mean_value_95lower = mean_value - 1.96 * std
+    mean_value_95upper = mean_value + 1.96 * std
+
+    #p_value
+    t_stat = mean_value / (std / np.sqrt(len(df['difference'])))
+    p_val = t.sf(np.abs(t_stat), len(df['difference']) - 1) * 2
+
+    CR = 1.96 * std * np.sqrt(2)
+
+
+    result_content.append(make_result_section(section_name="Output 1: Bland-Altman method result",
+                                              content_type="table",
+                                              content={
+                                                  "data": [
+                                                      [sample_size],
+                                                      ['%.3f' % mean_value],
+                                                      ['%.3f' % std],
+                                                      ['%.3f' % mean_value_95upper],
+                                                      ['%.3f' % mean_value_95lower],
+                                                      [p_val],
+                                                      ['%.3f' % CR]
+                                                  ],
+                                                  "columns": [
+                                                        "value"
+                                                  ],
+                                                  "index": [
+                                                      "sample size","arithmetic mean","standard deviation","Upper limit of LoA","Lower limit of LoA","P value","coefficient of repeatability"
+                                                            ]
+                                              }))
+
+    result_content.append(make_result_section(section_name="Chart descriptions",
+                                              content_type="text",
+                                              content='The above table shows the results of the Bland-Altman method, mainly the average value, P value (used to assist in judging the consistency) and the value of the limit of agreement (LoA).'))
+
+    Bland_Altman_pic = make_Bland_Altman_plot(df,first_method,second_method)
+
+    result_content.append(make_result_section(section_name="Output 2: Bland-Altman graph",
+                                              content_type="img",
+                                              content=Bland_Altman_pic
+                                              ))
+
+    result_content.append(make_result_section(section_name="Chart descriptions",
+                                              content_type="text",
+                                              content="The above table shows the Bland-Altman diagram, which is used to analyze the consistency. The more points that are within the 95% LoA (dotted line in the graph), the better the agreement."))
+
+    return result_content
+
+def make_Bland_Altman_plot(df,first_method,second_method):
+
+
+    f, ax = plt.subplots(1, figsize=(8, 5))
+    sm.graphics.mean_diff_plot(df[first_method], df[second_method], ax=ax)
+    #plt.show()
+
+    # Encode into a string in the form of base64
+    pic_io = io.BytesIO()
+    plt.savefig(pic_io, format='png')
+    pic_io.seek(0)
+    base64_pic = base64.b64encode(pic_io.read()).decode()
+
+    # Clear plt buffer
+    f.clear()
+    plt.close()
+
+    return base64_pic
+
+
+
+def adf_test(df, parameters):
+    result_content = []
+
+    result_content.append(make_result_section(section_name="Analysis steps",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "By analyzing the t value, analyze whether it can significantly reject the null hypothesis of sequence instability (P<0.05).",
+                                                  "If it is significant, it indicates that the null hypothesis that the series is not stationary is rejected, and the series is a stationary time series.",
+                                                  "If it is not significant, it indicates that the null hypothesis that the sequence is not stable cannot be rejected. The sequence is an unstable time series. Considering the difference of the data, generally no more than the second order difference."
+                                              ]))
+
+    result_content.append(make_result_section(section_name="Detailed conclusions",
+                                              content_type="text",
+                                              content=''))
+
+    # difference order = 0
+    time_series_data = df[parameters["time series data"]]
+    time_item = df[parameters["time item"]]
+
+    df_combined1 = pd.concat([time_series_data, time_item], axis=1)
+
+    original_sequence_pic_1 = make_original_sequence_pic(df_combined1)
+
+    adf_result1 = adfuller(time_series_data)
+    t_value1 = adf_result1[0]
+    p_value1 = adf_result1[1]
+    critical_value1_1 = adf_result1[4]['1%']
+    critical_value1_5 = adf_result1[4]['5%']
+    critical_value1_10 = adf_result1[4]['10%']
+
+    index1 = f'{parameters["time series data"]} difference order 0'
+
+    model = ARIMA(time_series_data, order=(1, 1, 1))
+    result1 = model.fit()
+    aic1 = result1.aic
+
+    #difference order = 1
+    diff1_time_series_data = time_series_data.diff()
+    diff1_time_series_data = diff1_time_series_data.drop(diff1_time_series_data.index[0])
+
+    time_item = time_item.iloc[1:]
+    df_combined2 = pd.concat([diff1_time_series_data, time_item], axis=1)
+    df_combined2.dropna(inplace=True)
+    original_sequence_pic_2 = make_original_sequence_pic(df_combined2)
+
+    adf_result2 = adfuller(diff1_time_series_data)
+    t_value2 = adf_result2[0]
+    p_value2 = adf_result2[1]
+    critical_value2_1 = adf_result2[4]['1%']
+    critical_value2_5 = adf_result2[4]['5%']
+    critical_value2_10 = adf_result2[4]['10%']
+
+    index2 = f'{parameters["time series data"]} difference order 1'
+
+    model = ARIMA(diff1_time_series_data, order=(1, 1, 1))
+    result2 = model.fit()
+    aic2 = result2.aic
+
+    # difference order = 2
+    diff2_time_series_data = diff1_time_series_data.diff()
+    diff2_time_series_data = diff2_time_series_data.drop(diff2_time_series_data.index[0])
+    time_item = time_item.iloc[2:]
+    df_combined3 = pd.concat([diff2_time_series_data, time_item], axis=1)
+    original_sequence_pic_3 = make_original_sequence_pic(df_combined3)
+
+    adf_result3 = adfuller(diff2_time_series_data)
+    t_value3 = adf_result3[0]
+    p_value3 = adf_result3[1]
+    critical_value3_1 = adf_result3[4]['1%']
+    critical_value3_5 = adf_result3[4]['5%']
+    critical_value3_10 = adf_result3[4]['10%']
+
+    index3 = f'{parameters["time series data"]} difference order 2'
+
+    model = ARIMA(diff2_time_series_data, order=(1, 1, 1))
+    result3 = model.fit()
+    aic3 = result3.aic
+
+    result_content.append(make_result_section(section_name="Output 1: ADF inspection table",
+                                              content_type="table",
+                                              content={
+                                                  "data": [
+                                                      [
+                                                       '%.3f' % t_value1,
+                                                       '%.3f' % p_value1,
+                                                       '%.3f' % aic1,
+                                                       '%.3f' % critical_value1_1,
+                                                       '%.3f' % critical_value1_5,
+                                                       '%.3f' % critical_value1_10
+                                                       ],
+                                                      [
+                                                          '%.3f' % t_value2,
+                                                          '%.3f' % p_value2,
+                                                          '%.3f' % aic2,
+                                                          '%.3f' % critical_value2_1,
+                                                          '%.3f' % critical_value2_5,
+                                                          '%.3f' % critical_value2_10
+                                                      ],
+                                                      [
+                                                          '%.3f' % t_value3,
+                                                          '%.3f' % p_value3,
+                                                          '%.3f' % aic3,
+                                                          '%.3f' % critical_value3_1,
+                                                          '%.3f' % critical_value3_5,
+                                                          '%.3f' % critical_value3_10
+                                                      ],
+                                                  ],
+                                                  "columns": [
+                                                              "t",
+                                                              "P",
+                                                              "AIC",
+                                                              "critical value(1%)",
+                                                              "critical value(5%)",
+                                                              "critical value(10%)"
+                                                              ],
+                                                  "index": [index1,index2,index3
+                                                            ]
+                                              }))
+
+    result_content.append(make_result_section(section_name="Table description:",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "The above table is the result of ADF test, including variables, difference order, T test results, AIC value, etc., which are used to test whether the time series is stable.",
+                                                  "The model requires that the sequence must be a stationary time series data. By analyzing the t value, analyze whether it can significantly reject the null hypothesis of sequence instability.",
+                                                  "If it is significant (P<0.05), it means that the null hypothesis is rejected, and the series is a stationary time series; otherwise, it means that the series is an unstationary time series.",
+                                                  "The critical value of 1%, 5%, 10% compares the statistical value of rejecting the null hypothesis in different degrees and the ADF Test result, and the ADF Test result is less than 1%, 5%, and 10% at the same time, which means that the hypothesis is rejected very well.",
+                                                  "Difference order: essentially the next value, minus the previous value, mainly to eliminate some fluctuations and make the data tend to be stable. Non-stationary sequences can be transformed into stationary sequences through differential transformation.",
+                                                  "AIC value: A standard to measure the goodness of statistical model fitting, the smaller the value, the better.",
+                                                  "Critical value: A critical value is a fixed value corresponding to a given significance level."
+                                              ]))
+    
+    result_content.append(make_result_section(section_name="Output 2: original sequence diagram",
+                                              content_type="img",
+                                              content=original_sequence_pic_1
+                                              ))
+
+    result_content.append(make_result_section(section_name="Chart description:",
+                                              content_type="text",
+                                              content=
+                                              "The image above shows the original image without difference. The X-axis represents the time item, and the Y-axis represents the value."
+                                              ))
+
+    result_content.append(make_result_section(section_name="Output 3: first-order difference map",
+                                              content_type="img",
+                                              content=original_sequence_pic_2
+                                              ))
+
+    result_content.append(make_result_section(section_name="Chart description:",
+                                              content_type="text",
+                                              content=
+                                                  "The figure above shows the resulting plot of taking a first-order difference. When the time intervals are equal, subtract the previous value from the next value to get the first difference."
+                                                    ))
+
+    result_content.append(make_result_section(section_name="Output 4: second-order difference map",
+                                              content_type="img",
+                                              content=original_sequence_pic_3
+                                              ))
+
+    result_content.append(make_result_section(section_name="Chart description:",
+                                              content_type="text",
+                                              content=
+                                                  "The figure above shows the resulting plot of the second difference. Doing the same action twice, that is, subtracting a value from the last value on the basis of the first-order difference, is called 'second-order difference'."
+                                              ))
+
+    return result_content
+
+def make_original_sequence_pic(column):
+
+
+    # plot histogram and density curve
+    f = plt.figure()
+    x = column.iloc[:, 0]
+    y = column.iloc[:, 1]
+    plt.plot(y, x)
+
+    # Encode into a string in the form of base64
+    pic_io = io.BytesIO()
+    plt.savefig(pic_io, format='png')
+    pic_io.seek(0)
+    base64_pic = base64.b64encode(pic_io.read()).decode()
+
+    # Clear plt buffer
+    f.clear()
+    plt.close()
+
+    return base64_pic
 
 def reliability_analysis(df, parameters):
 

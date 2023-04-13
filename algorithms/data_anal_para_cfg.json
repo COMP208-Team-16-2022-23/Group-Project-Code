@@ -32,7 +32,7 @@
         "variables": [
           {
             "name": "variables",
-            "description": "The variables to conduct the reliability analysis.",
+            "description": "The variables to conduct the reliability analysis.(Cronbach's α need at least 2 variables, split_half need at least 4 variables)",
             "type": "multi_select"
           }
         ],
@@ -50,6 +50,68 @@
           ]
       }
     ]
+  },
+  {
+    "section_name": "Econometric Models",
+    "code_name": "econometric_models",
+    "algorithms": [
+      {
+        "name": "ADF Test",
+        "code_name": "adf_test",
+        "description": "When using many time series models, such as ARMA and ARIMA, the time series is required to be stationary, so generally when studying a period of time series, the first step is to perform a stationarity test. In addition to the method of visual inspection, in addition The more commonly used strict statistical test method is the ADF test, also known as the unit root test.",
+        "link": "https://en.wikipedia.org/wiki/Augmented_Dickey%E2%80%93Fuller_test",
+        "variables": [
+          {
+            "name": "time series data",
+            "description": "Put in time series data (number of variables = 1)",
+            "type": "single_select"
+          },
+          {
+            "name": "time item",
+            "description": "Put in time item variables (number of variables = 1)",
+            "type": "single_select"
+          }
+        ]
+      }
+
+      ]
+  },
+  {
+    "section_name": "Medical Statistical Model",
+    "code_name": "medical_models",
+    "algorithms": [
+      {
+        "name": "Bland-Altman Method",
+        "code_name": "Bland-Altman_method",
+        "description": "A method for visual consistency checking. Its principle is an intuitive method to draw graphs using the difference, mean and 95% consistency (LoA) of the results of the two methods, so as to determine whether the results of the two methods are consistent.",
+        "link": "https://en.wikipedia.org/wiki/Bland%E2%80%93Altman_plot",
+        "variables": [
+          {
+            "name": "first method",
+            "description": "Put in first method [quantitative] (number of variables=1)",
+            "type": "single_select"
+          },
+          {
+            "name": "second method",
+            "description": "Put in second method [quantitative] (number of variables=1)",
+            "type": "single_select"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Testing method",
+            "code_name": "testing_method",
+            "type": "select",
+            "options": [
+              "difference",
+              "ratio"
+            ],
+            "description": "The difference between the two measurements is also the ratio of the two measurements to reflect agreement."
+          }
+          ]
+      }
+
+      ]
   },
   {
     "section_name": "ML Classification",

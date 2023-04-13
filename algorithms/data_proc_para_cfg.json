@@ -55,6 +55,7 @@
     "parameters": [
       {
         "name": "method_selection",
+        "description": "Method selection",
         "type": "select",
         "options": [
           "tail_shrinkage",
@@ -63,14 +64,19 @@
       },
       {
         "name": "upper_limit",
-        "type": "number"
+        "description": "Upper limit",
+        "type": "number",
+        "default": 99
       },
       {
         "name": "lower_limit",
-        "type": "number"
+        "description": "Lower limit",
+        "type": "number",
+        "default": 1
       },
       {
         "name": "processing_method",
+        "description": "Processing method",
         "type": "select",
         "options": [
           "delete_value",
@@ -86,6 +92,7 @@
     "parameters": [
       {
         "name": "transform_method",
+        "description": "Transform method",
         "type": "select",
         "options": [
           "FFT",
@@ -100,6 +107,7 @@
     "parameters": [
       {
         "name": "method",
+        "description": "Method",
         "type": "select",
         "options": [
           "PCA",
@@ -108,7 +116,9 @@
       },
       {
         "name": "n_components",
-        "type": "number"
+        "description": "Number of components(Less than the number of variables)",
+        "type": "number",
+        "default": 1
       }
     ],
     "variables": [
@@ -126,6 +136,7 @@
     "parameters": [
       {
         "name": "balancing_method",
+        "description": "Balancing method",
         "type": "select",
         "options": [
           "undersample",
