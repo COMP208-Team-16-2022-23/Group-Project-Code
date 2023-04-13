@@ -61,7 +61,8 @@ def analysis(file_path, parameters):
         'normality_test': normality_test,
         'reliability_analysis': reliability_analysis,
         'svm_classification': svm_classification,
-        'adf_test': adf_test
+        'adf_test': adf_test,
+        'Bland-Altman_method': Bland_Altman_method
     }
 
     # Call the corresponding function
@@ -78,6 +79,63 @@ def analysis(file_path, parameters):
     processed_file_path = storage_control.upload_blob(file=result_json, blob_name=new_file_path)
 
     return processed_file_path
+
+def Bland_Altman_method(df, parameters):
+    result_content = []
+
+    result_content.append(make_result_section(section_name="Analysis steps",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "Analyze the results of the Bland-Altman method to obtain the mean value, P value (used to assist in judging the consistency) and the value of the limit of agreement (LoA).",
+                                                  "Analyzing the Bland-Altman graph, the more points are within 95% LoA (dotted line in the graph), the better the consistency."
+                                              ]))
+
+    first_method = parameters['first method']
+    second_method = parameters['second method']
+
+    df['difference'] = df[first_method].sub(df[second_method])
+
+    sample_size = df.shape[0]
+    diff_array = np.array(df['difference'])
+    mean_value = np.mean(diff_array)
+    std = np.std(df['difference'], ddof=1)
+
+    mean_value_95lower = mean_value - 1.96 * std
+    mean_value_95upper = mean_value + 1.96 * std
+
+    #p_value
+    p = stats.ttest_ind(df[first_method], df[second_method])
+
+    #ci_upper and ci_lower are the 95 % confidence intervals for the upper and lower bounds, respectively.
+    se_upper = std * np.sqrt((sample_size - 1) / (sample_size - 2)) * np.sqrt(1 + (1 / sample_size) + (mean_value_95upper / mean_value))
+    se_lower = std * np.sqrt((sample_size - 1) / (sample_size - 2)) * np.sqrt(1 + (1 / sample_size) + (mean_value_95lower / mean_value))
+    ci_upper = mean_value_95upper + 1.96 * se_upper
+    ci_lower = mean_value_95lower - 1.96 * se_lower
+
+    CoR = 1.96 * (mean_value_95upper - mean_value_95lower) / mean_value
+
+    result_content.append(make_result_section(section_name="Output 1: Bland-Altman method result",
+                                              content_type="table",
+                                              content={
+                                                  "data": [
+                                                      [sample_size],
+                                                      [mean_value],
+                                                      [mean_value_95upper],
+                                                      [mean_value_95lower],
+                                                      [p],
+                                                      [ci_upper],
+                                                      [ci_lower],
+                                                      [CoR]
+                                                  ],
+                                                  "columns": [
+                                                        "value"
+                                                  ],
+                                                  "index": [
+                                                      "sample size","Arithmetic mean","95% confidence interval (upper bound) for the arithmetic mean","95% confidence interval (lower bound) for the arithmetic mean","P value","Upper limit of LoA","Lower limit of LoA","Coefficient of Repeatability"
+                                                            ]
+                                              }))
+
+    return result_content
 
 def adf_test(df, parameters):
     result_content = []

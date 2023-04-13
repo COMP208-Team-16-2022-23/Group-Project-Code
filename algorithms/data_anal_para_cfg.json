@@ -77,6 +77,43 @@
       ]
   },
   {
+    "section_name": "Medical Statistical Model",
+    "code_name": "medical_models",
+    "algorithms": [
+      {
+        "name": "Bland-Altman Method",
+        "code_name": "Bland-Altman_method",
+        "description": "A method for visual consistency checking. Its principle is an intuitive method to draw graphs using the difference, mean and 95% consistency (LoA) of the results of the two methods, so as to determine whether the results of the two methods are consistent.",
+        "link": "https://en.wikipedia.org/wiki/Bland%E2%80%93Altman_plot",
+        "variables": [
+          {
+            "name": "first method",
+            "description": "Put in first method [quantitative] (number of variables=1)",
+            "type": "single_select"
+          },
+          {
+            "name": "second method",
+            "description": "Put in second method [quantitative] (number of variables=1)",
+            "type": "single_select"
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Testing method",
+            "code_name": "testing_method",
+            "type": "select",
+            "options": [
+              "difference",
+              "ratio"
+            ],
+            "description": "The difference between the two measurements is also the ratio of the two measurements to reflect agreement."
+          }
+          ]
+      }
+
+      ]
+  },
+  {
     "section_name": "ML Classification",
     "code_name": "ml_classification",
     "algorithms": [
