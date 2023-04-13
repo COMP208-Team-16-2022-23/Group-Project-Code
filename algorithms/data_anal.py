@@ -81,6 +81,7 @@ def analysis(file_path, parameters):
 
 def adf_test(df, parameters):
     result_content = []
+
     result_content.append(make_result_section(section_name="Analysis steps",
                                               content_type="ordered_list",
                                               content=[
@@ -96,6 +97,10 @@ def adf_test(df, parameters):
     # difference order = 0
     time_series_data = df[parameters["time series data"]]
     time_item = df[parameters["time item"]]
+
+    df_combined1 = pd.concat([time_series_data, time_item], axis=1)
+
+    original_sequence_pic_1 = make_original_sequence_pic(df_combined1)
 
     adf_result1 = adfuller(time_series_data)
     t_value1 = adf_result1[0]
@@ -113,6 +118,12 @@ def adf_test(df, parameters):
     #difference order = 1
     diff1_time_series_data = time_series_data.diff()
     diff1_time_series_data = diff1_time_series_data.drop(diff1_time_series_data.index[0])
+
+    time_item = time_item.iloc[1:]
+    df_combined2 = pd.concat([diff1_time_series_data, time_item], axis=1)
+    df_combined2.dropna(inplace=True)
+    original_sequence_pic_2 = make_original_sequence_pic(df_combined2)
+
     adf_result2 = adfuller(diff1_time_series_data)
     t_value2 = adf_result2[0]
     p_value2 = adf_result2[1]
@@ -129,6 +140,9 @@ def adf_test(df, parameters):
     # difference order = 2
     diff2_time_series_data = diff1_time_series_data.diff()
     diff2_time_series_data = diff2_time_series_data.drop(diff2_time_series_data.index[0])
+    time_item = time_item.iloc[2:]
+    df_combined3 = pd.concat([diff2_time_series_data, time_item], axis=1)
+    original_sequence_pic_3 = make_original_sequence_pic(df_combined3)
 
     adf_result3 = adfuller(diff2_time_series_data)
     t_value3 = adf_result3[0]
@@ -195,12 +209,62 @@ def adf_test(df, parameters):
                                                   "AIC value: A standard to measure the goodness of statistical model fitting, the smaller the value, the better.",
                                                   "Critical value: A critical value is a fixed value corresponding to a given significance level."
                                               ]))
+    
+    result_content.append(make_result_section(section_name="Output 2: original sequence diagram",
+                                              content_type="img",
+                                              content=original_sequence_pic_1
+                                              ))
 
+    result_content.append(make_result_section(section_name="Chart description:",
+                                              content_type="text",
+                                              content=
+                                              "The image above shows the original image without difference. The X-axis represents the time item, and the Y-axis represents the value."
+                                              ))
 
+    result_content.append(make_result_section(section_name="Output 3: first-order difference map",
+                                              content_type="img",
+                                              content=original_sequence_pic_2
+                                              ))
+
+    result_content.append(make_result_section(section_name="Chart description:",
+                                              content_type="text",
+                                              content=
+                                                  "The figure above shows the resulting plot of taking a first-order difference. When the time intervals are equal, subtract the previous value from the next value to get the first difference."
+                                                    ))
+
+    result_content.append(make_result_section(section_name="Output 4: second-order difference map",
+                                              content_type="img",
+                                              content=original_sequence_pic_3
+                                              ))
+
+    result_content.append(make_result_section(section_name="Chart description:",
+                                              content_type="text",
+                                              content=
+                                                  "The figure above shows the resulting plot of the second difference. Doing the same action twice, that is, subtracting a value from the last value on the basis of the first-order difference, is called 'second-order difference'."
+                                              ))
 
     return result_content
 
+def make_original_sequence_pic(column):
 
+
+    # plot histogram and density curve
+    f = plt.figure()
+    x = column.iloc[:, 0]
+    y = column.iloc[:, 1]
+    plt.plot(y, x)
+
+    # Encode into a string in the form of base64
+    pic_io = io.BytesIO()
+    plt.savefig(pic_io, format='png')
+    pic_io.seek(0)
+    base64_pic = base64.b64encode(pic_io.read()).decode()
+
+    # Clear plt buffer
+    f.clear()
+    plt.close()
+
+    return base64_pic
 
 def reliability_analysis(df, parameters):
 
