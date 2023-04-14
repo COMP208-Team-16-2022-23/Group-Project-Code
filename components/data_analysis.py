@@ -38,7 +38,6 @@ def index():
             flash('Please log in first', 'warning-auth')
             # save the current url to session
             session['next_url'] = request.url
-            a=session
             return redirect(url_for('auth.login'))
 
         selected_file_path = request.form['file_selection']
@@ -61,7 +60,8 @@ def index():
 
         return redirect(url_for('data_analysis.project', analysis_project_id=analysis_project_id))
 
-    return render_template('data_analysis/index.html', analysis_project_list=analysis_project_list, file_list=file_list)
+    return render_template('data_analysis/index.html', analysis_project_list=analysis_project_list, file_list=file_list,
+                           button_status="disabled" if g.user is None else "")
 
 
 @bp.route("/project/<analysis_project_id>", methods=['GET', 'POST'])

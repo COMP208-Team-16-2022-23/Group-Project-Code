@@ -16,9 +16,9 @@ try:
     bucket_name = config_dict['BUCKET_NAME']
 except:
     import secret
+
     storage_client = storage.Client.from_service_account_info(secret.GOOGLE_APPLICATION_CREDENTIALS)
     bucket_name = secret.BUCKET_NAME
-
 
 
 def upload_blob(file, blob_name, bucket_name=bucket_name, public=False, prefix=''):
@@ -168,7 +168,24 @@ def delete_folder(path, bucket):
     except:
         return False
 
+
 # def check_folder_exists(folderPath, bucket):
 #     """ check if path/file exists in bucket or not in google storage """
 #     stats = storage.Blob(bucket=bucket, name=folderPath).exists(storage_client)
 #     return stats
+
+def copy_to_username(username, file_path, bucket_name=bucket_name):
+    """Copy file to user's folder in Cloud Storage
+    :param username: username
+    :param file_path: file path in Cloud Storage
+    :param bucket_name: bucket name
+    :return: new file path
+    """
+    try:
+        bucket = storage_client.bucket(bucket_name)
+        blob = bucket.blob(file_path)
+        new_name = username + '/' + file_path.split('/', 1)[-1]
+        new_blob = bucket.copy_blob(blob, bucket, new_name)
+        return new_blob.name
+    except Exception as e:
+        return False
