@@ -3,6 +3,7 @@
 # @File: user.PY
 """User System. Handle operations including signin, signup and sign out. Get and update user state"""
 import functools
+import re
 from random import randint
 from datetime import timedelta
 
@@ -106,6 +107,9 @@ def register():
         if password != password_confirm:  # the two passwords are not the same
             error = 'The passwords you have entered do not match.'
 
+        if is_strong_password(password) is False:
+            error = 'The password you have entered is not strong enough.'
+
         if error is None:
             try:
                 user = User(email=email, username=username, password=generate_password_hash(password, salt_length=128))
@@ -145,6 +149,19 @@ def register():
 
         flash(error, 'warning-auth')
     return render_template('auth/register.html')
+
+
+def is_strong_password(password):
+    if len(password) < 8:
+        return False
+    elif re.search('[0-9]', password) is None:
+        return False
+    elif re.search('[A-Z]', password) is None:
+        return False
+    elif re.search('[a-z]', password) is None:
+        return False
+    else:
+        return True
 
 
 @bp.route('/logout')
