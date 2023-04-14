@@ -4,14 +4,13 @@ import pandas
 from flask import Blueprint, request, render_template, session, redirect, g, url_for, flash
 
 import config
-from util.storage_control import list_blobs, download_to_memory, upload_blob
+from util.storage_control import list_blobs, download_to_memory, copy_to_username
 from algorithms import data_proc
 
 # database import
 from database import db_session
 from util.models import ProcessingProject, User
 from components.auth import login_required
-
 
 bp = Blueprint('data_processing', __name__, url_prefix='/data_processing')
 
@@ -48,7 +47,10 @@ def index():
         # add new processing project to database
         user_id = g.user.id
 
-        processing_project = ProcessingProject(user_id=user_id, original_file_path=selected_file_path)
+        copied_file_path = copy_to_username(file_path=selected_file_path, username=g.user.username)
+
+        processing_project = ProcessingProject(user_id=user_id, original_file_path=selected_file_path,
+                                               current_file_path=copied_file_path)
         db_session.add(processing_project)
         db_session.commit()
 
