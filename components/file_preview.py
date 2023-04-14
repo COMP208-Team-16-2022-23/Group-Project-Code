@@ -221,7 +221,11 @@ def delete_task(component_name, id):
         # check ownership
         project = ProcessingProject.query.filter_by(id=id).first()
         owner = project.current_file_path.split('/')[0]
-        if owner != g.user.username:
+        if owner == 'public':
+            db_session.delete(project)
+            db_session.commit()
+            return redirect(redirect_url)
+        elif owner != g.user.username:
             flash('Warning: Deleting This File is NOT ALLOWED!')
             return redirect(redirect_url)
 
