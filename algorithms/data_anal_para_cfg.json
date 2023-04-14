@@ -32,7 +32,7 @@
         "variables": [
           {
             "name": "variables",
-            "description": "The variables to conduct the reliability analysis.",
+            "description": "The variables to conduct the reliability analysis.(Cronbach's α need at least 2 variables, split_half need at least 4 variables)",
             "type": "multi_select"
           }
         ],

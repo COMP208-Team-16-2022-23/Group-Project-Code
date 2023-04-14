@@ -60,7 +60,8 @@
                                         <th scope="row">
                                             <div class="form-check">
                                                 <input class="form-check-input" type="radio" name="file_selection"
-                                                       id="{{ file['file_path'] }}" value="{{ file['file_path'] }}" required/>
+                                                       id="{{ file['file_path'] }}" value="{{ file['file_path'] }}"
+                                                       required/>
                                             </div>
                                         </th>
                                         <td>
@@ -70,7 +71,12 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <p class="fw-normal mb-0">{{ file['date_modified'] }}</p>
+                                            <p class="fw-normal mb-0">
+                                                <script>
+                                                    var date = new Date('{{ file['date_modified'] }} UTC'.replace(/-/g, "/"));
+                                                    document.write(date.toLocaleString());
+                                                </script>
+                                            </p>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -125,7 +131,7 @@
                                 <p class="fw-normal mb-0">
                                     {# change utctime to local time #}
                                     <script>
-                                        var date = new Date('{{ processing_project['modified_date'] }} UTC');
+                                        var date = new Date('{{ processing_project['modified_date'] }} UTC'.replace(/-/g, "/"));
                                         document.write(date.toLocaleString());
                                     </script>
                                 </p>

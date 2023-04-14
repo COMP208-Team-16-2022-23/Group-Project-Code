@@ -10,6 +10,7 @@ from sklearn.utils import shuffle
 import seaborn as sns
 import pandas as pd
 from scipy import stats
+from scipy.stats import t
 from scipy.stats import skew
 from scipy.stats import spearmanr
 import psython
@@ -93,49 +94,92 @@ def Bland_Altman_method(df, parameters):
     first_method = parameters['first method']
     second_method = parameters['second method']
 
-    df['difference'] = df[first_method].sub(df[second_method])
+    if parameters['testing_method'] == "difference":
+        df['difference'] = df[first_method].sub(df[second_method])
+    elif parameters['testing_method'] == "ratio":
+        df['difference'] = df[first_method] / df[second_method]
 
     sample_size = df.shape[0]
-    diff_array = np.array(df['difference'])
-    mean_value = np.mean(diff_array)
+
     std = np.std(df['difference'], ddof=1)
+
+    if parameters['testing_method'] == "difference":
+        mean_value1 = df[first_method].mean()
+        mean_value2 = df[second_method].mean()
+        mean_value = abs(mean_value1 - mean_value2)
+    elif parameters['testing_method'] == "ratio":
+        mean_value1 = df[first_method].mean()
+        mean_value2 = df[second_method].mean()
+        mean_value = abs(mean_value1 / mean_value2)
+
 
     mean_value_95lower = mean_value - 1.96 * std
     mean_value_95upper = mean_value + 1.96 * std
 
     #p_value
-    p = stats.ttest_ind(df[first_method], df[second_method])
+    t_stat = mean_value / (std / np.sqrt(len(df['difference'])))
+    p_val = t.sf(np.abs(t_stat), len(df['difference']) - 1) * 2
 
-    #ci_upper and ci_lower are the 95 % confidence intervals for the upper and lower bounds, respectively.
-    se_upper = std * np.sqrt((sample_size - 1) / (sample_size - 2)) * np.sqrt(1 + (1 / sample_size) + (mean_value_95upper / mean_value))
-    se_lower = std * np.sqrt((sample_size - 1) / (sample_size - 2)) * np.sqrt(1 + (1 / sample_size) + (mean_value_95lower / mean_value))
-    ci_upper = mean_value_95upper + 1.96 * se_upper
-    ci_lower = mean_value_95lower - 1.96 * se_lower
+    CR = 1.96 * std * np.sqrt(2)
 
-    CoR = 1.96 * (mean_value_95upper - mean_value_95lower) / mean_value
 
     result_content.append(make_result_section(section_name="Output 1: Bland-Altman method result",
                                               content_type="table",
                                               content={
                                                   "data": [
                                                       [sample_size],
-                                                      [mean_value],
-                                                      [mean_value_95upper],
-                                                      [mean_value_95lower],
-                                                      [p],
-                                                      [ci_upper],
-                                                      [ci_lower],
-                                                      [CoR]
+                                                      ['%.3f' % mean_value],
+                                                      ['%.3f' % std],
+                                                      ['%.3f' % mean_value_95upper],
+                                                      ['%.3f' % mean_value_95lower],
+                                                      [p_val],
+                                                      ['%.3f' % CR]
                                                   ],
                                                   "columns": [
                                                         "value"
                                                   ],
                                                   "index": [
-                                                      "sample size","Arithmetic mean","95% confidence interval (upper bound) for the arithmetic mean","95% confidence interval (lower bound) for the arithmetic mean","P value","Upper limit of LoA","Lower limit of LoA","Coefficient of Repeatability"
+                                                      "sample size","arithmetic mean","standard deviation","Upper limit of LoA","Lower limit of LoA","P value","coefficient of repeatability"
                                                             ]
                                               }))
 
+    result_content.append(make_result_section(section_name="Chart descriptions",
+                                              content_type="text",
+                                              content='The above table shows the results of the Bland-Altman method, mainly the average value, P value (used to assist in judging the consistency) and the value of the limit of agreement (LoA).'))
+
+    Bland_Altman_pic = make_Bland_Altman_plot(df,first_method,second_method)
+
+    result_content.append(make_result_section(section_name="Output 2: Bland-Altman graph",
+                                              content_type="img",
+                                              content=Bland_Altman_pic
+                                              ))
+
+    result_content.append(make_result_section(section_name="Chart descriptions",
+                                              content_type="text",
+                                              content="The above table shows the Bland-Altman diagram, which is used to analyze the consistency. The more points that are within the 95% LoA (dotted line in the graph), the better the agreement."))
+
     return result_content
+
+def make_Bland_Altman_plot(df,first_method,second_method):
+
+
+    f, ax = plt.subplots(1, figsize=(8, 5))
+    sm.graphics.mean_diff_plot(df[first_method], df[second_method], ax=ax)
+    #plt.show()
+
+    # Encode into a string in the form of base64
+    pic_io = io.BytesIO()
+    plt.savefig(pic_io, format='png')
+    pic_io.seek(0)
+    base64_pic = base64.b64encode(pic_io.read()).decode()
+
+    # Clear plt buffer
+    f.clear()
+    plt.close()
+
+    return base64_pic
+
+
 
 def adf_test(df, parameters):
     result_content = []
