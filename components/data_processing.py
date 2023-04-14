@@ -47,10 +47,7 @@ def index():
         # add new processing project to database
         user_id = g.user.id
 
-        copied_file_path = copy_to_username(file_path=selected_file_path, username=g.user.username)
-
-        processing_project = ProcessingProject(user_id=user_id, original_file_path=selected_file_path,
-                                               current_file_path=copied_file_path)
+        processing_project = ProcessingProject(user_id=user_id, original_file_path=selected_file_path)
         db_session.add(processing_project)
         db_session.commit()
 
