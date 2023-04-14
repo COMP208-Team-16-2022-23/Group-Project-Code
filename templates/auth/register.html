@@ -4,18 +4,6 @@
     <div class="container">
         <h1 class="text-center">{% block title %}Sign Up{% endblock %}</h1>
     </div>
-
-    <style>
-        .btn {
-            position: relative;
-        }
-
-        #password-message {
-            top: 0;
-            left: 100%;
-            transform: translateX(10px);
-        }
-    </style>
 {% endblock %}
 
 {% block content %}
@@ -161,21 +149,8 @@
                                                         Please enter your password
                                                     </div>
                                                 </div>
-                                                <div class="text-danger" id="password-error"></div>
+                                                <div class="text-danger" id="password-strength-promote"></div>
                                             </div>
-<!--                                            <div class="ms-3">-->
-<!--                                                <i class="fas fa-question-circle" style="cursor: pointer;"-->
-<!--                                                   onclick="showPasswordMessage()"></i>-->
-<!--                                            </div>-->
-                                        </div>
-
-                                        <div id="password-message"
-                                             style="display: none; position: absolute; z-index: 1; background-color: white; padding: 10px; border: 1px solid gray;">
-                                            <p>Password Requirements:</p>
-                                            <p> - Must be at least 8 characters long.</p>
-                                            <p>- Must contain at least one uppercase letter.</p>
-                                            <p>- Must contain at least one lowercase letter.</p>
-                                            <p>- Must contain at least one number.</p>
                                         </div>
 
                                         <div class="d-flex flex-row align-items-center mb-4">
@@ -201,7 +176,8 @@
                                                        value="true"
                                                        id="agree_terms" required/>
                                                 <label class="form-check-label" for="agree_terms">
-                                                    I agree to <a href="{{ url_for('legal.terms') }}">Terms & Conditions</a>
+                                                    I agree to <a href="{{ url_for('legal.terms') }}">Terms &
+                                                    Conditions</a>
                                                     and
                                                     <a href="{{ url_for('legal.privacy') }}">Privacy Policy</a>.
                                                 </label>
@@ -234,23 +210,37 @@
     </section>
 
     <script>
-        // check if two passwords match
         const password = document.getElementById('password');
         const password_confirm = document.getElementById('password_confirm');
         const passwordError = document.getElementById('password-error');
+        const passwordStrengthPromote = document.getElementById('password-strength-promote');
         const form = document.getElementById('register-form');
 
         function checkPasswordMatch(event) {
             const passwordValue = password.value;
             const confirmPasswordValue = password_confirm.value;
+
+            // check password strength
             const hasUppercase = /[A-Z]/.test(passwordValue);
             const hasLowercase = /[a-z]/.test(passwordValue);
             const hasDigit = /\d/.test(passwordValue);
             const isLongEnough = passwordValue.length >= 8;
             if (!hasUppercase || !hasLowercase || !hasDigit || !isLongEnough) {
-                passwordError.innerHTML = 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one digit.';
+                passwordStrengthPromote.innerHTML = 'Password must have at least: ' +
+                    '<ul class="mb-0">' +
+                    '<li>8 characters</li>' +
+                    '<li>one digit</li>' +
+                    '<li>one uppercase letter</li>' +
+                    '<li>one lowercase letter</li>' +
+                    '</ul>';
                 form.querySelector('button[type="submit"]').disabled = true;
-            } else if (passwordValue !== confirmPasswordValue) {
+            } else {
+                passwordStrengthPromote.innerHTML = '';
+                form.querySelector('button[type="submit"]').disabled = false;
+            }
+
+            // check if passwords match
+            if (passwordValue !== confirmPasswordValue) {
                 passwordError.innerHTML = 'Passwords do not match';
                 form.querySelector('button[type="submit"]').disabled = true;
             } else {
@@ -261,17 +251,6 @@
 
         password.addEventListener('input', checkPasswordMatch);
         password_confirm.addEventListener('input', checkPasswordMatch);
-
-
-
-        function showPasswordMessage() {
-        var passwordMessage = document.getElementById("password-message");
-        if (passwordMessage.style.display === "none") {
-            passwordMessage.style.display = "block";
-        } else {
-            passwordMessage.style.display = "none";
-        }
-    }
 
     </script>
 {% endblock %}
