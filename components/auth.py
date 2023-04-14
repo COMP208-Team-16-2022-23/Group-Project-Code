@@ -236,6 +236,9 @@ def reset_password():
         elif password != password_confirm:
             flash('The two passwords you entered are not the same.', 'warning-auth')
             return redirect(url_for('auth.reset_password'))
+        elif is_strong_password(password) is False:
+            flash('The password you have entered is not strong enough.', 'warning-auth')
+            return redirect(url_for('auth.reset_password'))
         else:
             # reset the password and clear the OTP
             user.password = generate_password_hash(password, salt_length=128)
