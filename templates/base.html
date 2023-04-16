@@ -47,11 +47,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
     {% if MAINTENANCE_MESSAGE or MAINTENANCE_TITLE %}
-    <script type="text/javascript">
-		window.onload = function() {
-			alert("{{ MAINTENANCE_TITLE }} {{ MAINTENANCE_MESSAGE }}");
-		}
-	</script>
+        <script type="text/javascript">
+            window.onload = function () {
+                alert("{{ MAINTENANCE_TITLE }} {{ MAINTENANCE_MESSAGE }}");
+            }
+        </script>
     {% endif %}
 
     <style>
@@ -122,11 +122,13 @@
             <!-- Right elements -->
 
             <!-- Avatar -->
-            <div class="d-flex align-items-center ms-auto">
+            <div class="d-grid gap-2 d-md-flex justify-content-start align-items-center ms-auto">
+                <a class="btn btn-tertiary" data-mdb-ripple-color="light" href="https://guide.lcda.space"
+                   target="_blank" role="button">Docs<i class="fas fa-up-right-from-square ms-2"></i></a>
                 {% if g.user %}
                     <div class="dropdown">
                         <a
-                                class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                                class="dropdown-toggle d-flex align-items-center hidden-arrow ms-2"
                                 href="#"
                                 id="navbarDropdownMenuAvatar"
                                 role="button"
@@ -159,10 +161,10 @@
                     </div>
                 {% else %}
 
-                    <a class="btn btn-link px-3 me-2" href="{{ url_for('auth.register') }}" role="button">
+                    <a class="btn btn-link px-3" href="{{ url_for('auth.register') }}" role="button">
                         Sign up
                     </a>
-                    <a class="btn btn-primary me-3" href="{{ url_for('auth.login') }}" role="button">
+                    <a class="btn btn-primary" href="{{ url_for('auth.login') }}" role="button">
                         Login
                     </a>
 

@@ -893,6 +893,12 @@ def get_evaluation_metrics(y_train, y_train_pred, y_test, y_test_pred):
     return accuracy_train, accuracy_test, recall_train, recall_test, precision_train, precision_test, f1_train, f1_test
 
 
+def get_unique_label_list(df):
+    labels = list(df.unique())
+    labels.sort()
+    return labels
+
+
 def make_heatmap_pic(cnf_matrix, labels=None):
     """
     Make the picture of heatmap
@@ -1056,7 +1062,7 @@ def knn_classification(df, parameters):
         # Compute confusion matrix
         cnf_matrix = pd.DataFrame(confusion_matrix(y_test, y_test_pred))
 
-        pic = make_heatmap_pic(cnf_matrix)
+        pic = make_heatmap_pic(cnf_matrix, labels=get_unique_label_list(y_train))
 
         # get the accuracy
         accuracy = neigh.score(x_test, y_test)
@@ -1133,7 +1139,7 @@ def svm_classification(df, parameters):
         # Compute confusion matrix
         cnf_matrix = pd.DataFrame(confusion_matrix(y_test, y_test_pred))
 
-        pic = make_heatmap_pic(cnf_matrix)
+        pic = make_heatmap_pic(cnf_matrix, get_unique_label_list(y_train))
 
         # get the accuracy
         accuracy = clf.score(x_test, y_test)
@@ -1210,7 +1216,7 @@ def svr_regression(df, parameters):
         # Compute confusion matrix
         cnf_matrix = pd.DataFrame(confusion_matrix(y_test, y_test_pred))
 
-        pic = make_heatmap_pic(cnf_matrix)
+        pic = make_heatmap_pic(cnf_matrix, get_unique_label_list(y_train))
 
         # get the accuracy
         accuracy = svm.score(x_test, y_test)

@@ -124,8 +124,8 @@
                                 {% for variable in algorithm["variables"] %}
                                     <p class="fw-bold mt-3">{{ variable["description"] }}</p>
                                     {% if variable["type"] == "multi_select" %}
-                                        <select class="selectpicker" multiple data-live-search="true"
-                                                name="{{ variable['name'] }}" required>
+                                        <select class="selectpicker" data-actions-box="true" data-container="body"
+                                                multiple data-live-search="true" name="{{ variable['name'] }}" required>
                                             {% for column_name in column_names %}
                                                 <option value="{{ column_name }}">{{ column_name }}</option>
                                             {% endfor %}
@@ -144,7 +144,7 @@
 
                                 {#                                <p class="fw-bold">Select the variables to be processed</p>#}
                                 {##}
-                                {#                                <select class="selectpicker" multiple data-live-search="true" name="column_selected">#}
+                                {#                                <select class="selectpicker" data-actions-box="true" data-container="body" multiple data-live-search="true" name="column_selected">#}
                                 {#                                    {% for column_name in column_names %}#}
                                 {#                                        <option value="{{ column_name }}">{{ column_name }}</option>#}
                                 {#                                    {% endfor %}#}

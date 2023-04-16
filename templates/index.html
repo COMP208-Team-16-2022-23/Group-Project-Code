@@ -50,11 +50,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
 
     {% if MAINTENANCE_MESSAGE or MAINTENANCE_TITLE %}
-    <script type="text/javascript">
-		window.onload = function() {
-			alert("{{ MAINTENANCE_TITLE }} {{ MAINTENANCE_MESSAGE }}");
-		}
-	</script>
+        <script type="text/javascript">
+            window.onload = function () {
+                alert("{{ MAINTENANCE_TITLE }} {{ MAINTENANCE_MESSAGE }}");
+            }
+        </script>
     {% endif %}
 
 </head>
@@ -75,6 +75,7 @@
         .navbar-before-scroll .navbar-toggler,
         .navbar-before-scroll .username,
         .navbar-before-scroll .fa-user,
+        .navbar-before-scroll .fa-book-open,
         .navbar-after-scroll .navbar-brand {
             color: #fff;
         }
@@ -86,7 +87,8 @@
         }
 
         .navbar-after-scroll .username,
-        .navbar-after-scroll .fa-user {
+        .navbar-after-scroll .fa-user,
+        .navbar-after-scroll .fa-book-open {
             color: #3B71CA;
         }
 
@@ -131,7 +133,8 @@
             }
 
             .username,
-            .fa-user {
+            .fa-user,
+            .fa-book-open {
                 color: #3b71ca !important;
             }
 
@@ -198,7 +201,9 @@
                 <!-- Right elements -->
 
                 <!-- Avatar -->
-                <div class="d-flex align-items-center ms-auto">
+                <div class="d-grid gap-2 d-md-flex justify-content-start align-items-center ms-auto">
+                    <a class="btn btn-tertiary username px-3" data-mdb-ripple-color="light" href="https://guide.lcda.space" target="_blank" role="button">Docs<i
+                            class="fas fa-up-right-from-square ms-2"></i></a>
                     {% if g.user %}
                         <div class="dropdown">
                             <a
@@ -230,7 +235,6 @@
                                 </li>
                             </ul>
                         </div>
-
                     {% endif %}
                 </div>
             </div>
@@ -257,21 +261,38 @@
                     <h1 class="mb-3" style="font-family: Georgia, serif;">Low-Code Data Analysis</h1>
                     <h5 class="mb-4" style="font-family: Georgia, serif;">A simplified approach to data analysis with
                         less coding required.</h5>
+                    {#                     <a #}
+                    {#                            class="btn btn-outline-light btn-lg m-2" #}
+                    {#                            href="https://guide.lcda.space/" #}
+                    {#                            role="button" #}
+                    {#                            target="_blank" #}
+                    {#                            style="width: 145px;" #}
+                    {#                    >Get Started</a> #}
+
                     {% if not g.user %}
-                        <a
-                                class="btn btn-outline-light btn-lg m-2"
-                                href="{{ url_for('auth.register') }}"
-                                role="button"
-                                style="width: 108px;"
-                        >Sign Up</a>
-                        <a
-                                class="btn btn-outline-light btn-lg m-2"
-                                href="{{ url_for('auth.login') }}"
-                                role="button"
-                                style="width: 108px;"
-                        >Log in</a>
+                        <div class="d-grid gap-2 d-md-flex justify-content-center align-items-center">
+                            <a
+                                    class="btn btn-outline-light btn-lg m-2"
+                                    href="{{ url_for('auth.register') }}"
+                                    role="button"
+                                    style="width: 170px;"
+                            >Sign Up</a>
+                            <a
+                                    class="btn btn-outline-light btn-lg m-2"
+                                    href="{{ url_for('auth.login') }}"
+                                    role="button"
+                                    style="width: 170px;"
+                            >Log in</a>
+                        </div>
                     {% else %}
                         <p>Good <span id="timeNow"></span>, {{ g.user.username }}!</p>
+                        <a
+                                class="btn btn-outline-light btn-lg m-2"
+                                href="{{ url_for('data_analysis.index') }}"
+                                role="button"
+                                target="_blank"
+                                style="width: 170px;"
+                        >Continue Using </a>
                     {% endif %}
                 </div>
                 <div class="scroll-prompt" id="js_scrollPrompt">
@@ -289,16 +310,16 @@
     <div class="container">
         {#        <h1 class="mb-3">Low-Code Data Analysis Platform</h1>#}
 
-<!--        {% if MAINTENANCE_MESSAGE and MAINTENANCE_TITLE %}-->
-<!--        <div class="note note-primary mb-5">-->
-<!--            <strong>{{MAINTENANCE_TITLE}}</strong> {{ MAINTENANCE_MESSAGE }}-->
-<!--        </div>-->
-<!--        {% endif %}-->
+        {#        {% if MAINTENANCE_MESSAGE and MAINTENANCE_TITLE %}#}
+        {#       <div class="note note-primary mb-5">#}
+        {#           <strong>{{MAINTENANCE_TITLE}}</strong> {{ MAINTENANCE_MESSAGE }}#}
+        {#        </div>#}
+        {#       {% endif %}#}
 
         {% if NOTICE_MESSAGE or NOTICE_TITLE %}
-        <div class="note note-primary mb-5">
-            <strong>{{NOTICE_TITLE}}</strong> {{ NOTICE_MESSAGE }}
-        </div>
+            <div class="note note-primary mb-5">
+                <strong>{{ NOTICE_TITLE }}</strong> {{ NOTICE_MESSAGE }}
+            </div>
         {% endif %}
 
         <h2 class="mb-4">What is LCDA?</h2>
@@ -306,7 +327,12 @@
             {{ INTRODUCTION }}
         </p>
 
-        <!--        <p>Know more about our team? <br><a href="{{ url_for('legal.about') }}"><b>About us</b></a></p>-->
+        <h6> Having problems?</h6>
+        <p> You are welcome to read our <a href='https://guide.lcda.space/'>User Manual</a> if you encounter problems
+            in using LCDA or wish to gain an in-depth understanding of all its functions.
+        </p>
+
+        {#                <p>Know more about our team? <br><a href="{{ url_for('legal.about') }}"><b>About us</b></a></p> #}
 
         <!-- set the link to sign up page-->
         <h6>Don't have an account?</h6>
