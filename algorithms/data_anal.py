@@ -63,7 +63,8 @@ def analysis(file_path, parameters):
         'reliability_analysis': reliability_analysis,
         'svm_classification': svm_classification,
         'adf_test': adf_test,
-        'Bland-Altman_method': Bland_Altman_method
+        'Bland-Altman_method': Bland_Altman_method,
+        "decision_matrix": decision_matrix
     }
 
     # Call the corresponding function
@@ -80,6 +81,116 @@ def analysis(file_path, parameters):
     processed_file_path = storage_control.upload_blob(file=result_json, blob_name=new_file_path)
 
     return processed_file_path
+
+def decision_matrix(df, parameters):
+    result_content = []
+
+    D = df[parameters['variable']].values
+
+    # 计算指标变异性
+    VC = np.var(D, axis=0, ddof=1)
+
+    # 计算指标冲突性
+    CC = np.zeros((D.shape[1], D.shape[1]))
+    for j in range(D.shape[1]):
+        for k in range(j + 1, D.shape[1]):
+            CC[j][k] = np.sum((D[:, j] - np.mean(D[:, j])) * (D[:, k] - np.mean(D[:, k]))) / (D.shape[0] - 1) / np.std(
+                D[:, j], ddof=1) / np.std(D[:, k], ddof=1)
+            CC[k][j] = CC[j][k]
+
+
+    # 计算信息量
+    IC = VC / np.sum(CC, axis=1)
+
+    # 计算权重百分比
+    WP = IC / np.sum(IC) * 100
+
+    result_df = pd.DataFrame({
+        "Indicator variability": VC,
+        'Information content': IC,
+        'weight percentage': WP
+    }, index=df.columns)
+
+    table_data = []
+    for index, row in result_df.iterrows():
+        row_data = list(row)
+        table_data.append(row_data)
+
+    result_content.append(make_result_section(section_name="Analysis steps",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "Firstly, the weight of each index is analyzed according to the weight calculation results.",
+                                                  "The weight analysis matrix is obtained through the weight calculation results.",
+                                                  "Summarize the analysis."
+                                              ]))
+
+    result_content.append(make_result_section(section_name="Detailed conclusions",
+                                              content_type="text",
+                                              content=''))
+
+    result_content.append(make_result_section(section_name="Output 1: weight calculation result",
+                                              content_type="table",
+                                              content={
+                                                  "data": table_data,
+                                                  "columns": [
+                                                      "Indicator variability",
+                                                      'Information content',
+                                                      'weight percentage'
+                                                  ],
+                                                  "index": parameters['variable']
+                                              }))
+
+    result_content.append(make_result_section(section_name="Table description:",
+                                              content_type="ordered_list",
+                                              content=[
+                                              "The above table shows the weight calculation results of the CRITIC method, and analyzes the weight of each indicator according to the results.",
+                                                  "The index variability is the standard deviation, the greater the standard deviation, the greater the weight.",
+                                                  "The amount of information is index variability * conflict index.",
+                                                  "The weight is the normalization of the amount of information."
+                                              ]))
+
+    decision_pic = make_decision_pic(WP,parameters['variable'])
+
+    result_content.append(make_result_section(section_name="Output 2: indicator importance histogram",
+                                              content_type="img",
+                                              content=decision_pic
+                                              ))
+
+    result_content.append(make_result_section(section_name="Chart descriptions",
+                                              content_type="text",
+                                              content="The figure above shows the importance of indicators in the form of a histogram."))
+
+
+    return result_content
+
+def make_decision_pic(WP,column):
+    f = plt.figure()
+    data = WP
+    labels = column
+
+    # 将数据转化为百分比
+    data_perc = data / np.sum(data) * 100
+
+
+    # 绘制横向直方图
+    fig, ax = plt.subplots()
+    # 设置横轴和纵轴标签
+    ax.set_xlabel('Percentage')
+    ax.set_ylabel('Category')
+    bars = ax.barh(labels, data_perc)
+    for bar, val in zip(bars, data):
+        ax.text(bar.get_width(), bar.get_y() + bar.get_height() / 2, "{:.3f}".format(val), ha='left', va='center')
+
+    pic_io = io.BytesIO()
+    plt.savefig(pic_io, format='png')
+    pic_io.seek(0)
+    base64_pic = base64.b64encode(pic_io.read()).decode()
+
+    # Clear plt buffer
+    f.clear()
+    plt.close()
+
+    return base64_pic
 
 def Bland_Altman_method(df, parameters):
     result_content = []

@@ -21,6 +21,27 @@
     ]
   },
   {
+    "section_name": "Comprehensive evaluation",
+    "code_name": "comprehensive_evaluation",
+    "algorithms": [
+      {
+        "name": "Decision-matrix method",
+        "code_name": "decision_matrix",
+        "description": "The decision-matrix method, also Pugh method or Pugh concept selection, invented by Stuart Pugh, is a qualitative technique used to rank the multi-dimensional options of an option set. It is frequently used in engineering for making design decisions but can also be used to rank investment options, vendor options, product options or any other set of multidimensional entities.",
+        "link": "https://en.wikipedia.org/wiki/Decision-matrix_method",
+        "variables": [
+          {
+            "name": "variable",
+            "description": "Put in [quantitative] variables (number of variables ≥ 2)",
+            "type": "multi_select"
+          }
+        ],
+        "parameters": [
+        ]
+      }
+    ]
+  },
+  {
     "section_name": "Questionaire Analysis",
     "code_name": "questionaire_analysis",
     "algorithms": [
