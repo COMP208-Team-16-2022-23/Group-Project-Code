@@ -257,28 +257,36 @@
                     <h1 class="mb-3" style="font-family: Georgia, serif;">Low-Code Data Analysis</h1>
                     <h5 class="mb-4" style="font-family: Georgia, serif;">A simplified approach to data analysis with
                         less coding required.</h5>
-                    <a
-                            class="btn btn-outline-light btn-lg m-2"
-                            href="https://guide.lcda.space/"
-                            role="button"
-                            target="_blank"
-                            style="width: 145px;"
-                    >Get Started</a>
+<!--                     <a-->
+<!--                            class="btn btn-outline-light btn-lg m-2"-->
+<!--                            href="https://guide.lcda.space/"-->
+<!--                            role="button"-->
+<!--                            target="_blank"-->
+<!--                            style="width: 145px;"-->
+<!--                    >Get Started</a>-->
+
                     {% if not g.user %}
-                        {#                        <a#}
-                        {#                                class="btn btn-outline-light btn-lg m-2"#}
-                        {#                                href="{{ url_for('auth.register') }}"#}
-                        {#                                role="button"#}
-                        {#                                style="width: 145px;"#}
-                        {#                        >Sign Up</a>#}
+                        <a
+                                class="btn btn-outline-light btn-lg m-2"
+                                href="{{ url_for('auth.register') }}"
+                                role="button"
+                                style="width: 108px;"
+                        >Sign Up</a>
                         <a
                                 class="btn btn-outline-light btn-lg m-2"
                                 href="{{ url_for('auth.login') }}"
                                 role="button"
-                                style="width: 145px;"
+                                style="width: 108px;"
                         >Log in</a>
                     {% else %}
                         <p>Good <span id="timeNow"></span>, {{ g.user.username }}!</p>
+                        <a
+                                class="btn btn-outline-light btn-lg m-2"
+                                href="{{ url_for('data_analysis.index') }}"
+                                role="button"
+                                target="_blank"
+                                style="width: 170px;"
+                        >Continue Using </a>
                     {% endif %}
                 </div>
                 <div class="scroll-prompt" id="js_scrollPrompt">
@@ -311,6 +319,11 @@
         <h2 class="mb-4">What is LCDA?</h2>
         <p>
             {{ INTRODUCTION }}
+        </p>
+
+        <h6> Having problems?</h6>
+        <p> You are welcome to read our <a href='https://guide.lcda.space/'>User Manual</a> if you encounter problems
+            in using the LCDA or wish to gain an in-depth understanding of all its functions.
         </p>
 
         {#                <p>Know more about our team? <br><a href="{{ url_for('legal.about') }}"><b>About us</b></a></p> #}
