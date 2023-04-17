@@ -271,22 +271,20 @@
                     {#                    >Get Started</a> #}
 
                     {% if not g.user %}
-                            <div class="d-flex justify-content-center align-items-center col-md-8 col-10 mx-auto row">
-                                <div class="col-md-6 d-flex">
-                                    <a
-                                            class="btn btn-outline-light btn-lg m-2 flex-grow-1"
-                                            href="{{ url_for('auth.register') }}"
-                                            role="button"
-                                    >Sign Up</a>
-                                </div>
-                                <div class="col-md-6 d-flex">
-                                    <a
-                                            class="btn btn-outline-light btn-lg m-2 flex-grow-1"
-                                            href="{{ url_for('auth.login') }}"
-                                            role="button"
-                                    >Log in</a>
-                                </div>
-                            </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-center align-items-center">
+                            <a
+                                    class="btn btn-outline-light btn-lg m-2"
+                                    href="{{ url_for('auth.register') }}"
+                                    role="button"
+                                    style="width: 108px;"
+                            >Sign Up</a>
+                            <a
+                                    class="btn btn-outline-light btn-lg m-2"
+                                    href="{{ url_for('auth.login') }}"
+                                    role="button"
+                                    style="width: 108px;"
+                            >Log in</a>
+                        </div>
                     {% else %}
                         <p>Good <span id="timeNow"></span>, {{ g.user.username }}!</p>
                         <a
