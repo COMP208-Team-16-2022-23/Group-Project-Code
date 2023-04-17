@@ -4,11 +4,11 @@ Flask_Mail
 google-cloud-storage
 gunicorn==20.1.0
 imblearn
-matplotlib
+matplotlib==3.5.2
 numpy
 openai
 openpyxl
-pandas
+pandas==1.5
 PyMySQL
 pingouin
 psython

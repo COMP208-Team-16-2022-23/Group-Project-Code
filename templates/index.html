@@ -75,7 +75,6 @@
         .navbar-before-scroll .navbar-toggler,
         .navbar-before-scroll .username,
         .navbar-before-scroll .fa-user,
-        .navbar-before-scroll .fa-book-open,
         .navbar-after-scroll .navbar-brand {
             color: #fff;
         }
@@ -87,8 +86,7 @@
         }
 
         .navbar-after-scroll .username,
-        .navbar-after-scroll .fa-user,
-        .navbar-after-scroll .fa-book-open {
+        .navbar-after-scroll .fa-user {
             color: #3B71CA;
         }
 
@@ -133,8 +131,7 @@
             }
 
             .username,
-            .fa-user,
-            .fa-book-open {
+            .fa-user {
                 color: #3b71ca !important;
             }
 
@@ -201,10 +198,7 @@
                 <!-- Right elements -->
 
                 <!-- Avatar -->
-                <div class="d-grid gap-2 d-md-flex justify-content-start align-items-center ms-auto">
-                    <a class="btn btn-tertiary username px-3" data-mdb-ripple-color="light"
-                       href="https://guide.lcda.space" target="_blank" role="button">Docs<i
-                            class="fas fa-up-right-from-square ms-2"></i></a>
+                <div class="d-flex align-items-center ms-auto">
                     {% if g.user %}
                         <div class="dropdown">
                             <a
@@ -236,6 +230,7 @@
                                 </li>
                             </ul>
                         </div>
+
                     {% endif %}
                 </div>
             </div>
@@ -271,20 +266,18 @@
                     {#                    >Get Started</a> #}
 
                     {% if not g.user %}
-                        <div class="d-grid gap-2 d-md-flex justify-content-center align-items-center">
-                            <a
-                                    class="btn btn-outline-light btn-lg m-2"
-                                    href="{{ url_for('auth.register') }}"
-                                    role="button"
-                                    style="width: 108px;"
-                            >Sign Up</a>
-                            <a
-                                    class="btn btn-outline-light btn-lg m-2"
-                                    href="{{ url_for('auth.login') }}"
-                                    role="button"
-                                    style="width: 108px;"
-                            >Log in</a>
-                        </div>
+                        <a
+                                class="btn btn-outline-light btn-lg m-2"
+                                href="{{ url_for('auth.register') }}"
+                                role="button"
+                                style="width: 108px;"
+                        >Sign Up</a>
+                        <a
+                                class="btn btn-outline-light btn-lg m-2"
+                                href="{{ url_for('auth.login') }}"
+                                role="button"
+                                style="width: 108px;"
+                        >Log in</a>
                     {% else %}
                         <p>Good <span id="timeNow"></span>, {{ g.user.username }}!</p>
                         <a
@@ -328,7 +321,7 @@
 
         <h6> Having problems?</h6>
         <p> You are welcome to read our <a href='https://guide.lcda.space/'>User Manual</a> if you encounter problems
-            in using LCDA or wish to gain an in-depth understanding of all its functions.
+            in using the LCDA or wish to gain an in-depth understanding of all its functions.
         </p>
 
         {#                <p>Know more about our team? <br><a href="{{ url_for('legal.about') }}"><b>About us</b></a></p> #}
