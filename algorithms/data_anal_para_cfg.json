@@ -334,11 +334,83 @@
         ],
         "parameters": [
           {
+            "name": "Data shuffling",
+            "code_name": "shuffle",
+            "type": "checkbox",
+            "description": "Reshuffle the data to re-segment the data according to the training.",
+            "default": "checked"
+          },
+          {
+            "name": "Training ratio",
+            "code_name": "train_ratio",
+            "type": "number",
+            "description": "The ratio of the data to use for training.",
+            "default": 0.7
+          },
+          {
+            "name": "Cross validation",
+            "code_name": "cross_validation",
+            "type": "select",
+            "options": [
+              "None",
+              "10-fold",
+              "5-fold",
+              "4-fold",
+              "3-fold",
+              "2-fold"
+            ],
+            "description": "The cross validation method to use.",
+            "default": "None"
+          },
+          {
+            "name": "Criterion",
+            "code_name": "criterion",
+            "type": "select",
+            "options": [
+              "gini",
+              "entropy"
+            ],
+            "description": "The function to measure the quality of a split. Supported criteria are “gini” for the Gini impurity and “entropy” for the information gain.",
+            "default": "gini"
+          },
+          {
+            "name": "Splitter",
+            "code_name": "splitter",
+            "type": "select",
+            "options": [
+              "best",
+              "random"
+            ],
+            "description": "The strategy used to choose the split at each node. Supported strategies are “best” to choose the best split and “random” to choose the best random split.",
+            "default": "best"
+          },
+          {
+            "name": "Min samples split",
+            "code_name": "min_samples_split",
+            "type": "number",
+            "description": "The minimum number of samples required to split an internal node.",
+            "default": 2
+          },
+          {
+            "name": "Min samples leaf",
+            "code_name": "min_samples_leaf",
+            "type": "number",
+            "description": "The minimum number of samples required to be at a leaf node.",
+            "default": 1
+          },
+          {
             "name": "Max depth",
             "code_name": "max_depth",
             "type": "number",
-            "description": "The function to measure the quality of a split. Supported criteria are “gini” for the Gini impurity and “entropy” for the information gain.",
-            "default": "gini"
+            "description": "The maximum depth of the tree. If None, then nodes are expanded until all leaves are pure or until all leaves contain less than min_samples_split samples.",
+            "default": 10
+          },
+          {
+            "name": "Max leaf nodes",
+            "code_name": "max_leaf_nodes",
+            "type": "number",
+            "description": "Grow a tree with max_leaf_nodes in best-first fashion. Best nodes are defined as relative reduction in impurity. If None then unlimited number of leaf nodes.",
+            "default": 50
           }
         ]
       }

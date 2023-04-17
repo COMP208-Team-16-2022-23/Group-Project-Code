@@ -1,11 +1,10 @@
 import numpy as np
 from sklearn import svm
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split, KFold
-from sklearn.metrics.pairwise import euclidean_distances, manhattan_distances
 from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, precision_score, f1_score
 from sklearn.svm import SVR
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.utils import shuffle
 import seaborn as sns
 import pandas as pd
@@ -64,7 +63,8 @@ def analysis(file_path, parameters):
         'svm_classification': svm_classification,
         'adf_test': adf_test,
         'Bland-Altman_method': Bland_Altman_method,
-        "decision_matrix": decision_matrix
+        "decision_matrix": decision_matrix,
+        'decision_tree': decision_tree_classification
     }
 
     # Call the corresponding function
@@ -82,6 +82,7 @@ def analysis(file_path, parameters):
 
     return processed_file_path
 
+
 def decision_matrix(df, parameters):
     result_content = []
 
@@ -97,7 +98,6 @@ def decision_matrix(df, parameters):
             CC[j][k] = np.sum((D[:, j] - np.mean(D[:, j])) * (D[:, k] - np.mean(D[:, k]))) / (D.shape[0] - 1) / np.std(
                 D[:, j], ddof=1) / np.std(D[:, k], ddof=1)
             CC[k][j] = CC[j][k]
-
 
     # 计算信息量
     IC = VC / np.sum(CC, axis=1)
@@ -143,13 +143,13 @@ def decision_matrix(df, parameters):
     result_content.append(make_result_section(section_name="Table description:",
                                               content_type="ordered_list",
                                               content=[
-                                              "The above table shows the weight calculation results of the CRITIC method, and analyzes the weight of each indicator according to the results.",
+                                                  "The above table shows the weight calculation results of the CRITIC method, and analyzes the weight of each indicator according to the results.",
                                                   "The index variability is the standard deviation, the greater the standard deviation, the greater the weight.",
                                                   "The amount of information is index variability * conflict index.",
                                                   "The weight is the normalization of the amount of information."
                                               ]))
 
-    decision_pic = make_decision_pic(WP,parameters['variable'])
+    decision_pic = make_decision_pic(WP, parameters['variable'])
 
     result_content.append(make_result_section(section_name="Output 2: indicator importance histogram",
                                               content_type="img",
@@ -160,17 +160,16 @@ def decision_matrix(df, parameters):
                                               content_type="text",
                                               content="The figure above shows the importance of indicators in the form of a histogram."))
 
-
     return result_content
 
-def make_decision_pic(WP,column):
+
+def make_decision_pic(WP, column):
     f = plt.figure()
     data = WP
     labels = column
 
     # 将数据转化为百分比
     data_perc = data / np.sum(data) * 100
-
 
     # 绘制横向直方图
     fig, ax = plt.subplots()
@@ -191,6 +190,7 @@ def make_decision_pic(WP,column):
     plt.close()
 
     return base64_pic
+
 
 def Bland_Altman_method(df, parameters):
     result_content = []
@@ -223,16 +223,14 @@ def Bland_Altman_method(df, parameters):
         mean_value2 = df[second_method].mean()
         mean_value = abs(mean_value1 / mean_value2)
 
-
     mean_value_95lower = mean_value - 1.96 * std
     mean_value_95upper = mean_value + 1.96 * std
 
-    #p_value
+    # p_value
     t_stat = mean_value / (std / np.sqrt(len(df['difference'])))
     p_val = t.sf(np.abs(t_stat), len(df['difference']) - 1) * 2
 
     CR = 1.96 * std * np.sqrt(2)
-
 
     result_content.append(make_result_section(section_name="Output 1: Bland-Altman method result",
                                               content_type="table",
@@ -247,18 +245,20 @@ def Bland_Altman_method(df, parameters):
                                                       ['%.3f' % CR]
                                                   ],
                                                   "columns": [
-                                                        "value"
+                                                      "value"
                                                   ],
                                                   "index": [
-                                                      "sample size","arithmetic mean","standard deviation","Upper limit of LoA","Lower limit of LoA","P value","coefficient of repeatability"
-                                                            ]
+                                                      "sample size", "arithmetic mean", "standard deviation",
+                                                      "Upper limit of LoA", "Lower limit of LoA", "P value",
+                                                      "coefficient of repeatability"
+                                                  ]
                                               }))
 
     result_content.append(make_result_section(section_name="Chart descriptions",
                                               content_type="text",
                                               content='The above table shows the results of the Bland-Altman method, mainly the average value, P value (used to assist in judging the consistency) and the value of the limit of agreement (LoA).'))
 
-    Bland_Altman_pic = make_Bland_Altman_plot(df,first_method,second_method)
+    Bland_Altman_pic = make_Bland_Altman_plot(df, first_method, second_method)
 
     result_content.append(make_result_section(section_name="Output 2: Bland-Altman graph",
                                               content_type="img",
@@ -271,12 +271,11 @@ def Bland_Altman_method(df, parameters):
 
     return result_content
 
-def make_Bland_Altman_plot(df,first_method,second_method):
 
-
+def make_Bland_Altman_plot(df, first_method, second_method):
     f, ax = plt.subplots(1, figsize=(8, 5))
     sm.graphics.mean_diff_plot(df[first_method], df[second_method], ax=ax)
-    #plt.show()
+    # plt.show()
 
     # Encode into a string in the form of base64
     pic_io = io.BytesIO()
@@ -289,7 +288,6 @@ def make_Bland_Altman_plot(df,first_method,second_method):
     plt.close()
 
     return base64_pic
-
 
 
 def adf_test(df, parameters):
@@ -328,7 +326,7 @@ def adf_test(df, parameters):
     result1 = model.fit()
     aic1 = result1.aic
 
-    #difference order = 1
+    # difference order = 1
     diff1_time_series_data = time_series_data.diff()
     diff1_time_series_data = diff1_time_series_data.drop(diff1_time_series_data.index[0])
 
@@ -375,13 +373,13 @@ def adf_test(df, parameters):
                                               content={
                                                   "data": [
                                                       [
-                                                       '%.3f' % t_value1,
-                                                       '%.3f' % p_value1,
-                                                       '%.3f' % aic1,
-                                                       '%.3f' % critical_value1_1,
-                                                       '%.3f' % critical_value1_5,
-                                                       '%.3f' % critical_value1_10
-                                                       ],
+                                                          '%.3f' % t_value1,
+                                                          '%.3f' % p_value1,
+                                                          '%.3f' % aic1,
+                                                          '%.3f' % critical_value1_1,
+                                                          '%.3f' % critical_value1_5,
+                                                          '%.3f' % critical_value1_10
+                                                      ],
                                                       [
                                                           '%.3f' % t_value2,
                                                           '%.3f' % p_value2,
@@ -400,14 +398,14 @@ def adf_test(df, parameters):
                                                       ],
                                                   ],
                                                   "columns": [
-                                                              "t",
-                                                              "P",
-                                                              "AIC",
-                                                              "critical value(1%)",
-                                                              "critical value(5%)",
-                                                              "critical value(10%)"
-                                                              ],
-                                                  "index": [index1,index2,index3
+                                                      "t",
+                                                      "P",
+                                                      "AIC",
+                                                      "critical value(1%)",
+                                                      "critical value(5%)",
+                                                      "critical value(10%)"
+                                                  ],
+                                                  "index": [index1, index2, index3
                                                             ]
                                               }))
 
@@ -422,7 +420,7 @@ def adf_test(df, parameters):
                                                   "AIC value: A standard to measure the goodness of statistical model fitting, the smaller the value, the better.",
                                                   "Critical value: A critical value is a fixed value corresponding to a given significance level."
                                               ]))
-    
+
     result_content.append(make_result_section(section_name="Output 2: original sequence diagram",
                                               content_type="img",
                                               content=original_sequence_pic_1
@@ -442,8 +440,8 @@ def adf_test(df, parameters):
     result_content.append(make_result_section(section_name="Chart description:",
                                               content_type="text",
                                               content=
-                                                  "The figure above shows the resulting plot of taking a first-order difference. When the time intervals are equal, subtract the previous value from the next value to get the first difference."
-                                                    ))
+                                              "The figure above shows the resulting plot of taking a first-order difference. When the time intervals are equal, subtract the previous value from the next value to get the first difference."
+                                              ))
 
     result_content.append(make_result_section(section_name="Output 4: second-order difference map",
                                               content_type="img",
@@ -453,14 +451,13 @@ def adf_test(df, parameters):
     result_content.append(make_result_section(section_name="Chart description:",
                                               content_type="text",
                                               content=
-                                                  "The figure above shows the resulting plot of the second difference. Doing the same action twice, that is, subtracting a value from the last value on the basis of the first-order difference, is called 'second-order difference'."
+                                              "The figure above shows the resulting plot of the second difference. Doing the same action twice, that is, subtracting a value from the last value on the basis of the first-order difference, is called 'second-order difference'."
                                               ))
 
     return result_content
 
+
 def make_original_sequence_pic(column):
-
-
     # plot histogram and density curve
     f = plt.figure()
     x = column.iloc[:, 0]
@@ -479,18 +476,17 @@ def make_original_sequence_pic(column):
 
     return base64_pic
 
-def reliability_analysis(df, parameters):
 
+def reliability_analysis(df, parameters):
     if parameters["Analytical_method"] == "Cronbach's α":
         result_content = cronbach(df, parameters)
     elif parameters["Analytical_method"] == "Split-half Reliability":
         result_content = splitHalf(df, parameters)
 
-
     return result_content
 
-def cronbach(df, parameters):
 
+def cronbach(df, parameters):
     result_content = []
     result_content.append(make_result_section(section_name="Analysis steps",
                                               content_type="ordered_list",
@@ -582,8 +578,8 @@ def cronbach(df, parameters):
 
     return result_content
 
-def splitHalf(df, parameters):
 
+def splitHalf(df, parameters):
     result_content = []
 
     result_content.append(make_result_section(section_name="Analysis steps",
@@ -603,13 +599,11 @@ def splitHalf(df, parameters):
     # new_df  includes the columns need to conduct reliablity analysis
     new_df = df.loc[:, variable_names]
 
-
     n_cols = len(new_df.columns)
     half_cols = n_cols // 2
 
     df1 = new_df.iloc[:, :half_cols]
     df2 = new_df.iloc[:, half_cols:]
-
 
     number_of_items1 = df1.shape[1]
     number_of_items2 = df2.shape[1]
@@ -621,7 +615,6 @@ def splitHalf(df, parameters):
     sum1 = df1.sum(axis=1)
     sum2 = df2.sum(axis=1)
 
-
     # 计算两组数据的斯皮尔曼相关系数
     corr = spearmanr(sum1, sum2).correlation
 
@@ -632,18 +625,18 @@ def splitHalf(df, parameters):
                                               content_type="table",
                                               content={
                                                   "data": [
-                                                      [ result1,
-                                                        number_of_items1
+                                                      [result1,
+                                                       number_of_items1
                                                        ],
                                                       [
-                                                        result2,
-                                                        number_of_items2
+                                                          result2,
+                                                          number_of_items2
                                                       ]
                                                   ],
                                                   "columns": ["Cronbach's alpha coefficient",
                                                               "number of items"
                                                               ],
-                                                  "index": ["first half","second half"]
+                                                  "index": ["first half", "second half"]
                                               }))
 
     result_content.append(make_result_section(section_name="Output 2: Spearman-Brown coefficient",
@@ -668,6 +661,7 @@ def splitHalf(df, parameters):
                                               ]))
 
     return result_content
+
 
 def normality_test(df, parameters):
     result_content = []
@@ -768,9 +762,6 @@ def normality_test(df, parameters):
                                               ))
 
     return result_content
-
-
-
 
 
 def make_histogram_pic(column, variable):
@@ -1107,7 +1098,7 @@ def svm_classification(df, parameters):
                                               content=[
                                                   "Establish a Support vector machine (SVM) class classification model through the training set data.",
                                                   "Apply the established Support vector machine (SVM) classification model to the training and test data to obtain the classification evaluation results of the model.",
-                                                  "Due to the random nature of support vector machine (SVM) classification, the results of each operation are not the same"
+                                                  "Due to the random nature of support vector machine (SVM) classification, the results of each operation are not the same",
                                                   "Note: The Support vector machine (SVM) classification model cannot obtain a definite equation like the traditional model, and the model is usually evaluated by testing the classification effect of the data."
                                               ]))
 
@@ -1184,7 +1175,7 @@ def svr_regression(df, parameters):
                                               content=[
                                                   "Establish a Support vector machine regression (SVR) model through the training set data.",
                                                   "Apply the established Support vector machine regression (SVR) model to the training and test data to obtain the classification evaluation results of the model.",
-                                                  "Due to the random nature of support vector machine (SVR) regression, the results of each operation are not the same"
+                                                  "Due to the random nature of support vector machine (SVR) regression, the results of each operation are not the same",
                                                   "Note: The Support vector machine regression (SVR) model cannot obtain a definite equation like the traditional model, and the model is usually evaluated by testing the classification effect of the data."
                                               ]))
 
@@ -1253,106 +1244,80 @@ def svr_regression(df, parameters):
     return result_content
 
 
-def chebyshev_distances(x, y):
-    x = np.array(x)
-    y = np.array(y)
-    diff = np.abs(x - y)
-    distance = np.max(diff)
-    return distance
+def decision_tree_classification(df, parameters):
+    result_content = []
 
+    result_content.append(make_result_section(section_name="Analysis steps",
+                                              content_type="ordered_list",
+                                              content=[
+                                                  "Establish a Decision Number Classification Model to obtain a decision tree structure. through the training set data.",
+                                                  "Feature importance is calculated from the decision tree built.",
+                                                  "Apply the established Decision Tree classification model to the training and test data to obtain the classification evaluation results of the model.",
+                                                  "Due to the random nature of Decision Tree classification, the results of each operation are not the same.",
+                                                  "Note: Decision trees do not yield definitive equations as traditional models do. At each decision node, the segmentation features chosen determine the final classification result, and the model is usually evaluated by testing the effectiveness of the data classification."
+                                              ]))
 
-def k_nearest_neighbor(df, para_received):
-    dependent_variable = para_received["dependent_variable_y"]
-    independent_variables = para_received["independent_variable_x"]
-    data_shuffling = para_received["data_shuffling"]
-    testing_set_ratio = para_received["testing_set_ratio"]
-    cross_validation = para_received["cross_validation"]
-    k = para_received["number_of_neighbors"]
-    vector_distance_algorithm = para_received["vector_distance_algorithm"]
-    search_algorithm = para_received["search_algorithm"]
-    weighting_function_of_nearest_neighbors = para_received["weighting_function_of_nearest_neighbors"]
+    # Construct a Decision Tree classifier model
+    clf = DecisionTreeClassifier(criterion=parameters["criterion"], splitter=parameters["splitter"],
+                                 min_samples_split=int(parameters["min_samples_leaf"]),
+                                 min_samples_leaf=int(parameters["min_samples_leaf"]),
+                                 max_depth=int(parameters["max_depth"]),
+                                 max_leaf_nodes=int(parameters["max_leaf_nodes"]))
 
-    df = df.dropna()  # remove rows with missing values
-    x = df[independent_variables].values  # extract independent variables
-    y = df[dependent_variable].values  # extract dependent variable
-    label_encoder = LabelEncoder()
-    y = label_encoder.fit_transform(y)  # convert dependent variable to numerical label
+    # Slice the dataframe according to the features selected by the user
+    x_train = df[parameters["features"]]
+    y_train = df[parameters["target"]]
 
-    # shuffle the data
-    if data_shuffling == "true":
-        x, y = shuffle(x, y, random_state=42)
+    # If the data needs to be shuffled, perform the shuffle operation
+    if parameters["shuffle"] == "True":
+        x_train, y_train = shuffle_dataset(x_train, y_train)
 
-    # cross validation
-    if cross_validation == "false":
+    # Divide the dataset and return the divided training and test sets
+    if parameters["cross_validation"] == "None":
+        x_train, x_test, y_train, y_test = dataset_split(x_train, y_train, 1 - float(parameters["train_ratio"]))
+        clf.fit(x_train, y_train)
 
-        # split data into training and testing sets
-        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=testing_set_ratio)
+        # Predict on training and test sets
+        y_train_pred = clf.predict(x_train)
+        y_test_pred = clf.predict(x_test)
 
-        # calculate distances between test instances and training instances
-        if vector_distance_algorithm == "euclidean":
-            distances = euclidean_distances(x_test, x_train)
-        elif vector_distance_algorithm == "manhattan":
-            distances = manhattan_distances(x_test, x_train)
-        elif vector_distance_algorithm == "chebyshev":
-            distances = chebyshev_distances(x_test, x_train)
+        # Calculate evaluation metrics
+        accuracy_train, accuracy_test, recall_train, recall_test, precision_train, precision_test, f1_train, f1_test = \
+            get_evaluation_metrics(y_train, y_train_pred, y_test, y_test_pred)
 
-        # get k nearest neighbors for each test instance
-        k_nearest_indices = np.argsort(distances, axis=1)[:, :k]
+        # Compute confusion matrix
+        cnf_matrix = pd.DataFrame(confusion_matrix(y_test, y_test_pred))
 
-        # make predictions for test instances based on k nearest neighbors
-        y_pred = []
-        for indices in k_nearest_indices:
-            labels = y_train[indices]
-            counts = np.bincount(labels)
-            y_pred.append(np.argmax(counts))
+        pic = make_heatmap_pic(cnf_matrix, get_unique_label_list(y_train))
 
-        # convert predicted labels back to original format
-        y_pred = label_encoder.inverse_transform(y_pred)
+        # Get the accuracy
+        accuracy = clf.score(x_test, y_test)
 
+        # Make all the values in result_table and confusion_matrix_table into one dictionary
+        evaluation_table = [accuracy_train, recall_train, precision_train, f1_train, accuracy_test, recall_test,
+                            precision_test, f1_test]
+        result_content.append(make_result_section(section_name="Evaluation Results",
+                                                  content_type="table",
+                                                  content={
+                                                      "data": [['%.3f' % (evaluation_table[0]),
+                                                                '%.3f' % (evaluation_table[1]),
+                                                                '%.3f' % (evaluation_table[2]),
+                                                                '%.3f' % (evaluation_table[3])],
+                                                               # '%.3f' % means 3 decimal places
+                                                               ['%.3f' % (evaluation_table[4]),
+                                                                '%.3f' % (evaluation_table[5]),
+                                                                '%.3f' % (evaluation_table[6]),
+                                                                '%.3f' % (evaluation_table[7])]],
+                                                      "columns": ["Accuracy", "Recall", "Precision", "F1"],
+                                                      "index": ["Training Set", "Test Set"]
+                                                  }))
+
+        result_content.append(make_result_section(section_name="Heatmap", content_type="img", content=pic))
+        result_content.append(make_result_section(section_name="Accuracy",
+                                                  content_type="text",
+                                                  content=accuracy))
     else:
+        result_content += cross_validation(x_train, y_train, clf,
+                                           int(parameters["cross_validation"].split("-", 1)[0]))  # k-fold
 
-        # perform k-fold cross-validation
-        kf = KFold(n_splits=cross_validation)
-        y_pred = []
-        for train_index, test_index in kf.split(x):
-            x_train, x_test = x[train_index], x[test_index]
-            y_train, y_test = y[train_index], y[test_index]
-
-            # calculate distances between test instances and training instances
-            if vector_distance_algorithm == "euclidean":
-                distances = euclidean_distances(x_test, x_train)
-            elif vector_distance_algorithm == "manhattan":
-                distances = manhattan_distances(x_test, x_train)
-            elif vector_distance_algorithm == "chebyshev":
-                distances = chebyshev_distances(x_test, x_train)
-
-            # get k nearest neighbors for each test instance
-            k_nearest_indices = np.argsort(distances, axis=1)[:, :k]
-
-            # make predictions for test instances based on k nearest neighbors
-            y_pred_fold = []
-            for indices in k_nearest_indices:
-                labels = y_train[indices]
-                counts = np.bincount(labels)
-                y_pred_fold.append(np.argmax(counts))
-
-            # convert predicted labels back to original format
-            y_pred_fold = label_encoder.inverse_transform(y_pred_fold)
-            y_pred.extend(y_pred_fold)
-
-    # create confusion matrix
-    confusion_matrix = np.zeros((len(label_encoder.classes_), len(label_encoder.classes_)))
-    for actual, predicted in zip(y_test, y_pred):
-        confusion_matrix[actual][predicted] += 1
-
-    # normalize confusion matrix
-    confusion_matrix_norm = confusion_matrix.astype('float') / confusion_matrix.sum(axis=1)[:, np.newaxis]
-
-    # plot heatmap
-    sns.heatmap(confusion_matrix_norm, cmap="YlGnBu", annot=True, fmt=".2f", xticklabels=label_encoder.classes_,
-                yticklabels=label_encoder.classes_)
-    plt.xlabel("Predicted Label")
-    plt.ylabel("Actual Label")
-    plt.title("Confusion Matrix")
-
-    return y_pred
+    return result_content
