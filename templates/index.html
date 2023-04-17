@@ -202,7 +202,8 @@
 
                 <!-- Avatar -->
                 <div class="d-grid gap-2 d-md-flex justify-content-start align-items-center ms-auto">
-                    <a class="btn btn-tertiary username px-3" data-mdb-ripple-color="light" href="https://guide.lcda.space" target="_blank" role="button">Docs<i
+                    <a class="btn btn-tertiary username px-3" data-mdb-ripple-color="light"
+                       href="https://guide.lcda.space" target="_blank" role="button">Docs<i
                             class="fas fa-up-right-from-square ms-2"></i></a>
                     {% if g.user %}
                         <div class="dropdown">
@@ -270,28 +271,28 @@
                     {#                    >Get Started</a> #}
 
                     {% if not g.user %}
-                        <div class="d-grid gap-2 d-md-flex justify-content-center align-items-center">
-                            <a
-                                    class="btn btn-outline-light btn-lg m-2"
-                                    href="{{ url_for('auth.register') }}"
-                                    role="button"
-                                    style="width: 170px;"
-                            >Sign Up</a>
-                            <a
-                                    class="btn btn-outline-light btn-lg m-2"
-                                    href="{{ url_for('auth.login') }}"
-                                    role="button"
-                                    style="width: 170px;"
-                            >Log in</a>
-                        </div>
+                            <div class="d-flex justify-content-center align-items-center col-md-8 col-10 mx-auto row">
+                                <div class="col-md-6 d-flex">
+                                    <a
+                                            class="btn btn-outline-light btn-lg m-2 flex-grow-1"
+                                            href="{{ url_for('auth.register') }}"
+                                            role="button"
+                                    >Sign Up</a>
+                                </div>
+                                <div class="col-md-6 d-flex">
+                                    <a
+                                            class="btn btn-outline-light btn-lg m-2 flex-grow-1"
+                                            href="{{ url_for('auth.login') }}"
+                                            role="button"
+                                    >Log in</a>
+                                </div>
+                            </div>
                     {% else %}
                         <p>Good <span id="timeNow"></span>, {{ g.user.username }}!</p>
                         <a
                                 class="btn btn-outline-light btn-lg m-2"
                                 href="{{ url_for('data_analysis.index') }}"
                                 role="button"
-                                target="_blank"
-                                style="width: 170px;"
                         >Continue Using </a>
                     {% endif %}
                 </div>
