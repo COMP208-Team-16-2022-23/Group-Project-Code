@@ -240,12 +240,13 @@ def delete_task(component_name, id):
     elif component_name == 'data_analysis':
         # query project
         project = AnalysisProject.query.filter_by(id=id).first()
-        project_id = [project.id]
 
         # find results
-        results = AnalysisResult.query.filter_by(project_id=project_id).all()
+        results = AnalysisResult.query.filter_by(project_id=project.id).all()
         paths = [res.result_file_path for res in results]
         #     check ownership
+        # db_session.query(AnalysisResult).filter(AnalysisResult.project_id.in_(project_id)).delete(
+        #     synchronize_session=False)
         for path in paths:
             owner = path.split('/')[0]
             if owner != g.user.username:
@@ -258,10 +259,8 @@ def delete_task(component_name, id):
                 return redirect(redirect_url)
             else:
                 # Delete database record
-                # db_session.query(AnalysisResult).filter(AnalysisResult.project_id.in_(project_id)).delete(
-                #     synchronize_session=False)
                 db_session.query(AnalysisResult).filter(AnalysisResult.result_file_path == path).delete()
                 db_session.commit()
-            db_session.delete(project)
-            db_session.commit()
+        db_session.delete(project)
+        db_session.commit()
     return redirect(redirect_url)
