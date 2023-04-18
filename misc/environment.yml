@@ -1,22 +1,28 @@
-name: COMP208-test
+name: COMP208
+channels:
+  - defaults
+  - conda-forge
 dependencies:
-  - python=3.10
-  - pip
   - flask
-  - numpy
-  - scikit-learn
-  - pandas
-  - matplotlib
+  - flask-mail
   - flask-sqlalchemy
-  - conda-forge::flask-mail
-  - conda-forge::google-cloud-storage
-  - conda-forge::openai
-  - pymysql
+  - google-cloud-storage
+  - imbalanced-learn
+  - langdetect
+  - matplotlib
+  - numpy
+  - openai
   - openpyxl
+  - pandas=1.5
+  - pingouin
+  - pip
+  - prettytable
+  - pymysql
+  - python=3.10
+  - scikit-learn
   - seaborn
-  - conda-forge::imbalanced-learn
-  - xlrd
-  - conda-forge::langdetect
-  - conda-forge::pingouin
-  - conda-forge::prettytable
   - statsmodels
+  - xlrd
+  - pip: # pip packages
+      - better-profanity
+      - psython
