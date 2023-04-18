@@ -66,6 +66,8 @@ def add_suffix(file_path, suffix, username, folder_name="", ext=""):
     # remove "username/"
     file_path = file_path.split('/', 1)[-1]  # ('/', 1) means split once
 
+    suffix = '-' + suffix if suffix else ''
+
     # Split the filename into name and extension
     if not ext:
         name, ext = os.path.splitext(file_path)
@@ -74,9 +76,9 @@ def add_suffix(file_path, suffix, username, folder_name="", ext=""):
 
     # Add suffix to the filename
     if folder_name:
-        file_path = username + "/" + folder_name + "/" + name + "-" + suffix + ext
+        file_path = username + "/" + folder_name + "/" + name + suffix + ext
     else:
-        file_path = username + "/" + name + "-" + suffix + ext
+        file_path = username + "/" + name + suffix + ext
 
     return file_path
 
