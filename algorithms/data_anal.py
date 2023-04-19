@@ -1259,7 +1259,7 @@ def decision_tree_classification(df, parameters):
 
     # Construct a Decision Tree classifier model
     clf = DecisionTreeClassifier(criterion=parameters["criterion"], splitter=parameters["splitter"],
-                                 min_samples_split=int(parameters["min_samples_leaf"]),
+                                 min_samples_split=int(parameters["min_samples_split"]),
                                  min_samples_leaf=int(parameters["min_samples_leaf"]),
                                  max_depth=int(parameters["max_depth"]),
                                  max_leaf_nodes=int(parameters["max_leaf_nodes"]))
