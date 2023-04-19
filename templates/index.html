@@ -257,40 +257,49 @@
                 );
                 ">
             <div class="container d-flex align-items-center justify-content-center text-center h-100">
-                <div class="text-white">
-                    {#                    <h1 class="mb-3"><span>L</span><span>C</span><span>D</span><span>A</span></h1>#}
-                    <h1 class="mb-3" style="font-family: Georgia, serif;">Low-Code Data Analysis</h1>
-                    <h5 class="mb-4" style="font-family: Georgia, serif;">A simplified approach to data analysis with
-                        less coding required.</h5>
-                    {#                     <a #}
-                    {#                            class="btn btn-outline-light btn-lg m-2" #}
-                    {#                            href="https://guide.lcda.space/" #}
-                    {#                            role="button" #}
-                    {#                            target="_blank" #}
-                    {#                            style="width: 145px;" #}
-                    {#                    >Get Started</a> #}
+                <div>
 
-                    {% if not g.user %}
-                        <a
-                                class="btn btn-outline-light btn-lg m-2"
-                                href="{{ url_for('auth.register') }}"
-                                role="button"
-                                style="width: 108px;"
-                        >Sign Up</a>
-                        <a
-                                class="btn btn-outline-light btn-lg m-2"
-                                href="{{ url_for('auth.login') }}"
-                                role="button"
-                                style="width: 108px;"
-                        >Log in</a>
-                    {% else %}
-                        <p>Good <span id="timeNow"></span>, {{ g.user.username }}!</p>
-                        <a
-                                class="btn btn-outline-light btn-lg m-2"
-                                href="{{ url_for('data_analysis.index') }}"
-                                role="button"
-                        >Continue Using </a>
+                    {% if NOTICE_MESSAGE or NOTICE_TITLE %}
+                    <div class="note note-primary mb-5">
+                        <strong>{{ NOTICE_TITLE }}</strong> {{ NOTICE_MESSAGE }}
+                    </div>
                     {% endif %}
+
+                    <div class="text-white">
+                        {#                    <h1 class="mb-3"><span>L</span><span>C</span><span>D</span><span>A</span></h1>#}
+                        <h1 class="mb-3" style="font-family: Georgia, serif;">Low-Code Data Analysis</h1>
+                        <h5 class="mb-4" style="font-family: Georgia, serif;">A simplified approach to data analysis with
+                            less coding required.</h5>
+                        {#                     <a #}
+                        {#                            class="btn btn-outline-light btn-lg m-2" #}
+                        {#                            href="https://guide.lcda.space/" #}
+                        {#                            role="button" #}
+                        {#                            target="_blank" #}
+                        {#                            style="width: 145px;" #}
+                        {#                    >Get Started</a> #}
+
+                        {% if not g.user %}
+                            <a
+                                    class="btn btn-outline-light btn-lg m-2"
+                                    href="{{ url_for('auth.register') }}"
+                                    role="button"
+                                    style="width: 108px;"
+                            >Sign Up</a>
+                            <a
+                                    class="btn btn-outline-light btn-lg m-2"
+                                    href="{{ url_for('auth.login') }}"
+                                    role="button"
+                                    style="width: 108px;"
+                            >Log in</a>
+                        {% else %}
+                            <p>Good <span id="timeNow"></span>, {{ g.user.username }}!</p>
+                            <a
+                                    class="btn btn-outline-light btn-lg m-2"
+                                    href="{{ url_for('data_analysis.index') }}"
+                                    role="button"
+                            >Continue Using </a>
+                        {% endif %}
+                    </div>
                 </div>
                 <div class="scroll-prompt" id="js_scrollPrompt">
                     <div class="scroll-prompt-shape"></div>
