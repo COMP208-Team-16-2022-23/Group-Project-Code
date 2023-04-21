@@ -8,7 +8,7 @@ Project Source Code
 
 This is the code repo of COMP208 Team 16. 
 
-Online Demo: [https://www.lcda.space](https://www.lcda.space)
+Online Demo: [lcda.space](https://www.lcda.space)
 
 [//]: # ([Change Log]&#40;CHANGELOG.md&#41;)
 
