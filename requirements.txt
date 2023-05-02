@@ -1,5 +1,5 @@
 better_profanity
-Flask==2.2.2
+Flask==2.3.2
 Flask_Mail
 google-cloud-storage
 gunicorn==20.1.0
